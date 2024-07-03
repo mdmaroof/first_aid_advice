@@ -30,12 +30,12 @@ const InputSearchBox = ({ onClick, input, setInput }) => {
             <motion.div
                 initial={{ width: 250 }}
                 animate={{ width: 340 }}
-                className="text-[#ff7b73] overflow-hidden bg-white p-1 text-xl rounded-full gap-1 relative cursor-pointer flex flex-row"
+                className="text-[#ff7b73] overflow-hidden bg-white p-1 text-xl rounded-full gap-1 relative cursor-pointer grid grid-cols-3"
             >
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="text-lg flex1 bg-transparent focus-visible:outline-0 pl-2 pr-1" />
+                    className="text-lg col-span-2 bg-transparent focus-visible:outline-0 pl-2 pr-1" />
                 <div
                     className="bg-[#ff7b73] text-white py-2 px-4 rounded-full font-bold"
                     onClick={onClick}
