@@ -26,11 +26,11 @@ const ButtonComponent = ({ text, onClick, initial = {}, animate = {}, exit = {},
 const InputSearchBox = ({ onClick, input, setInput }) => {
 
     return (
-        <div className="p-1 border-4 border-white rounded-full">
+        <div className="p-1 border-4 border-white rounded-full realtive">
             <motion.div
                 initial={{ width: 250 }}
                 animate={{ width: 340 }}
-                className="text-[#ff7b73] bg-white p-1 text-xl rounded-full gap-1 relative cursor-pointer flex flex-row"
+                className="text-[#ff7b73] overflow-hidden bg-white p-1 text-xl rounded-full gap-1 relative cursor-pointer flex flex-row"
             >
                 <input
                     value={input}
