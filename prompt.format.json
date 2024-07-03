@@ -1,0 +1,29 @@
+ // show syptoms only if first_instance accuracy is less than 100%
+{
+    "message": "Messaged typed by User",
+    "first_instance": {
+        "disease": "disease for which assistance is been provided",
+        "accuracy": "accuracy of disease for which assistance is been provided"
+    },
+    "instant_help": [
+        {
+            "step": 1,
+            "info": "Provide instructions for common emergencies (e.g., CPR, choking, burns)"
+        },
+        {
+            "step": 2,
+            "info": "Provide instructions for common emergencies (e.g., CPR, choking, burns)"
+        }
+    ],
+    "symptoms_option": [  
+        {
+            "symptom": "Provide a range of symptoms for users to select for better result",
+            "description": "Provide detail description of symptoms so one can easily understand"
+        },
+        {
+            "symptom": "Provide a range of symptoms for users to select for better result",
+            "description": "Provide detail description of symptoms so one can easily understand"
+        }
+    ],
+    "medical_advice": "Feature: AI-driven medical advice based on user input. generate ai images as well"
+}

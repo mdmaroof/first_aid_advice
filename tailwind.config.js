@@ -12,6 +12,10 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      gridTemplateColumns: {
+        'my-columns': 'auto 1fr',
+        'auto-fit-100': 'repeat(auto-fit,minmax(220px, 1fr))'
+      }
     },
   },
   plugins: [],
