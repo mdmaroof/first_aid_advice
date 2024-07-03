@@ -37,7 +37,7 @@ const InputSearchBox = ({ onClick, input, setInput }) => {
                     onChange={(e) => setInput(e.target.value)}
                     className="text-lg flex-1 bg-transparent focus-visible:outline-0 pl-2 pr-1" />
                 <div
-                    className="bg-[#ff7b73] flex-auto text-white py-2 px-4 rounded-full font-bold"
+                    className="bg-[#ff7b73] flex-1 text-white py-2 px-4 rounded-full font-bold"
                     onClick={onClick}
                 >
                     Search
