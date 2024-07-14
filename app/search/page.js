@@ -9,9 +9,7 @@ const SearchPage = () => {
 
     useEffect(() => {
         const getData = localStorage.getItem("getData");
-        const data = JSON.parse(getData)?.content[0] || null;
-        const res = JSON.parse(data.text.value);
-        setResult(res)
+        setResult(JSON.parse(getData))
     }, []);
 
     const { first_instance, instant_help, medical_advice, symptoms_option } = result || {};

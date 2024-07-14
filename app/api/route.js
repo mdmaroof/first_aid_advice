@@ -58,7 +58,10 @@ export const POST = async (req) => {
             })
 
             const result = await myPromise;
-            return NextResponse.json(result, { status: 200 });
+            const getData = result?.data[0];
+            const data = getData?.content[0] || null;
+            const res = JSON.parse(data?.text?.value);
+            return NextResponse.json(res, { status: 200 });
         }
         catch (err) {
             return NextResponse.json({ err: 'error' }, { status: 400 });

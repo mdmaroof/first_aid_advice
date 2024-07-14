@@ -1,7 +1,6 @@
 "use client";
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useStepTracker } from "@/hooks/steps";
 import { callApi } from '@/hooks/callApi';
 import { useRouter } from 'next/navigation';
 
