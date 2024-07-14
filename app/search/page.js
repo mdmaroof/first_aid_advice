@@ -52,7 +52,7 @@ const SearchPage = () => {
             <div className="p-1 w-fit border-4 border-white rounded-full mt-7 md:mt-10">
                 <div
                     onClick={() => router.push("/")}
-                    className="w-fit font-bold text-[#ff7b73] bg-white py-3 px-10 text-xl rounded-full gap-1 relative cursor-pointer flex justify-center items-center"
+                    className="w-fit font-bold text-[#ff7b73] bg-white py-2 px-5 md:py-3 md:px-10 text-xl rounded-full gap-1 relative cursor-pointer flex justify-center items-center"
                 >
                     Search New Symptoms
                 </div>

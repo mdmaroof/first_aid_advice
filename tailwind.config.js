@@ -15,7 +15,11 @@ module.exports = {
       gridTemplateColumns: {
         'my-columns': 'auto 1fr',
         'auto-fit-100': 'repeat(auto-fit,minmax(220px, 1fr))'
-      }
+      },
+      fontFamily: {
+        quicksand: ['var(--font-quicksand)'],
+        mulish: ['var(--font-mulish)'],
+      },
     },
   },
   plugins: [],
