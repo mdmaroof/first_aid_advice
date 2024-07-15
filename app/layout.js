@@ -13,6 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <meta name="theme-color" content="#ff7b73"></meta>
       <body className={`${fontOne.variable} ${fontTwo.variable} ${fontOne.className}`}>{children}</body>
     </html>
   );
