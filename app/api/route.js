@@ -33,6 +33,13 @@ WRITING RULES (critical):
 - Align with standard first-aid (Red Cross / NHS / AHA style).
 - first_instance.accuracy must be "Guidance".
 - Return ONLY valid JSON. No markdown.
+- Output ONLY one JSON object.
+- Do NOT wrap in markdown.
+- Do NOT explain anything.
+- Do NOT include notes.
+- Do NOT include \`\`\`json.
+- The response must be parseable by JSON.parse().
+- If unsure, use an empty string rather than omitting fields.
 
 Split symptoms into TWO groups (not every sign is serious):
 - critical: red flags that mean escalate / call emergency.
@@ -66,10 +73,13 @@ Include 5–7 instant_help steps, 3–4 critical symptoms, and 2–3 basic sympt
           content: data,
         },
       ],
-      temperature: 0.2,
-      max_tokens: 900,
+      temperature: 0,
+      max_tokens: 1200,
       response_format: {
         type: "json_object",
+      },
+      thinking: {
+        type: "disabled",
       },
     });
 
