@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { callApi } from "@/hooks/callApi";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
+import { Keyboard, Search } from "lucide-react";
 import { easeOut, scaleTap } from "@/hooks/motion";
 
 const ButtonComponent = ({
@@ -12,6 +13,7 @@ const ButtonComponent = ({
   onClick,
   search = false,
   disabled = false,
+  icon: Icon = null,
 }) => {
   return (
     <motion.button
@@ -28,6 +30,9 @@ const ButtonComponent = ({
       aria-busy={search || undefined}
       className="glass-strong relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-lg font-bold text-aid-ink transition-[background-color] hover:bg-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-wait"
     >
+      {Icon && !search ? (
+        <Icon className="h-5 w-5 text-aid-teal" strokeWidth={2.25} aria-hidden="true" />
+      ) : null}
       {text}
       {search ? <span className="loader ml-1" aria-hidden="true" /> : null}
       {search ? <span className="sr-only">Loading results</span> : null}
@@ -49,7 +54,10 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
       }}
       className="w-full max-w-md"
     >
-      <div className="glass-strong grid grid-cols-[1fr_auto] overflow-hidden rounded-2xl focus-within:border-white/80">
+      <div className="glass-strong grid grid-cols-[auto_1fr_auto] items-center overflow-hidden rounded-2xl focus-within:border-white/80">
+        <span className="pl-4 text-aid-teal" aria-hidden="true">
+          <Search className="h-4 w-4" strokeWidth={2.25} />
+        </span>
         <label htmlFor="symptom-input" className="sr-only">
           Describe your symptoms
         </label>
@@ -59,7 +67,7 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
           onChange={(event) => setInput(event.target.value)}
           placeholder="e.g. sharp chest pain"
           autoComplete="off"
-          className="bg-transparent px-4 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
+          className="bg-transparent px-3 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
         />
         <motion.button
           type="submit"
@@ -109,6 +117,7 @@ export const SearchInput = ({ step, setStep }) => {
             key="step1"
             onClick={stepMarker}
             text="Type symptoms"
+            icon={Keyboard}
           />
         ) : null}
         {step === "step2" ? (
