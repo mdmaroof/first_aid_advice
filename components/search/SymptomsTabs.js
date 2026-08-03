@@ -5,6 +5,7 @@ import { AlertTriangle, HeartHandshake } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, staggerContainer, staggerItem } from "@/hooks/motion";
 import { normalizeSymptoms } from "@/lib/aidResult";
+import { EmergencyActions } from "@/components/SafetyBanner";
 
 const TABS = [
   {
@@ -23,7 +24,7 @@ const TABS = [
   },
 ];
 
-export function SymptomsTabs({ symptomsOption }) {
+export function SymptomsTabs({ symptomsOption, showPoisonHotline = false }) {
   const baseId = useId();
   const symptoms = normalizeSymptoms(symptomsOption);
   const hasAny = symptoms.critical.length > 0 || symptoms.basic.length > 0;
@@ -196,6 +197,14 @@ export function SymptomsTabs({ symptomsOption }) {
               ))}
             </motion.ul>
           )}
+
+          {active === "critical" && items.length > 0 ? (
+            <EmergencyActions
+              className="mt-3"
+              compact
+              showPoison={showPoisonHotline}
+            />
+          ) : null}
         </motion.div>
       </AnimatePresence>
     </motion.section>

@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import { Title } from "@/components/homePage";
 import { FirstAidSteps } from "@/components/search/FirstAidSteps";
 import { SymptomsTabs } from "@/components/search/SymptomsTabs";
-import { EmergencyCTA, MedicalDisclaimer } from "@/components/SafetyBanner";
+import {
+  EmergencyActions,
+  EmergencyCTA,
+  MedicalDisclaimer,
+} from "@/components/SafetyBanner";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -32,8 +36,14 @@ const SearchPage = () => {
     );
   }
 
-  const { first_instance, instant_help, medical_advice, symptoms_option } =
-    result;
+  const {
+    first_instance,
+    instant_help,
+    medical_advice,
+    symptoms_option,
+    category,
+  } = result;
+  const isPoison = category === "poison";
 
   const handleNewSearch = () => {
     clearResult();
@@ -44,7 +54,7 @@ const SearchPage = () => {
     <main className="page-blobs relative min-h-dvh w-full text-aid-ink">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.45),transparent_35%)]" />
 
-      <div className="safe-content relative z-10 mx-auto max-w-3xl md:px-2 md:py-2">
+      <div className="safe-content relative z-10 mx-auto max-w-3xl pb-24 md:px-2 md:py-2 md:pb-8">
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,9 +72,7 @@ const SearchPage = () => {
           >
             <Title compact />
           </motion.button>
-          <div className="flex items-center gap-2">
-            <EmergencyCTA compact />
-          </div>
+          <EmergencyActions compact showPoison={isPoison} />
         </motion.header>
 
         <motion.section
@@ -104,11 +112,26 @@ const SearchPage = () => {
               {medical_advice}
             </p>
           ) : null}
+
+          <EmergencyActions className="mt-3" showPoison={isPoison} />
         </motion.section>
 
         <FirstAidSteps steps={instant_help} />
 
-        <SymptomsTabs symptomsOption={symptoms_option} />
+        <motion.div
+          custom={1.5}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="mt-3"
+        >
+          <EmergencyActions showPoison={isPoison} />
+        </motion.div>
+
+        <SymptomsTabs
+          symptomsOption={symptoms_option}
+          showPoisonHotline={isPoison}
+        />
 
         <motion.footer
           custom={8}
@@ -130,6 +153,16 @@ const SearchPage = () => {
             Search new symptoms
           </motion.button>
         </motion.footer>
+      </div>
+
+      {/* Mobile thumb-reach emergency bar */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-white/50 bg-[#c5e0e4]/92 px-3 py-2.5 backdrop-blur-xl md:hidden"
+        style={{ paddingBottom: "max(0.65rem, var(--safe-bottom))" }}
+      >
+        <div className="mx-auto flex max-w-3xl justify-center gap-2">
+          <EmergencyCTA className="flex-1 justify-center" />
+        </div>
       </div>
     </main>
   );

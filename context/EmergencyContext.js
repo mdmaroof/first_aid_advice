@@ -7,6 +7,7 @@ const EmergencyContext = createContext({
   number: DEFAULT_EMERGENCY.number,
   label: DEFAULT_EMERGENCY.label,
   countryCode: null,
+  poison: null,
   loading: true,
 });
 
@@ -15,6 +16,7 @@ export function EmergencyProvider({ children }) {
     number: DEFAULT_EMERGENCY.number,
     label: DEFAULT_EMERGENCY.label,
     countryCode: null,
+    poison: null,
     loading: true,
   });
 
@@ -29,6 +31,7 @@ export function EmergencyProvider({ children }) {
           number: data.number,
           label: data.label || data.number,
           countryCode: data.countryCode ?? null,
+          poison: data.poison ?? null,
           loading: false,
         });
       })

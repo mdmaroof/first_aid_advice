@@ -75,16 +75,35 @@ export const EMERGENCY_BY_COUNTRY = {
   NZ: { number: "111", label: "111" },
 };
 
+/**
+ * Dedicated poison-control / advice lines where nationally known.
+ * `number` is tel:-safe (digits only where possible).
+ */
+export const POISON_BY_COUNTRY = {
+  US: { number: "18002221222", label: "1-800-222-1222" },
+  CA: { number: "18002221222", label: "1-800-222-1222" },
+  AU: { number: "131126", label: "13 11 26" },
+  NZ: { number: "0800764766", label: "0800 764 766" },
+  GB: { number: "111", label: "111" },
+  IE: { number: "018092166", label: "01 809 2166" },
+};
+
 export function getEmergencyForCountry(countryCode) {
   if (!countryCode || countryCode === "XX") {
-    return { ...DEFAULT_EMERGENCY, countryCode: null };
+    return {
+      ...DEFAULT_EMERGENCY,
+      countryCode: null,
+      poison: null,
+    };
   }
 
   const code = countryCode.toUpperCase();
   const entry = EMERGENCY_BY_COUNTRY[code] ?? DEFAULT_EMERGENCY;
+  const poison = POISON_BY_COUNTRY[code] ?? null;
 
   return {
     ...entry,
     countryCode: code,
+    poison,
   };
 }

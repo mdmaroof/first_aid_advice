@@ -468,6 +468,318 @@ export const QUICK_AID_DATA = {
       ],
     },
   },
+
+  "poison swallowed": {
+    category: "poison",
+    first_instance: { disease: "Poison swallowed", accuracy: "Guidance" },
+    medical_advice:
+      "Don't make them vomit. Call poison control or emergency now.",
+    instant_help: [
+      { step: 1, info: "Call poison control or emergency — stay on the line." },
+      { step: 2, info: "Do not make them vomit or give salt water." },
+      { step: 3, info: "No food, drink, or milk unless a clinician says so." },
+      { step: 4, info: "Keep the container or label for responders." },
+      { step: 5, info: "Note what, how much, and when it was taken." },
+      {
+        step: 6,
+        info: "If drowsy, seizing, or not breathing — call emergency; start CPR if needed.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Drowsy or hard to wake",
+          description: "Call emergency now.",
+        },
+        {
+          symptom: "Seizure or collapse",
+          description: "Protect airway — emergency.",
+        },
+        {
+          symptom: "Trouble breathing",
+          description: "Airway risk — call now.",
+        },
+        {
+          symptom: "Burns in mouth or throat",
+          description: "Corrosive risk — urgent care.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Small sip, feels fine",
+          description: "Still call poison control to confirm.",
+        },
+        {
+          symptom: "Mild nausea only",
+          description: "Don't induce vomiting. Get advice now.",
+        },
+        {
+          symptom: "Unknown amount swallowed",
+          description: "Treat as serious until advised otherwise.",
+        },
+      ],
+    },
+  },
+
+  "poison skin": {
+    category: "poison",
+    first_instance: {
+      disease: "Poison on skin",
+      accuracy: "Guidance",
+    },
+    medical_advice:
+      "Brush off dry powder, then rinse with water 15+ minutes. Call for advice.",
+    instant_help: [
+      { step: 1, info: "Move away from the chemical. Avoid spreading it." },
+      { step: 2, info: "Brush off dry powder before water if it's a dry chemical." },
+      { step: 3, info: "Remove contaminated clothes and jewelry carefully." },
+      { step: 4, info: "Rinse skin with cool running water for 15+ minutes." },
+      { step: 5, info: "Wash gently with soap after long rinse if advised." },
+      { step: 6, info: "Call poison control. Bring the product label." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Burning, blistering skin",
+          description: "Chemical burn — urgent care.",
+        },
+        {
+          symptom: "Trouble breathing after splash",
+          description: "Possible fumes — call emergency.",
+        },
+        {
+          symptom: "Large area exposed",
+          description: "Call poison control / emergency.",
+        },
+        {
+          symptom: "Eyes also exposed",
+          description: "Rinse eyes too — see eye guidance.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Small splash, mild sting",
+          description: "Rinse 15 min. Still get advice.",
+        },
+        {
+          symptom: "Redness after rinse",
+          description: "Cover loosely. Recheck with hotline.",
+        },
+        {
+          symptom: "Known mild household cleaner",
+          description: "Rinse well. Call if unsure.",
+        },
+      ],
+    },
+  },
+
+  "poison eyes": {
+    category: "poison",
+    first_instance: { disease: "Poison in eyes", accuracy: "Guidance" },
+    medical_advice:
+      "Rinse eyes with clean water 15+ minutes. Don't rub. Call now.",
+    instant_help: [
+      { step: 1, info: "Hold eyelids open. Flush with clean lukewarm water." },
+      { step: 2, info: "Rinse for at least 15 minutes — clock it." },
+      { step: 3, info: "Remove contact lenses while rinsing if easy." },
+      { step: 4, info: "Do not rub eyes or use eye drops unless told." },
+      { step: 5, info: "Call poison control or emergency while rinsing if you can." },
+      { step: 6, info: "Seek urgent eye care after rinsing — take the product." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Severe pain or vision loss",
+          description: "Emergency — keep rinsing, call.",
+        },
+        {
+          symptom: "Chemical still burning",
+          description: "Continue flush — urgent care.",
+        },
+        {
+          symptom: "Both eyes affected",
+          description: "Call emergency / poison control.",
+        },
+        {
+          symptom: "Alkali or battery acid",
+          description: "High damage risk — hospital now.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild sting, rinsing helps",
+          description: "Finish 15 min rinse. Still get advice.",
+        },
+        {
+          symptom: "Redness after flush",
+          description: "See urgent care same day.",
+        },
+        {
+          symptom: "Splash of mild soap",
+          description: "Rinse well. Call if pain continues.",
+        },
+      ],
+    },
+  },
+
+  "poison inhaled": {
+    category: "poison",
+    first_instance: { disease: "Poison inhaled", accuracy: "Guidance" },
+    medical_advice:
+      "Fresh air now. If breathless or confused — call emergency.",
+    instant_help: [
+      { step: 1, info: "Get to fresh air. Don't re-enter a toxic space." },
+      { step: 2, info: "Loosen tight clothing. Sit upright if breathless." },
+      { step: 3, info: "Open windows only if safe — prefer leave the area." },
+      { step: 4, info: "Call poison control or emergency. Name the gas if known." },
+      { step: 5, info: "Don't enter confined spaces to “help” without protection." },
+      {
+        step: 6,
+        info: "If unresponsive and not breathing — start CPR; call emergency.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Can't catch breath",
+          description: "Call emergency now.",
+        },
+        {
+          symptom: "Blue lips or confusion",
+          description: "Low oxygen — emergency.",
+        },
+        {
+          symptom: "Chest pain after fumes",
+          description: "Urgent — call now.",
+        },
+        {
+          symptom: "Collapse in a closed room",
+          description: "Possible CO/gas — emergency.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild headache after smell",
+          description: "Fresh air. Call poison control.",
+        },
+        {
+          symptom: "Cough that is easing",
+          description: "Stay outside. Get advice if it returns.",
+        },
+        {
+          symptom: "Brief exposure, feeling OK",
+          description: "Still report it — some gases delay effects.",
+        },
+      ],
+    },
+  },
+
+  "poison food": {
+    category: "poison",
+    first_instance: {
+      disease: "Food or plant poison",
+      accuracy: "Guidance",
+    },
+    medical_advice:
+      "Don't make them vomit. Save a sample. Call poison control now.",
+    instant_help: [
+      { step: 1, info: "Call poison control or emergency for advice." },
+      { step: 2, info: "Do not force vomiting." },
+      { step: 3, info: "Save leftover food, plant, or mushrooms in a bag." },
+      { step: 4, info: "Note time eaten and how much." },
+      { step: 5, info: "Sip water only if fully alert and advised to." },
+      {
+        step: 6,
+        info: "Severe vomiting, confusion, or breathing trouble — call emergency.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Severe vomiting or diarrhea",
+          description: "Dehydration risk — urgent care.",
+        },
+        {
+          symptom: "Hallucinations or confusion",
+          description: "Possible toxin — call emergency.",
+        },
+        {
+          symptom: "Trouble swallowing or breathing",
+          description: "Emergency now.",
+        },
+        {
+          symptom: "Wild mushroom eaten",
+          description: "Treat as serious — call now.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild stomach upset",
+          description: "Rest. Call poison control to confirm.",
+        },
+        {
+          symptom: "Known food allergy mild itch",
+          description: "Watch closely; epinephrine if prescribed anaphylaxis.",
+        },
+        {
+          symptom: "Small taste of unknown berry",
+          description: "Still call — better safe.",
+        },
+      ],
+    },
+  },
+
+  "poison unknown": {
+    category: "poison",
+    first_instance: { disease: "Unknown poison", accuracy: "Guidance" },
+    medical_advice:
+      "Treat as serious. Call poison control or emergency now.",
+    instant_help: [
+      { step: 1, info: "Call poison control or emergency immediately." },
+      { step: 2, info: "Don't guess — no vomiting, no home remedies." },
+      { step: 3, info: "Move to fresh air if fumes are possible." },
+      { step: 4, info: "Rinse skin/eyes if a splash may have happened." },
+      { step: 5, info: "Gather any bottles, plants, or pills nearby." },
+      {
+        step: 6,
+        info: "Stay with them. If they collapse — emergency + CPR if needed.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Any breathing trouble",
+          description: "Call emergency now.",
+        },
+        {
+          symptom: "Seizure, collapse, or confusion",
+          description: "Emergency — protect airway.",
+        },
+        {
+          symptom: "Burns on lips or skin",
+          description: "Possible corrosive — urgent.",
+        },
+        {
+          symptom: "Child or unknown dose",
+          description: "Don't wait — call now.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Exposure unclear, feels well",
+          description: "Still call poison control to triage.",
+        },
+        {
+          symptom: "Mild worry only",
+          description: "Get expert advice before home care.",
+        },
+        {
+          symptom: "Possible contact, no symptoms yet",
+          description: "Some poisons are delayed — call.",
+        },
+      ],
+    },
+  },
 };
 
 export function getQuickAidData(input) {

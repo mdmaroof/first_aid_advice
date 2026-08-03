@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, Info } from "lucide-react";
+import { Phone, Info, FlaskConical } from "lucide-react";
 import { useEmergency } from "@/context/EmergencyContext";
 
 export function EmergencyCTA({ className = "", compact = false }) {
@@ -42,6 +42,42 @@ export function EmergencyCTA({ className = "", compact = false }) {
       />
       {`Call ${display}`}
     </a>
+  );
+}
+
+export function PoisonHotlineCTA({ className = "", compact = false }) {
+  const { poison, loading } = useEmergency();
+
+  if (loading || !poison?.number) return null;
+
+  return (
+    <a
+      href={`tel:${poison.number}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-2xl border border-aid-emergency/30 bg-white/55 font-bold text-aid-emergency backdrop-blur-md transition-colors hover:bg-white/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-emergency ${
+        compact ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm"
+      } ${className}`}
+      aria-label={`Call poison control at ${poison.label}`}
+    >
+      <FlaskConical
+        className={compact ? "h-3.5 w-3.5" : "h-4 w-4"}
+        strokeWidth={2.5}
+        aria-hidden="true"
+      />
+      {compact ? `Poison ${poison.label}` : `Poison control ${poison.label}`}
+    </a>
+  );
+}
+
+export function EmergencyActions({
+  className = "",
+  compact = false,
+  showPoison = false,
+}) {
+  return (
+    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+      <EmergencyCTA compact={compact} />
+      {showPoison ? <PoisonHotlineCTA compact={compact} /> : null}
+    </div>
   );
 }
 
