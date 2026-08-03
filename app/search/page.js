@@ -32,11 +32,11 @@ const SearchPage = () => {
 
   if (!result) {
     return (
-      <main className="page-blobs flex min-h-dvh items-center justify-center bg-aid-page text-aid-muted">
+      <main className="page-blobs flex min-h-dvh items-center justify-center text-aid-muted">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="relative z-10 text-lg"
+          className="safe-content relative z-10 text-lg"
         >
           Loading guidance…
         </motion.p>
@@ -56,15 +56,16 @@ const SearchPage = () => {
   };
 
   return (
-    <main className="page-blobs relative min-h-dvh w-full bg-aid-page text-aid-ink">
+    <main className="page-blobs relative min-h-dvh w-full text-aid-ink">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.45),transparent_35%)]" />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-4 py-4 pb-8 md:px-6 md:py-6 md:pb-10">
+      <div className="safe-content relative z-10 mx-auto max-w-3xl md:px-2 md:py-2">
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="glass sticky top-3 z-20 mb-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:px-5"
+          className="glass sticky z-20 mb-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:px-5"
+          style={{ top: "max(0.75rem, var(--safe-top))" }}
         >
           <motion.button
             type="button"
