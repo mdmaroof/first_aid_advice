@@ -23,6 +23,11 @@
     @apply border border-white/40 bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl;
   }
 
+  .page-blobs{
+    position: relative;
+    overflow: hidden;
+  }
+
   .page-blobs::before,
   .page-blobs::after {
     content: "";
