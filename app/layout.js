@@ -11,6 +11,10 @@ export const metadata = {
     "Fast first-aid guidance from symptoms — not a substitute for emergency care.",
 };
 
+export const viewport = {
+  themeColor: "#ff7b73",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

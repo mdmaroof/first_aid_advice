@@ -1,18 +1,23 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 const ResultsContext = createContext(null);
 
 export function ResultsProvider({ children }) {
   const [result, setResult] = useState(null);
 
-  const clearResult = () => setResult(null);
+  const clearResult = useCallback(() => {
+    setResult(null);
+  }, []);
+
+  const value = useMemo(
+    () => ({ result, setResult, clearResult }),
+    [result, clearResult]
+  );
 
   return (
-    <ResultsContext.Provider value={{ result, setResult, clearResult }}>
-      {children}
-    </ResultsContext.Provider>
+    <ResultsContext.Provider value={value}>{children}</ResultsContext.Provider>
   );
 }
 

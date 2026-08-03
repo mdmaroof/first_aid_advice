@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --aid-coral: #ff7b73;
+  --aid-coral-deep: #e85d55;
+  --aid-ink: #1a1a1a;
+}
+
+.bg-aid-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 255, 255, 0.22), transparent),
+    linear-gradient(165deg, #ff8f88 0%, #ff7b73 42%, #e85d55 100%);
+}
 
 .gridAuto {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
