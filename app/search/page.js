@@ -4,13 +4,12 @@ import { Title } from "@/components/homePage";
 import { EmergencyCTA, MedicalDisclaimer } from "@/components/SafetyBanner";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Activity,
   CheckCircle2,
   Eye,
-  ListChecks,
   Search,
 } from "lucide-react";
 import {
@@ -23,7 +22,6 @@ import {
 const SearchPage = () => {
   const { result, clearResult } = useResults();
   const router = useRouter();
-  const [activeSymptom, setActiveSymptom] = useState(0);
 
   useEffect(() => {
     if (!result) {
@@ -53,8 +51,6 @@ const SearchPage = () => {
     router.push("/");
   };
 
-  const selectedSymptom = symptoms_option?.[activeSymptom];
-
   return (
     <main className="page-blobs relative min-h-dvh w-full bg-aid-page text-aid-ink">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.45),transparent_35%)]" />
@@ -64,7 +60,7 @@ const SearchPage = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="glass sticky top-3 z-20 mb-5 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:mb-6 md:px-5"
+          className="glass sticky top-3 z-20 mb-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:px-5"
         >
           <motion.button
             type="button"
@@ -97,32 +93,27 @@ const SearchPage = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="glass-strong relative overflow-hidden rounded-[1.5rem] px-5 py-5 md:px-6 md:py-5"
+          className="glass-strong rounded-[1.5rem] px-4 py-4 md:px-5"
         >
-          <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-aid-teal">
                 <Activity className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
                 Possible match
               </p>
-              <h1 className="mt-1.5 font-quicksand text-2xl font-bold tracking-tight text-aid-ink md:text-3xl md:leading-tight">
+              <h1 className="mt-1 font-quicksand text-xl font-bold tracking-tight text-aid-ink md:text-2xl">
                 {first_instance?.disease || "Urgent concern"}
               </h1>
             </div>
             {first_instance?.accuracy ? (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.15, duration: 0.3 }}
-                className="glass-soft inline-flex shrink-0 items-center gap-1.5 rounded-2xl px-3 py-1.5 text-sm font-bold text-aid-teal"
-              >
+              <span className="glass-soft inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-bold text-aid-teal md:text-sm">
                 <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
                 {first_instance.accuracy}
-              </motion.span>
+              </span>
             ) : null}
           </div>
           {medical_advice ? (
-            <p className="mt-3 max-w-prose text-sm leading-relaxed text-aid-ink/80 md:text-[0.95rem] md:leading-7">
+            <p className="mt-2.5 text-sm leading-relaxed text-aid-ink/85 md:leading-6">
               {medical_advice}
             </p>
           ) : null}
@@ -135,40 +126,36 @@ const SearchPage = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="glass-strong mt-4 overflow-hidden rounded-[1.5rem] p-3 md:mt-5 md:p-4"
+            className="glass-strong mt-3 rounded-[1.5rem] px-4 py-4 md:px-5"
           >
-            <div className="mb-3 flex items-center justify-between gap-3 px-1">
-              <h2
-                id="help-heading"
-                className="inline-flex items-center gap-2 font-quicksand text-lg font-bold text-aid-ink"
-              >
-                <ListChecks className="h-5 w-5 text-aid-teal" strokeWidth={2.25} aria-hidden="true" />
-                What to do
-              </h2>
-              <span className="text-xs font-medium text-aid-muted">
-                {instant_help.length} steps
-              </span>
-            </div>
-
-            <motion.ol
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-              className="flex flex-col gap-2"
+            <h2
+              id="help-heading"
+              className="mb-3 font-quicksand text-base font-bold text-aid-ink md:text-lg"
             >
-              {instant_help.map((item, index) => (
-                <motion.li key={`${item.step}-${index}`} variants={staggerItem}>
-                  <article className="glass flex gap-3 rounded-[1.15rem] px-3.5 py-3 md:px-4 md:py-3.5">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-aid-teal/10 font-quicksand text-xs font-bold text-aid-teal">
-                      {String(item.step).padStart(2, "0")}
+              First aid steps
+            </h2>
+
+            <ol className="relative space-y-0 border-l-2 border-aid-teal/25 pl-4">
+              {instant_help.map((item, index) => {
+                const isLast = index === instant_help.length - 1;
+                return (
+                  <li
+                    key={`${item.step}-${index}`}
+                    className={`relative ${isLast ? "" : "pb-4"}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[calc(1rem+5px)] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-aid-teal text-[10px] font-bold text-white"
+                    >
+                      {item.step}
                     </span>
-                    <p className="pt-0.5 text-sm leading-relaxed text-aid-ink md:text-[0.95rem] md:leading-6">
+                    <p className="text-sm leading-relaxed text-aid-ink md:text-[0.95rem] md:leading-6">
                       {item.info}
                     </p>
-                  </article>
-                </motion.li>
-              ))}
-            </motion.ol>
+                  </li>
+                );
+              })}
+            </ol>
           </motion.section>
         ) : null}
 
@@ -179,64 +166,35 @@ const SearchPage = () => {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="mt-4 md:mt-5"
+            className="glass-strong mt-3 rounded-[1.5rem] p-3 md:p-4"
           >
-            <div className="mb-3 flex items-center justify-between gap-3 px-1">
-              <h2
-                id="symptoms-heading"
-                className="inline-flex items-center gap-2 font-quicksand text-lg font-bold text-aid-ink"
-              >
-                <Eye className="h-5 w-5 text-aid-teal" strokeWidth={2.25} aria-hidden="true" />
-                Also look for
-              </h2>
-              <span className="text-xs font-medium text-aid-muted">
-                Tap a sign
-              </span>
-            </div>
+            <h2
+              id="symptoms-heading"
+              className="mb-2.5 inline-flex items-center gap-2 px-1 font-quicksand text-base font-bold text-aid-ink md:text-lg"
+            >
+              <Eye className="h-4 w-4 text-aid-teal md:h-5 md:w-5" strokeWidth={2.25} aria-hidden="true" />
+              Also look for
+            </h2>
 
-            <div className="flex flex-wrap gap-2">
-              {symptoms_option.map((item, index) => {
-                const selected = activeSymptom === index;
-                return (
-                  <motion.button
-                    key={`${item.symptom}-${index}`}
-                    type="button"
-                    whileHover={scaleTap.whileHover}
-                    whileTap={scaleTap.whileTap}
-                    transition={scaleTap.transition}
-                    onClick={() => setActiveSymptom(index)}
-                    aria-pressed={selected}
-                    className={`inline-flex items-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal ${
-                      selected
-                        ? "bg-aid-ink text-white"
-                        : "glass-strong text-aid-ink hover:bg-white/60"
-                    }`}
-                  >
-                    {item.symptom}
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            <AnimatePresence mode="wait">
-              {selectedSymptom ? (
-                <motion.div
-                  key={selectedSymptom.symptom}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.22 }}
-                  className="glass-strong mt-3 rounded-[1.25rem] px-4 py-4 md:px-5"
-                >
-                  <p className="font-semibold text-aid-ink">
-                    {selectedSymptom.symptom}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-aid-muted md:text-[0.95rem]">
-                    {selectedSymptom.description}
-                  </p>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="show"
+              className="grid gap-2 sm:grid-cols-2"
+            >
+              {symptoms_option.map((item, index) => (
+                <motion.li key={`${item.symptom}-${index}`} variants={staggerItem}>
+                  <article className="glass h-full rounded-xl px-3 py-2.5">
+                    <p className="text-sm font-semibold text-aid-ink">
+                      {item.symptom}
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-aid-muted md:text-sm">
+                      {item.description}
+                    </p>
+                  </article>
+                </motion.li>
+              ))}
+            </motion.ul>
           </motion.section>
         ) : null}
 
@@ -245,7 +203,7 @@ const SearchPage = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="glass mt-5 flex flex-col gap-4 rounded-[1.5rem] px-5 py-4 md:mt-6 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6"
+          className="glass mt-4 flex flex-col gap-3 rounded-[1.5rem] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5"
         >
           <MedicalDisclaimer className="text-xs md:text-sm" />
           <motion.button

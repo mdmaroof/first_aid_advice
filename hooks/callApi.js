@@ -1,3 +1,5 @@
+import { getQuickAidData } from "@/data/quickAid";
+
 // Flip to false when the DeepSeek API is paid and ready.
 const USE_DEMO_DATA = true;
 
@@ -52,8 +54,12 @@ const getDemoData = (input) => ({
 
 export const callApi = async (input) => {
   try {
+    const quickData = getQuickAidData(input);
+    if (quickData) {
+      return { success: true, error: false, data: quickData };
+    }
+
     if (USE_DEMO_DATA) {
-      // Short delay so the “Searching” state is visible while testing.
       await new Promise((resolve) => setTimeout(resolve, 600));
       return { success: true, error: false, data: getDemoData(input) };
     }

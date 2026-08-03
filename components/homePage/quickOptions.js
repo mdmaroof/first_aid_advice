@@ -11,6 +11,8 @@ import {
   Flame,
   CircleAlert,
   Brain,
+  Dog,
+  Snail,
 } from "lucide-react";
 import { scaleTap, staggerContainer, staggerItem } from "@/hooks/motion";
 
@@ -21,6 +23,8 @@ const QUICK_OPTIONS = [
   { label: "Burn", Icon: Flame },
   { label: "Choking", Icon: CircleAlert },
   { label: "Headache", Icon: Brain },
+  { label: "Dog bite", Icon: Dog },
+  { label: "Snake bite", Icon: Snail },
 ];
 
 export const QuickOptions = ({ step, setStep }) => {
