@@ -39,7 +39,7 @@ function Home() {
           animate="show"
           className="mt-5 max-w-md text-center text-base text-aid-ink/75 md:text-lg"
         >
-          Describe symptoms and get clear first-aid steps you can act on now.
+          Type symptoms. Get clear steps you can act on now.
         </motion.p>
 
         <QuickOptions step={step} setStep={setStep} />

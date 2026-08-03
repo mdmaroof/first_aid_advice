@@ -8,60 +8,53 @@ const getDemoData = (input) => ({
     disease: `Assessment needed for “${input}”`,
     accuracy: "Guidance",
   },
-  medical_advice: `You described “${input}”. This app cannot diagnose you. If symptoms are sudden, severe, or getting worse — especially chest pain, trouble breathing, confusion, heavy bleeding, or loss of consciousness — call emergency services now. Otherwise, rest in a safe place, avoid alcohol and un-prescribed drugs, and contact a doctor or nurse for advice today.`,
+  medical_advice:
+    "Sudden severe symptoms? Call emergency. Otherwise rest and get advice today.",
   instant_help: [
-    {
-      step: 1,
-      info: "Check the scene is safe. Ask the person their name; if they respond, note level of alertness, breathing, and whether they can move all limbs normally.",
-    },
-    {
-      step: 2,
-      info: "Help them sit or lie in the most comfortable position for their symptoms — upright if breathless, flat if faint (unless vomiting, then on their side).",
-    },
-    {
-      step: 3,
-      info: "Call emergency services if you see red flags: chest pain, severe breathlessness, stroke signs (face droop, arm weakness, speech difficulty), heavy bleeding, seizure, or sudden confusion.",
-    },
+    { step: 1, info: "Check the scene is safe." },
+    { step: 2, info: "Note alertness, breathing, and movement." },
+    { step: 3, info: "Sit or lie them in the most comfortable position." },
     {
       step: 4,
-      info: "Record when symptoms started, what triggered them, current medications, allergies, and relevant medical history — clinicians will need this.",
+      info: "Chest pain, heavy bleed, or confusion? Call emergency.",
     },
-    {
-      step: 5,
-      info: "Do not give food, drink, or medication (including aspirin) unless a clinician or emergency operator tells you to — some conditions worsen with the wrong treatment.",
-    },
-    {
-      step: 6,
-      info: "Stay with them, keep them warm, and recheck breathing and responsiveness every few minutes until help arrives or symptoms clearly improve.",
-    },
+    { step: 5, info: "No food, drink, or unprescribed meds unless told." },
+    { step: 6, info: "Stay with them. Recheck breathing often." },
   ],
-  symptoms_option: [
-    {
-      symptom: "Worsening over minutes",
-      description:
-        "Rapidly increasing pain, breathlessness, or weakness — treat as urgent and call for help.",
-    },
-    {
-      symptom: "Difficulty breathing",
-      description:
-        "Shortness of breath at rest, unable to speak full sentences, or lips turning blue — emergency.",
-    },
-    {
-      symptom: "Chest pain or pressure",
-      description:
-        "Squeezing chest pain, especially with sweat, nausea, or pain into arm or jaw — call emergency services.",
-    },
-    {
-      symptom: "Confusion or drowsiness",
-      description:
-        "Hard to wake, slurred speech, or not making sense — may signal serious illness or injury.",
-    },
-    {
-      symptom: "Fever with stiff neck",
-      description:
-        "Headache with high fever and neck stiffness — possible meningitis; seek urgent hospital care.",
-    },
-  ],
+  symptoms_option: {
+    critical: [
+      {
+        symptom: "Getting worse fast",
+        description: "Minutes matter — call now.",
+      },
+      {
+        symptom: "Trouble breathing",
+        description: "Can't speak full sentences — emergency.",
+      },
+      {
+        symptom: "Chest pain or pressure",
+        description: "With sweat or nausea — call now.",
+      },
+      {
+        symptom: "Confusion or hard to wake",
+        description: "Treat as urgent.",
+      },
+    ],
+    basic: [
+      {
+        symptom: "Mild, steady discomfort",
+        description: "Rest. Recheck in 30 minutes.",
+      },
+      {
+        symptom: "Familiar mild symptoms",
+        description: "Hydrate and rest. Seek advice if unsure.",
+      },
+      {
+        symptom: "Improving with rest",
+        description: "Keep watching. Escalate if it returns.",
+      },
+    ],
+  },
 });
 
 export const callApi = async (input) => {

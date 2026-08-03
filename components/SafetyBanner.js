@@ -40,10 +40,9 @@ export function MedicalDisclaimer({ className = "" }) {
         strokeWidth={2.25}
         aria-hidden="true"
       />
-      <span className="text-justify">
-        SnapAid provides general first-aid guidance only. It is not a diagnosis
-        or a substitute for professional medical care. If someone is in danger,
-        call emergency services immediately.
+      <span>
+        General first-aid only — not a diagnosis. In danger? Call emergency
+        services now.
       </span>
     </p>
   );

@@ -48,7 +48,7 @@ export function FirstAidSteps({ steps }) {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aid-teal/10 font-quicksand text-sm font-bold text-aid-teal">
                 {item.step}
               </span>
-              <p className="text-sm leading-relaxed text-aid-ink md:leading-6">
+              <p className="text-sm font-medium leading-snug text-aid-ink md:text-[0.95rem]">
                 {item.info}
               </p>
             </article>
