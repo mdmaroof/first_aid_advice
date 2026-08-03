@@ -5,6 +5,16 @@ import { EmergencyCTA, MedicalDisclaimer } from "@/components/SafetyBanner";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 12 },
+  show: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.04 * i, duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 const SearchPage = () => {
   const { result, clearResult } = useResults();
@@ -34,102 +44,154 @@ const SearchPage = () => {
 
   return (
     <main className="page-blobs relative min-h-dvh w-full bg-aid-page text-aid-ink">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.4),transparent_35%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.45),transparent_35%)]" />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-4 py-4 md:px-6 md:py-6">
-        <header className="glass sticky top-3 z-20 mb-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:mb-5 md:px-5">
-          <Title compact />
+      <div className="relative z-10 mx-auto max-w-3xl px-4 py-4 pb-8 md:px-6 md:py-6 md:pb-10">
+        <motion.header
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="glass sticky top-3 z-20 mb-5 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 md:mb-6 md:px-5"
+        >
+          <button
+            type="button"
+            onClick={handleNewSearch}
+            className="rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal"
+            aria-label="Back to SnapAid home"
+          >
+            <Title compact />
+          </button>
           <div className="flex items-center gap-2">
             <EmergencyCTA compact />
             <button
               type="button"
               onClick={handleNewSearch}
-              className="glass-soft rounded-2xl px-3 py-2 text-xs font-semibold text-aid-ink transition-[background-color] hover:bg-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal md:text-sm"
+              className="glass-soft rounded-2xl px-3 py-2 text-xs font-semibold text-aid-ink transition-[background-color,transform] hover:bg-white/45 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal md:text-sm"
             >
               New search
             </button>
           </div>
-        </header>
+        </motion.header>
 
-        <section className="glass-strong rounded-[1.5rem] px-5 py-5 md:px-6">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h1 className="font-quicksand text-2xl font-bold tracking-tight text-aid-ink md:text-3xl">
-              {first_instance?.disease || "Urgent concern"}
-            </h1>
+        <motion.section
+          custom={0}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="glass-strong relative overflow-hidden rounded-[1.5rem] px-5 py-5 md:px-6 md:py-6"
+        >
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-0 left-0 w-1 bg-aid-teal/70"
+          />
+          <div className="flex flex-wrap items-start justify-between gap-3 pl-2">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-aid-teal">Possible match</p>
+              <h1 className="mt-1 font-quicksand text-2xl font-bold tracking-tight text-aid-ink md:text-[1.85rem] md:leading-tight">
+                {first_instance?.disease || "Urgent concern"}
+              </h1>
+            </div>
             {first_instance?.accuracy ? (
-              <span className="text-sm font-semibold text-aid-teal">
+              <span className="glass-soft shrink-0 rounded-xl px-3 py-1.5 text-sm font-bold text-aid-teal">
                 {first_instance.accuracy}
               </span>
             ) : null}
           </div>
           {medical_advice ? (
-            <p className="mt-3 text-sm leading-relaxed text-aid-ink/80 md:text-base">
+            <p className="mt-4 max-w-prose pl-2 text-sm leading-relaxed text-aid-ink/80 md:text-[0.95rem] md:leading-7">
               {medical_advice}
             </p>
           ) : null}
-        </section>
+        </motion.section>
 
         {instant_help?.length > 0 ? (
-          <section aria-labelledby="help-heading" className="mt-4 md:mt-5">
-            <h2
-              id="help-heading"
-              className="mb-3 px-1 font-quicksand text-base font-bold text-aid-ink md:text-lg"
-            >
-              What to do
-            </h2>
-            <ol className="flex flex-col gap-2.5">
+          <section aria-labelledby="help-heading" className="mt-6">
+            <div className="mb-3 flex items-end justify-between gap-3 px-1">
+              <h2
+                id="help-heading"
+                className="font-quicksand text-lg font-bold text-aid-ink"
+              >
+                What to do
+              </h2>
+              <span className="text-xs font-medium text-aid-muted">
+                {instant_help.length} steps
+              </span>
+            </div>
+            <ol className="relative flex flex-col gap-2.5">
               {instant_help.map((item, index) => (
-                <li key={`${item.step}-${index}`}>
-                  <article className="glass-strong flex gap-3 rounded-[1.25rem] px-4 py-3.5 md:px-5">
-                    <span className="font-quicksand text-sm font-bold text-aid-teal">
+                <motion.li
+                  key={`${item.step}-${index}`}
+                  custom={index + 1}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="show"
+                >
+                  <article className="glass-strong group flex gap-3.5 rounded-[1.25rem] px-4 py-3.5 transition-[background-color,border-color] hover:border-white/80 hover:bg-white/60 md:px-5 md:py-4">
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aid-teal/10 font-quicksand text-xs font-bold text-aid-teal"
+                      aria-hidden="true"
+                    >
                       {String(item.step).padStart(2, "0")}
                     </span>
-                    <p className="text-sm leading-relaxed text-aid-ink md:text-base">
+                    <p className="pt-1 text-sm leading-relaxed text-aid-ink md:text-base md:leading-7">
                       {item.info}
                     </p>
                   </article>
-                </li>
+                </motion.li>
               ))}
             </ol>
           </section>
         ) : null}
 
         {symptoms_option?.length > 0 ? (
-          <section aria-labelledby="symptoms-heading" className="mt-4 md:mt-5">
-            <h2
-              id="symptoms-heading"
-              className="mb-3 px-1 font-quicksand text-base font-bold text-aid-ink md:text-lg"
-            >
-              Also look for
-            </h2>
+          <section aria-labelledby="symptoms-heading" className="mt-6">
+            <div className="mb-3 flex items-end justify-between gap-3 px-1">
+              <h2
+                id="symptoms-heading"
+                className="font-quicksand text-lg font-bold text-aid-ink"
+              >
+                Also look for
+              </h2>
+              <span className="text-xs font-medium text-aid-muted">
+                Related signs
+              </span>
+            </div>
             <div className="grid gap-2.5 sm:grid-cols-2">
               {symptoms_option.map((item, index) => (
-                <article
+                <motion.article
                   key={`${item.symptom}-${index}`}
-                  className="glass-strong rounded-[1.25rem] px-4 py-3.5"
+                  custom={index + 1}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="show"
+                  className="glass-strong rounded-[1.25rem] px-4 py-3.5 transition-[background-color,border-color] hover:border-white/80 hover:bg-white/60 md:px-5"
                 >
-                  <h3 className="text-sm font-semibold text-aid-ink md:text-base">
-                    {item.symptom}
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-aid-muted">
+                  <h3 className="font-semibold text-aid-ink">{item.symptom}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-aid-muted">
                     {item.description}
                   </p>
-                </article>
+                </motion.article>
               ))}
             </div>
           </section>
         ) : null}
 
-        <footer className="mt-5 flex flex-col gap-3 border-t border-white/40 pt-5 md:mt-6 md:flex-row md:items-center md:justify-between">
+        <motion.footer
+          custom={6}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="glass mt-6 flex flex-col gap-4 rounded-[1.5rem] px-5 py-4 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6"
+        >
           <MedicalDisclaimer className="text-xs md:text-sm" />
           <button
             type="button"
             onClick={handleNewSearch}
-            className="w-fit shrink-0 rounded-2xl bg-aid-ink px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-aid-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
+            className="w-fit shrink-0 rounded-2xl bg-aid-ink px-4 py-2.5 text-sm font-bold text-white transition-[transform,background-color] hover:bg-aid-ink/90 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
           >
             Search new symptoms
           </button>
-        </footer>
+        </motion.footer>
       </div>
     </main>
   );
