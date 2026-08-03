@@ -33,14 +33,14 @@ export function MedicalDisclaimer({ className = "" }) {
   return (
     <p
       role="note"
-      className={`flex max-w-2xl items-start gap-2 text-sm leading-relaxed text-aid-muted ${className}`}
+      className={`flex gap-2 items-start text-sm leading-relaxed text-aid-muted ${className}`}
     >
       <Info
-        className="mt-0.5 h-4 w-4 shrink-0 text-aid-teal"
+        className="shrink-0 text-aid-teal"
         strokeWidth={2.25}
         aria-hidden="true"
       />
-      <span>
+      <span className="text-justify">
         SnapAid provides general first-aid guidance only. It is not a diagnosis
         or a substitute for professional medical care. If someone is in danger,
         call emergency services immediately.

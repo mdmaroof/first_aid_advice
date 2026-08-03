@@ -1,7 +1,7 @@
 import { getQuickAidData } from "@/data/quickAid";
 
 // Flip to false when the DeepSeek API is paid and ready.
-const USE_DEMO_DATA = true;
+const USE_DEMO_DATA = false;
 
 const getDemoData = (input) => ({
   first_instance: {

@@ -52,7 +52,7 @@ function Home() {
           animate="show"
           className="mt-10 text-center"
         >
-          <MedicalDisclaimer className="mx-auto justify-center" />
+          <MedicalDisclaimer className="mx-auto text-center" />
         </motion.div>
       </motion.div>
     </main>
