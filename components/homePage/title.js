@@ -1,32 +1,26 @@
 export const Title = ({
-  size = "w-[148px] h-[148px] md:w-[200px] md:h-[200px]",
+  size = "w-[150px] h-[150px] md:w-[190px] md:h-[190px]",
   textSize = "text-2xl md:text-4xl",
   compact = false,
 }) => {
   if (compact) {
     return (
-      <div className="flex items-center gap-2.5" aria-label="SnapAid">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-aid-teal text-sm font-bold text-white">
-          SA
-        </span>
-        <span className="font-quicksand text-xl font-bold tracking-tight text-aid-ink">
-          SnapAid
-        </span>
-      </div>
+      <p
+        className="font-quicksand text-xl font-bold tracking-tight text-aid-ink"
+        aria-label="SnapAid"
+      >
+        SnapAid
+      </p>
     );
   }
 
   return (
     <div
-      className={`relative flex items-center justify-center overflow-hidden rounded-[2rem] bg-white ring-1 ring-aid-line ${size}`}
+      className={`glass-strong relative flex items-center justify-center overflow-hidden rounded-[2rem] ${size}`}
       aria-label="SnapAid"
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(20,145,155,0.16),transparent_55%)]"
-      />
       <p
-        className={`relative font-quicksand font-bold tracking-tight text-aid-teal ${textSize}`}
+        className={`relative font-quicksand font-bold tracking-tight text-aid-ink ${textSize}`}
       >
         SnapAid
       </p>

@@ -24,7 +24,7 @@ const ButtonComponent = ({
       onClick={onClick}
       disabled={disabled}
       aria-busy={search || undefined}
-      className="relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-aid-teal px-8 py-3.5 text-lg font-bold text-white transition-colors hover:bg-aid-teal-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-wait"
+      className="glass-strong relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-lg font-bold text-aid-ink transition-[background-color] hover:bg-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-wait"
     >
       {text}
       {search ? <span className="loader ml-1" aria-hidden="true" /> : null}
@@ -45,7 +45,7 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-[1fr_auto] overflow-hidden rounded-xl border border-aid-line bg-white focus-within:border-aid-teal"
+        className="glass-strong grid grid-cols-[1fr_auto] overflow-hidden rounded-2xl focus-within:border-white/80"
       >
         <label htmlFor="symptom-input" className="sr-only">
           Describe your symptoms
@@ -60,7 +60,7 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
         />
         <button
           type="submit"
-          className="bg-aid-teal px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-teal-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal"
+          className="bg-aid-ink/90 px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
         >
           Search
         </button>
@@ -97,7 +97,7 @@ export const SearchInput = ({ step, setStep }) => {
   };
 
   return (
-    <div className="mt-8 flex w-full items-center justify-center md:mt-10">
+    <div className="mt-8 flex w-full items-center justify-center md:mt-9">
       <AnimatePresence mode="wait">
         {step === "step1" ? (
           <ButtonComponent
@@ -116,12 +116,7 @@ export const SearchInput = ({ step, setStep }) => {
           />
         ) : null}
         {step === "step3" ? (
-          <ButtonComponent
-            key="step3"
-            text="Searching"
-            search
-            disabled
-          />
+          <ButtonComponent key="step3" text="Searching" search disabled />
         ) : null}
       </AnimatePresence>
     </div>

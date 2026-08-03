@@ -3,13 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --aid-ink: #14242a;
-  --aid-muted: #5b6f76;
-  --aid-teal: #0d7377;
-  --aid-seafoam: #14919b;
+  --aid-ink: #122026;
+  --aid-muted: #4f646c;
+  --aid-teal: #0a6b6f;
+  --aid-seafoam: #1a8f98;
   --aid-emergency: #b42318;
-  --aid-line: #d5e2e6;
-  --aid-mist: #eef5f6;
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/55 bg-white/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] backdrop-blur-2xl;
+  }
+
+  .glass-strong {
+    @apply border border-white/60 bg-white/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] backdrop-blur-3xl;
+  }
+
+  .glass-soft {
+    @apply border border-white/40 bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl;
+  }
+
+  .page-blobs::before,
+  .page-blobs::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-blobs::before {
+    width: min(70vw, 520px);
+    height: min(70vw, 520px);
+    top: -12%;
+    left: -8%;
+    background: rgba(26, 143, 152, 0.35);
+  }
+
+  .page-blobs::after {
+    width: min(65vw, 460px);
+    height: min(65vw, 460px);
+    right: -10%;
+    bottom: 8%;
+    background: rgba(10, 107, 111, 0.28);
+  }
 }
 
 .loader {

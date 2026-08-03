@@ -15,15 +15,17 @@ function Home() {
   }, [clearResult]);
 
   return (
-    <main className="relative flex min-h-dvh w-full flex-col items-center justify-center overflow-y-auto bg-aid-page px-4 py-10 text-aid-ink">
-      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center animate-fade-up">
+    <main className="page-blobs relative flex min-h-dvh w-full flex-col items-center justify-center overflow-y-auto bg-aid-page px-4 py-10 text-aid-ink">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.45),transparent_40%)]" />
+
+      <div className="relative z-10 flex w-full max-w-2xl flex-col items-center">
         <div className="mb-6">
           <EmergencyCTA />
         </div>
 
         <Title />
 
-        <p className="mt-5 max-w-md text-center text-base text-aid-muted md:text-lg">
+        <p className="mt-5 max-w-md text-center text-base text-aid-ink/75 md:text-lg">
           Describe symptoms and get clear first-aid steps you can act on now.
         </p>
 
