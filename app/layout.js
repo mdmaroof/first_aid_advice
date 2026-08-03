@@ -1,20 +1,24 @@
 import { Mulish, Quicksand } from "next/font/google";
+import { Providers } from "@/components/Providers";
 import "./globals.css";
 
-const fontTwo = Quicksand({ subsets: ["latin"], variable: '--font-quicksand', });
-const fontOne = Mulish({ subsets: ["latin"], variable: '--font-mulish' });
-
+const fontTwo = Quicksand({ subsets: ["latin"], variable: "--font-quicksand" });
+const fontOne = Mulish({ subsets: ["latin"], variable: "--font-mulish" });
 
 export const metadata = {
   title: "SnapAid",
-  description: "Generate first aid help using chatgpt",
+  description:
+    "Fast first-aid guidance from symptoms — not a substitute for emergency care.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <meta name="theme-color" content="#ff7b73"></meta>
-      <body className={`${fontOne.variable} ${fontTwo.variable} ${fontOne.className}`}>{children}</body>
+      <body
+        className={`${fontOne.variable} ${fontTwo.variable} ${fontOne.className}`}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

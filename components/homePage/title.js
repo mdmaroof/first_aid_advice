@@ -1,7 +1,15 @@
-export const Title = ({ size = "w-[175px] h-[175px] md:w-[250px] md:h-[250px]", textSize = "text-2xl md:text-5xl" }) => {
-    return (
-        <div className={`flex justify-center items-center bg-white ${size} rounded-full`} >
-            <div className={`${textSize} font-quicksand text-[#ff7b73]`}>SnapAid</div>
-        </div>
-    )
-}
+export const Title = ({
+  size = "w-[160px] h-[160px] md:w-[220px] md:h-[220px]",
+  textSize = "text-2xl md:text-5xl",
+}) => {
+  return (
+    <div
+      className={`flex items-center justify-center rounded-full bg-white shadow-[0_12px_40px_rgba(0,0,0,0.12)] ${size}`}
+      aria-label="SnapAid"
+    >
+      <p className={`font-quicksand font-bold tracking-tight text-[#ff7b73] ${textSize}`}>
+        SnapAid
+      </p>
+    </div>
+  );
+};
