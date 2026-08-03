@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import {
+  clampSymptomInput,
+  MAX_SYMPTOM_LENGTH,
+  normalizeAidResult,
+} from "@/lib/aidResult";
+import { getClientIp, rateLimit } from "@/lib/rateLimit";
 
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
@@ -8,12 +14,41 @@ const client = new OpenAI({
 
 export async function POST(req) {
   try {
-    const { data } = await req.json();
+    const ip = getClientIp(req);
+    const limited = rateLimit(`aid:${ip}`, { limit: 12, windowMs: 60_000 });
+    if (!limited.ok) {
+      return NextResponse.json(
+        {
+          error: `Too many requests. Try again in ${limited.retryAfterSec}s.`,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limited.retryAfterSec) },
+        }
+      );
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const data = clampSymptomInput(body?.data);
 
     if (!data) {
       return NextResponse.json(
         { error: "Symptoms are required" },
         { status: 400 }
+      );
+    }
+
+    if (String(body?.data ?? "").trim().length > MAX_SYMPTOM_LENGTH) {
+      return NextResponse.json(
+        { error: `Keep symptoms under ${MAX_SYMPTOM_LENGTH} characters.` },
+        { status: 400 }
+      );
+    }
+
+    if (!process.env.DEEPSEEK_API_KEY) {
+      return NextResponse.json(
+        { error: "Guidance service is temporarily unavailable." },
+        { status: 503 }
       );
     }
 
@@ -86,13 +121,30 @@ Include 5–7 instant_help steps, 3–4 critical symptoms, and 2–3 basic sympt
     const text = completion.choices[0].message.content;
     if (!text) {
       return NextResponse.json(
-        {
-          error: "No response from the model",
-        },
-        { status: 400 }
+        { error: "No response from the model" },
+        { status: 502 }
       );
     }
-    return NextResponse.json(JSON.parse(text));
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid guidance response. Please try again." },
+        { status: 502 }
+      );
+    }
+
+    const normalized = normalizeAidResult(parsed);
+    if (!normalized) {
+      return NextResponse.json(
+        { error: "Incomplete guidance response. Please try again." },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json(normalized);
   } catch (err) {
     return NextResponse.json(
       {

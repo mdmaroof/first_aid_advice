@@ -156,3 +156,15 @@
     box-shadow: 0.2em -0.2em 0 0 currentcolor;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-blobs::before,
+  .page-blobs::after {
+    animation: none !important;
+  }
+
+  .loader:before,
+  .loader:after {
+    animation: none !important;
+  }
+}

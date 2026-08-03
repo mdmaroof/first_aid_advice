@@ -12,7 +12,7 @@ import {
   CircleAlert,
   Brain,
   Dog,
-  Snail,
+  Worm,
 } from "lucide-react";
 import { scaleTap, staggerContainer, staggerItem } from "@/hooks/motion";
 
@@ -24,10 +24,10 @@ const QUICK_OPTIONS = [
   { label: "Choking", Icon: CircleAlert },
   { label: "Headache", Icon: Brain },
   { label: "Dog bite", Icon: Dog },
-  { label: "Snake bite", Icon: Snail },
+  { label: "Snake bite", Icon: Worm },
 ];
 
-export const QuickOptions = ({ step, setStep }) => {
+export const QuickOptions = ({ step, setStep, setError }) => {
   const router = useRouter();
   const { setResult } = useResults();
   const isSearching = step === "step3";
@@ -35,10 +35,12 @@ export const QuickOptions = ({ step, setStep }) => {
   const callData = async (data) => {
     if (isSearching) return;
 
+    setError?.(null);
     setStep("step3");
     const res = await callApi(data);
 
     if (res.error) {
+      setError?.(res.message || "Something went wrong. Please try again.");
       setStep("step1");
       return;
     }

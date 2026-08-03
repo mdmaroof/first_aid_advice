@@ -7,8 +7,6 @@ import { fadeUp, staggerContainer, staggerItem } from "@/hooks/motion";
 export function FirstAidSteps({ steps }) {
   if (!steps?.length) return null;
 
-  const lastSpansFull = steps.length % 2 !== 0;
-
   return (
     <motion.section
       aria-labelledby="help-heading"
@@ -34,17 +32,11 @@ export function FirstAidSteps({ steps }) {
         variants={staggerContainer}
         initial="hidden"
         animate="show"
-        className="grid gap-2 sm:grid-cols-2"
+        className="grid gap-2"
       >
         {steps.map((item, index) => (
-          <motion.li
-            key={`${item.step}-${index}`}
-            variants={staggerItem}
-            className={
-              lastSpansFull && index === steps.length - 1 ? "sm:col-span-2" : ""
-            }
-          >
-            <article className="glass flex h-full gap-3 rounded-xl px-3 py-3 items-center">
+          <motion.li key={`${item.step}-${index}`} variants={staggerItem}>
+            <article className="glass flex gap-3 rounded-xl px-3 py-3">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aid-teal/10 font-quicksand text-sm font-bold text-aid-teal">
                 {item.step}
               </span>

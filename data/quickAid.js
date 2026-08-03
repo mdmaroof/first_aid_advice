@@ -11,7 +11,7 @@ export const QUICK_AID_DATA = {
       { step: 2, info: "Loosen tight clothes at neck and chest." },
       {
         step: 3,
-        info: "If alert and allowed: chew one adult aspirin (160–325 mg).",
+        info: "If alert, adult, no allergy/bleed risk: chew one aspirin.",
       },
       {
         step: 4,

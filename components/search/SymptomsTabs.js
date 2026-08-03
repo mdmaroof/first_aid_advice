@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { AlertTriangle, HeartHandshake } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, staggerContainer, staggerItem } from "@/hooks/motion";
+import { normalizeSymptoms } from "@/lib/aidResult";
 
 const TABS = [
   {
@@ -22,37 +23,56 @@ const TABS = [
   },
 ];
 
-export function normalizeSymptoms(symptomsOption) {
-  if (!symptomsOption) {
-    return { critical: [], basic: [] };
-  }
-
-  if (Array.isArray(symptomsOption)) {
-    return { critical: symptomsOption, basic: [] };
-  }
-
-  return {
-    critical: symptomsOption.critical ?? [],
-    basic: symptomsOption.basic ?? symptomsOption.not_serious ?? [],
-  };
-}
-
 export function SymptomsTabs({ symptomsOption }) {
+  const baseId = useId();
   const symptoms = normalizeSymptoms(symptomsOption);
   const hasAny = symptoms.critical.length > 0 || symptoms.basic.length > 0;
-  const defaultTab =
-    symptoms.critical.length > 0 ? "critical" : "basic";
+  const defaultTab = symptoms.critical.length > 0 ? "critical" : "basic";
   const [active, setActive] = useState(defaultTab);
+  const tabRefs = useRef({});
+
+  useEffect(() => {
+    setActive(defaultTab);
+  }, [defaultTab, symptomsOption]);
 
   if (!hasAny) return null;
 
+  const enabledTabs = TABS.filter((tab) => (symptoms[tab.id]?.length ?? 0) > 0);
   const items = symptoms[active] ?? [];
-  const lastSpansFull = items.length % 2 !== 0;
   const activeTab = TABS.find((tab) => tab.id === active) ?? TABS[0];
+
+  const focusTab = (id) => {
+    setActive(id);
+    requestAnimationFrame(() => {
+      tabRefs.current[id]?.focus();
+    });
+  };
+
+  const onTabKeyDown = (event, id) => {
+    const index = enabledTabs.findIndex((tab) => tab.id === id);
+    if (index < 0 || enabledTabs.length === 0) return;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      const next = enabledTabs[(index + 1) % enabledTabs.length];
+      focusTab(next.id);
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const prev =
+        enabledTabs[(index - 1 + enabledTabs.length) % enabledTabs.length];
+      focusTab(prev.id);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      focusTab(enabledTabs[0].id);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      focusTab(enabledTabs[enabledTabs.length - 1].id);
+    }
+  };
 
   return (
     <motion.section
-      aria-labelledby="symptoms-heading"
+      aria-labelledby={`${baseId}-heading`}
       custom={2}
       variants={fadeUp}
       initial="hidden"
@@ -60,7 +80,7 @@ export function SymptomsTabs({ symptomsOption }) {
       className="glass-strong mt-3 rounded-[1.5rem] p-3 md:p-4"
     >
       <h2
-        id="symptoms-heading"
+        id={`${baseId}-heading`}
         className="mb-2.5 px-1 font-quicksand text-base font-bold text-aid-ink md:text-lg"
       >
         Watch for
@@ -74,6 +94,7 @@ export function SymptomsTabs({ symptomsOption }) {
         {TABS.map(({ id, label, hint, Icon }) => {
           const isActive = active === id;
           const count = symptoms[id]?.length ?? 0;
+          const disabled = count === 0;
           const isCritical = id === "critical";
 
           return (
@@ -81,11 +102,16 @@ export function SymptomsTabs({ symptomsOption }) {
               key={id}
               type="button"
               role="tab"
-              id={`tab-${id}`}
+              id={`${baseId}-tab-${id}`}
+              ref={(node) => {
+                tabRefs.current[id] = node;
+              }}
               aria-selected={isActive}
-              aria-controls={`panel-${id}`}
-              disabled={count === 0}
+              aria-controls={`${baseId}-panel-${id}`}
+              tabIndex={isActive ? 0 : -1}
+              disabled={disabled}
               onClick={() => setActive(id)}
+              onKeyDown={(event) => onTabKeyDown(event, id)}
               className={`inline-flex items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-sm font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40 ${
                 isActive
                   ? isCritical
@@ -94,7 +120,11 @@ export function SymptomsTabs({ symptomsOption }) {
                   : "text-aid-ink/80 hover:bg-white/40 focus-visible:outline-aid-teal"
               }`}
             >
-              <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden="true" />
+              <Icon
+                className="h-3.5 w-3.5 shrink-0"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              />
               <span className="leading-tight">
                 {label}
                 <span className="mt-0.5 block text-[10px] font-semibold opacity-80 md:hidden">
@@ -113,8 +143,9 @@ export function SymptomsTabs({ symptomsOption }) {
         <motion.div
           key={active}
           role="tabpanel"
-          id={`panel-${active}`}
-          aria-labelledby={`tab-${active}`}
+          id={`${baseId}-panel-${active}`}
+          aria-labelledby={`${baseId}-tab-${active}`}
+          tabIndex={0}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
@@ -134,7 +165,7 @@ export function SymptomsTabs({ symptomsOption }) {
                   key={`${item.symptom}-${index}`}
                   variants={staggerItem}
                   className={
-                    lastSpansFull && index === items.length - 1
+                    items.length % 2 !== 0 && index === items.length - 1
                       ? "sm:col-span-2"
                       : ""
                   }

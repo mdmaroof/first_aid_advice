@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SnapAid
 
-## Getting Started
+Instant first-aid guidance. Describe symptoms (or tap a common emergency) and get clear, step-by-step actions — plus a one-tap call to local emergency services.
 
-First, run the development server:
+**Live:** [https://www.snapaid.live](https://www.snapaid.live)
+
+> SnapAid provides general first-aid guidance only. It is not a diagnosis or a substitute for professional medical care.
+
+## Stack
+
+- Next.js App Router
+- Tailwind CSS
+- Framer Motion
+- DeepSeek (via OpenAI-compatible API) for free-text symptom guidance
+- Curated quick-aid responses for common emergencies (no API needed)
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # if present — or create .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| Variable | Purpose |
+| --- | --- |
+| `DEEPSEEK_API_KEY` | Server-side key for `/api` guidance |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (optional; defaults to snapaid.live / Vercel URL) |
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev    # local development
+npm run build  # production build
+npm run start  # run production build
+npm run lint   # ESLint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Quick options (heart pain, bleeding, choking, …) are served from local data.
+- Free-text searches call `/api` and are rate-limited.
+- Results are kept in `sessionStorage` so a refresh on `/search` does not lose guidance.

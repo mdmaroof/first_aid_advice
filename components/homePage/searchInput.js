@@ -7,6 +7,8 @@ import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
 import { Keyboard, Search } from "lucide-react";
 import { easeOut, scaleTap } from "@/hooks/motion";
+import { InlineError } from "@/components/InlineStatus";
+import { MAX_SYMPTOM_LENGTH } from "@/lib/aidResult";
 
 const ButtonComponent = ({
   text,
@@ -40,66 +42,80 @@ const ButtonComponent = ({
   );
 };
 
-const InputSearchBox = ({ onSubmit, input, setInput }) => {
+const InputSearchBox = ({ onSubmit, input, setInput, error }) => {
   return (
-    <motion.form
+    <motion.div
       layout
       initial={{ opacity: 0, scale: 0.96, y: 8 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96, y: -6 }}
       transition={{ duration: 0.28, ease: easeOut }}
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSubmit();
-      }}
-      className="w-full max-w-md"
+      className="flex w-full max-w-md flex-col items-center"
     >
-      <div className="glass-strong grid grid-cols-[auto_1fr_auto] items-center overflow-hidden rounded-2xl focus-within:border-white/80">
-        <span className="pl-4 text-aid-teal" aria-hidden="true">
-          <Search className="h-4 w-4" strokeWidth={2.25} />
-        </span>
-        <label htmlFor="symptom-input" className="sr-only">
-          Describe your symptoms
-        </label>
-        <input
-          id="symptom-input"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="e.g. sharp chest pain"
-          autoComplete="off"
-          className="bg-transparent px-3 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
-        />
-        <motion.button
-          type="submit"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="bg-aid-ink/90 px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
-        >
-          Search
-        </motion.button>
-      </div>
-    </motion.form>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit();
+        }}
+        className="w-full"
+      >
+        <div className="glass-strong grid grid-cols-[auto_1fr_auto] items-center overflow-hidden rounded-2xl focus-within:border-white/80">
+          <span className="pl-4 text-aid-teal" aria-hidden="true">
+            <Search className="h-4 w-4" strokeWidth={2.25} />
+          </span>
+          <label htmlFor="symptom-input" className="sr-only">
+            Describe your symptoms
+          </label>
+          <input
+            id="symptom-input"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="e.g. sharp chest pain"
+            autoComplete="off"
+            maxLength={MAX_SYMPTOM_LENGTH}
+            aria-invalid={Boolean(error) || undefined}
+            aria-describedby={error ? "symptom-error" : undefined}
+            className="bg-transparent px-3 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
+          />
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="bg-aid-ink/90 px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
+          >
+            Search
+          </motion.button>
+        </div>
+      </form>
+      <InlineError message={error} id="symptom-error" className="w-full" />
+    </motion.div>
   );
 };
 
-export const SearchInput = ({ step, setStep }) => {
+export const SearchInput = ({ step, setStep, error, setError }) => {
   const [input, setInput] = useState("");
   const router = useRouter();
   const { setResult } = useResults();
 
   const stepMarker = async () => {
     if (step === "step1") {
+      setError?.(null);
       setStep("step2");
       return;
     }
 
     if (step === "step2") {
-      if (!input.trim()) return;
+      if (!input.trim()) {
+        setError?.("Type a symptom first.");
+        return;
+      }
 
+      setError?.(null);
       setStep("step3");
       const res = await callApi(input.trim());
 
       if (res.error) {
+        setError?.(res.message || "Something went wrong. Please try again.");
         setStep("step2");
         return;
       }
@@ -110,7 +126,7 @@ export const SearchInput = ({ step, setStep }) => {
   };
 
   return (
-    <div className="mt-8 flex w-full items-center justify-center md:mt-9">
+    <div className="mt-8 flex w-full flex-col items-center justify-center md:mt-9">
       <AnimatePresence mode="wait">
         {step === "step1" ? (
           <ButtonComponent
@@ -124,14 +140,19 @@ export const SearchInput = ({ step, setStep }) => {
           <InputSearchBox
             key="step2"
             input={input}
-            setInput={setInput}
+            setInput={(value) => {
+              setInput(value);
+              if (error) setError?.(null);
+            }}
             onSubmit={stepMarker}
+            error={error}
           />
         ) : null}
         {step === "step3" ? (
           <ButtonComponent key="step3" text="Searching" search disabled />
         ) : null}
       </AnimatePresence>
+      {step !== "step2" ? <InlineError message={error} /> : null}
     </div>
   );
 };

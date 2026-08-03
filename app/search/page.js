@@ -1,36 +1,33 @@
 "use client";
 
+import { useEffect } from "react";
 import { Title } from "@/components/homePage";
 import { FirstAidSteps } from "@/components/search/FirstAidSteps";
 import { SymptomsTabs } from "@/components/search/SymptomsTabs";
 import { EmergencyCTA, MedicalDisclaimer } from "@/components/SafetyBanner";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Activity, CheckCircle2, Search } from "lucide-react";
 import { fadeUp, scaleTap } from "@/hooks/motion";
 
 const SearchPage = () => {
-  const { result, clearResult } = useResults();
+  const { result, clearResult, hydrated } = useResults();
   const router = useRouter();
 
   useEffect(() => {
-    if (!result) {
+    if (hydrated && !result) {
       router.replace("/");
     }
-  }, [result, router]);
+  }, [result, router, hydrated]);
 
-  if (!result) {
+  if (!hydrated || !result) {
     return (
       <main className="page-blobs flex min-h-dvh items-center justify-center text-aid-muted">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="safe-content relative z-10 text-lg"
-        >
-          Loading guidance…
-        </motion.p>
+        <div className="safe-content relative z-10 flex flex-col items-center gap-3">
+          <span className="loader" aria-hidden="true" />
+          <p className="text-lg">Loading guidance…</p>
+        </div>
       </main>
     );
   }
@@ -67,17 +64,6 @@ const SearchPage = () => {
           </motion.button>
           <div className="flex items-center gap-2">
             <EmergencyCTA compact />
-            {/* <motion.button
-              type="button"
-              whileHover={scaleTap.whileHover}
-              whileTap={scaleTap.whileTap}
-              transition={scaleTap.transition}
-              onClick={handleNewSearch}
-              className="glass-soft inline-flex items-center gap-1.5 rounded-2xl px-3 py-2 text-xs font-semibold text-aid-ink hover:bg-white/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal md:text-sm"
-            >
-              <Search className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden="true" />
-              New search
-            </motion.button> */}
           </div>
         </motion.header>
 
@@ -91,7 +77,11 @@ const SearchPage = () => {
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-aid-teal">
-                <Activity className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
+                <Activity
+                  className="h-3.5 w-3.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
                 Possible match
               </p>
               <h1 className="mt-1 font-quicksand text-xl font-bold tracking-tight text-aid-ink md:text-2xl">
@@ -100,7 +90,11 @@ const SearchPage = () => {
             </div>
             {first_instance?.accuracy ? (
               <span className="glass-soft inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-bold text-aid-teal md:text-sm">
-                <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
+                <CheckCircle2
+                  className="h-3.5 w-3.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
                 {first_instance.accuracy}
               </span>
             ) : null}

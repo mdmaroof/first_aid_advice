@@ -1,6 +1,10 @@
 import { getQuickAidData } from "@/data/quickAid";
+import {
+  clampSymptomInput,
+  MAX_SYMPTOM_LENGTH,
+  normalizeAidResult,
+} from "@/lib/aidResult";
 
-// Flip to false when the DeepSeek API is paid and ready.
 const USE_DEMO_DATA = false;
 
 const getDemoData = (input) => ({
@@ -58,15 +62,56 @@ const getDemoData = (input) => ({
 });
 
 export const callApi = async (input) => {
-  try {
-    const quickData = getQuickAidData(input);
+  const trimmed = clampSymptomInput(input);
+
+  if (!trimmed) {
+    return {
+      success: false,
+      error: true,
+      message: "Type a symptom first.",
+      data: null,
+    };
+  }
+
+  if (String(input ?? "").trim().length > MAX_SYMPTOM_LENGTH) {
+    return {
+      success: false,
+      error: true,
+      message: `Keep it under ${MAX_SYMPTOM_LENGTH} characters.`,
+      data: null,
+    };
+  }
+
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    const quickData = getQuickAidData(trimmed);
     if (quickData) {
-      return { success: true, error: false, data: quickData };
+      const normalized = normalizeAidResult(quickData);
+      return { success: true, error: false, message: null, data: normalized };
+    }
+    return {
+      success: false,
+      error: true,
+      message:
+        "You’re offline. Try a quick option above, or call emergency services.",
+      data: null,
+    };
+  }
+
+  try {
+    const quickData = getQuickAidData(trimmed);
+    if (quickData) {
+      const normalized = normalizeAidResult(quickData);
+      return { success: true, error: false, message: null, data: normalized };
     }
 
     if (USE_DEMO_DATA) {
       await new Promise((resolve) => setTimeout(resolve, 600));
-      return { success: true, error: false, data: getDemoData(input) };
+      return {
+        success: true,
+        error: false,
+        message: null,
+        data: normalizeAidResult(getDemoData(trimmed)),
+      };
     }
 
     const res = await fetch("/api", {
@@ -74,26 +119,43 @@ export const callApi = async (input) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data: input }),
+      body: JSON.stringify({ data: trimmed }),
     });
 
-    const data = await res.json().catch(() => ({}));
+    const payload = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      const message = data?.error || "Something went wrong. Please try again.";
-      alert(message);
-      return { success: false, error: true, data: null };
+      return {
+        success: false,
+        error: true,
+        message: payload?.error || "Something went wrong. Please try again.",
+        data: null,
+      };
     }
 
-    if (!data) {
-      alert("No response received. Please try again.");
-      return { success: false, error: true, data: null };
+    const normalized = normalizeAidResult(payload);
+    if (!normalized) {
+      return {
+        success: false,
+        error: true,
+        message: "Couldn’t read that response. Please try again.",
+        data: null,
+      };
     }
 
-    return { success: true, error: false, data };
+    return { success: true, error: false, message: null, data: normalized };
   } catch (err) {
     console.error(err);
-    alert(err?.message || "Something went wrong. Please try again.");
-    return { success: false, error: true, data: null };
+    const offline =
+      typeof navigator !== "undefined" && !navigator.onLine
+        ? "You’re offline. Try a quick option, or call emergency services."
+        : null;
+    return {
+      success: false,
+      error: true,
+      message:
+        offline || err?.message || "Something went wrong. Please try again.",
+      data: null,
+    };
   }
 };
