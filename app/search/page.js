@@ -18,7 +18,7 @@ const SearchPage = () => {
 
   if (!result) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-aid-gradient text-white">
+      <main className="flex min-h-dvh items-center justify-center bg-aid-page text-aid-muted">
         <p className="text-lg">Loading guidance…</p>
       </main>
     );
@@ -33,61 +33,131 @@ const SearchPage = () => {
   };
 
   return (
-    <main className="relative min-h-dvh w-full overflow-y-auto bg-aid-gradient px-4 py-6 text-white md:px-10 md:py-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.16),_transparent_40%)]" />
-
-      <div className="relative z-10 mx-auto max-w-4xl">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <EmergencyCTA />
-          <button
-            type="button"
-            onClick={handleNewSearch}
-            className="rounded-full border-2 border-white/70 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            New search
-          </button>
+    <main className="min-h-dvh w-full bg-aid-page text-aid-ink">
+      <div className="sticky top-0 z-20 border-b border-aid-line/80 bg-[#F7FBFC]/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+          <Title compact />
+          <div className="flex items-center gap-2">
+            <EmergencyCTA compact />
+            <button
+              type="button"
+              onClick={handleNewSearch}
+              className="rounded-xl border border-aid-line bg-white px-3 py-2 text-xs font-semibold text-aid-ink transition-colors hover:border-aid-teal hover:text-aid-teal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal md:px-3.5 md:text-sm"
+            >
+              New search
+            </button>
+          </div>
         </div>
+      </div>
 
-        <header className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
-          <Title size="w-[96px] h-[96px] md:w-[112px] md:h-[112px]" textSize="text-xl md:text-2xl" />
-          <div className="flex-1">
-            <h1 className="font-quicksand text-3xl font-bold tracking-tight md:text-4xl">
+      <div className="mx-auto max-w-3xl px-4 py-6 md:px-6 md:py-8">
+        <section
+          aria-labelledby="assessment-heading"
+          className="animate-fade-up rounded-2xl border border-aid-line bg-white p-5 md:p-7"
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-aid-seafoam">
+            Assessment
+          </p>
+          <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+            <h1
+              id="assessment-heading"
+              className="max-w-xl font-quicksand text-2xl font-bold tracking-tight text-aid-ink md:text-3xl"
+            >
               Looks like {first_instance?.disease || "an urgent concern"}
             </h1>
             {first_instance?.accuracy ? (
-              <p className="mt-1 text-base text-white/90 md:text-lg">
-                Estimated match: {first_instance.accuracy}
-              </p>
-            ) : null}
-            {medical_advice ? (
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/95 md:text-lg">
-                {medical_advice}
-              </p>
+              <span className="inline-flex items-center rounded-lg bg-aid-mist px-3 py-1.5 text-sm font-semibold text-aid-teal">
+                {first_instance.accuracy} match
+              </span>
             ) : null}
           </div>
-        </header>
+          {medical_advice ? (
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-aid-muted md:text-lg">
+              {medical_advice}
+            </p>
+          ) : null}
+        </section>
+
+        {instant_help?.length > 0 ? (
+          <section
+            aria-labelledby="help-heading"
+            className="mt-5 animate-fade-up rounded-2xl border border-aid-line bg-white p-5 md:mt-6 md:p-7"
+            style={{ animationDelay: "80ms" }}
+          >
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-aid-seafoam">
+                  Do this now
+                </p>
+                <h2
+                  id="help-heading"
+                  className="mt-1 font-quicksand text-xl font-bold text-aid-ink md:text-2xl"
+                >
+                  Advised help
+                </h2>
+              </div>
+              <span className="text-sm text-aid-muted">
+                {instant_help.length} steps
+              </span>
+            </div>
+
+            <ol className="mt-5 space-y-0">
+              {instant_help.map((item, index) => {
+                const isLast = index === instant_help.length - 1;
+                return (
+                  <li key={`${item.step}-${index}`} className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-aid-teal text-sm font-bold text-white">
+                        {item.step}
+                      </span>
+                      {!isLast ? (
+                        <span
+                          aria-hidden="true"
+                          className="my-1 w-px flex-1 bg-aid-line"
+                        />
+                      ) : null}
+                    </div>
+                    <p
+                      className={`pb-5 text-base leading-relaxed text-aid-ink md:text-lg ${
+                        isLast ? "pb-0" : ""
+                      }`}
+                    >
+                      {item.info}
+                    </p>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        ) : null}
 
         {symptoms_option?.length > 0 ? (
           <section
             aria-labelledby="symptoms-heading"
-            className="mt-8 rounded-2xl bg-white p-4 shadow-sm md:mt-10 md:p-6"
+            className="mt-5 animate-fade-up rounded-2xl border border-aid-line bg-white p-5 md:mt-6 md:p-7"
+            style={{ animationDelay: "140ms" }}
           >
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-aid-seafoam">
+              Watch for
+            </p>
             <h2
               id="symptoms-heading"
-              className="font-quicksand text-xl font-bold text-[#ff7b73]"
+              className="mt-1 font-quicksand text-xl font-bold text-aid-ink md:text-2xl"
             >
-              Look for other symptoms
+              Other symptoms
             </h2>
-            <ul className="mt-4 flex flex-col gap-3">
+            <p className="mt-1 text-sm text-aid-muted">
+              These may help refine what you are seeing.
+            </p>
+
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
               {symptoms_option.map((item, index) => (
                 <li
                   key={`${item.symptom}-${index}`}
-                  className="rounded-xl border-2 border-[#ff7b73]/30 px-4 py-3"
+                  className="rounded-xl border border-aid-line bg-aid-surface p-4"
                 >
-                  <p className="text-lg font-semibold text-[#ff7b73]">
-                    {item.symptom}
-                  </p>
-                  <p className="mt-1 text-sm font-light leading-relaxed text-neutral-700 md:text-base">
+                  <p className="font-semibold text-aid-ink">{item.symptom}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-aid-muted">
                     {item.description}
                   </p>
                 </li>
@@ -96,38 +166,11 @@ const SearchPage = () => {
           </section>
         ) : null}
 
-        {instant_help?.length > 0 ? (
-          <section
-            aria-labelledby="help-heading"
-            className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:mt-8 md:p-6"
-          >
-            <h2
-              id="help-heading"
-              className="font-quicksand text-xl font-bold text-[#ff7b73]"
-            >
-              Advised help
-            </h2>
-            <ol className="mt-4 flex flex-col gap-3">
-              {instant_help.map((item, index) => (
-                <li
-                  key={`${item.step}-${index}`}
-                  className="flex gap-3 text-[#c94f48]"
-                >
-                  <span className="min-w-7 font-bold text-[#ff7b73]">
-                    {item.step}.
-                  </span>
-                  <span className="leading-relaxed">{item.info}</span>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ) : null}
-
-        <div className="mt-8 flex flex-col items-start gap-5 md:mt-10">
+        <div className="mt-8 flex flex-col gap-5 border-t border-aid-line pt-6 md:mt-10">
           <button
             type="button"
             onClick={handleNewSearch}
-            className="rounded-full border-4 border-white bg-white px-6 py-3 text-lg font-bold text-[#ff7b73] transition-transform hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:px-10 md:text-xl"
+            className="w-full rounded-xl bg-aid-teal px-6 py-3.5 text-base font-bold text-white transition-colors hover:bg-aid-teal-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal sm:w-auto"
           >
             Search new symptoms
           </button>

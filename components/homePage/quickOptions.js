@@ -21,7 +21,7 @@ const GridBox = ({ onClick, text, disabled }) => {
       type="button"
       onClick={() => onClick(text)}
       disabled={disabled}
-      className="cursor-pointer truncate rounded-full border border-[#ff7b73] bg-white px-6 py-2.5 text-sm font-semibold text-[#ff7b73] transition-all duration-300 hover:border-white hover:bg-transparent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-60 md:px-8 md:text-base"
+      className="cursor-pointer truncate rounded-xl border border-aid-line bg-white px-4 py-3 text-left text-sm font-semibold text-aid-ink transition-colors hover:border-aid-teal hover:bg-aid-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
     >
       {text}
     </button>
@@ -52,7 +52,7 @@ export const QuickOptions = ({ step, setStep }) => {
     <div
       role="group"
       aria-label="Common symptoms"
-      className="mt-8 grid w-full max-w-[900px] grid-cols-2 gap-3 px-1 md:mt-12 md:grid-cols-4 md:gap-4"
+      className="mt-8 grid w-full max-w-3xl grid-cols-2 gap-2.5 md:mt-10 md:grid-cols-4 md:gap-3"
     >
       {QUICK_OPTIONS.map((option) => (
         <GridBox

@@ -16,24 +16,20 @@ const ButtonComponent = ({
   disabled = false,
 }) => {
   return (
-    <div className="rounded-full border-4 border-white p-1">
-      <motion.button
-        type="button"
-        exit={exit}
-        initial={initial}
-        animate={animate}
-        onClick={onClick}
-        disabled={disabled}
-        aria-busy={search || undefined}
-        className="relative flex max-w-[312px] cursor-pointer items-center justify-center gap-1 rounded-full bg-white px-10 py-3 text-xl font-bold text-[#ff7b73] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait"
-      >
-        {text}
-        {search ? (
-          <span className="loader ml-2" aria-hidden="true" />
-        ) : null}
-        {search ? <span className="sr-only">Loading results</span> : null}
-      </motion.button>
-    </div>
+    <motion.button
+      type="button"
+      exit={exit}
+      initial={initial}
+      animate={animate}
+      onClick={onClick}
+      disabled={disabled}
+      aria-busy={search || undefined}
+      className="relative flex min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-aid-teal px-8 py-3.5 text-lg font-bold text-white transition-colors hover:bg-aid-teal-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-wait"
+    >
+      {text}
+      {search ? <span className="loader ml-1" aria-hidden="true" /> : null}
+      {search ? <span className="sr-only">Loading results</span> : null}
+    </motion.button>
   );
 };
 
@@ -44,12 +40,12 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
         event.preventDefault();
         onSubmit();
       }}
-      className="rounded-full border-4 border-white p-1"
+      className="w-full max-w-md"
     >
       <motion.div
-        initial={{ width: 250 }}
-        animate={{ width: 340 }}
-        className="relative grid max-w-full grid-cols-[1fr_auto] gap-1 overflow-hidden rounded-full bg-white p-1 text-xl text-[#ff7b73]"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="grid grid-cols-[1fr_auto] overflow-hidden rounded-xl border border-aid-line bg-white focus-within:border-aid-teal"
       >
         <label htmlFor="symptom-input" className="sr-only">
           Describe your symptoms
@@ -60,11 +56,11 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
           onChange={(event) => setInput(event.target.value)}
           placeholder="e.g. sharp chest pain"
           autoComplete="off"
-          className="bg-transparent px-3 py-2 text-lg text-[#ff7b73] placeholder:text-[#ff7b73]/50 focus-visible:outline-none"
+          className="bg-transparent px-4 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
         />
         <button
           type="submit"
-          className="rounded-full bg-[#ff7b73] px-4 py-2 font-bold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff7b73]"
+          className="bg-aid-teal px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-teal-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal"
         >
           Search
         </button>
@@ -101,7 +97,7 @@ export const SearchInput = ({ step, setStep }) => {
   };
 
   return (
-    <div className="mt-8 flex items-center justify-center md:mt-12">
+    <div className="mt-8 flex w-full items-center justify-center md:mt-10">
       <AnimatePresence mode="wait">
         {step === "step1" ? (
           <ButtonComponent
@@ -122,8 +118,6 @@ export const SearchInput = ({ step, setStep }) => {
         {step === "step3" ? (
           <ButtonComponent
             key="step3"
-            initial={{ width: 340 }}
-            animate={{ width: 230 }}
             text="Searching"
             search
             disabled
