@@ -78,7 +78,7 @@ const SearchPage = () => {
           </motion.button>
           <div className="flex items-center gap-2">
             <EmergencyCTA compact />
-            <motion.button
+            {/* <motion.button
               type="button"
               whileHover={scaleTap.whileHover}
               whileTap={scaleTap.whileTap}
@@ -88,7 +88,7 @@ const SearchPage = () => {
             >
               <Search className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden="true" />
               New search
-            </motion.button>
+            </motion.button> */}
           </div>
         </motion.header>
 
