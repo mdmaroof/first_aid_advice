@@ -1,75 +1,82 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI(
-    { apiKey: process.env.OPEN_AI_KEY }
-);
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_KEY,
+});
 
-export const GET = async () => {
+export async function POST(req: NextRequest) {
+  try {
+    const { data } = await req.json();
 
-    const myAssistants = await openai.beta.assistants.list({
-        order: "desc",
-        limit: "20",
+    if (!data) {
+      return NextResponse.json(
+        { error: "Prompt is required." },
+        { status: 400 }
+      );
+    }
+
+    const response = await openai.responses.create({
+      model: "gpt-5.6-luna",
+      input: [
+        {
+          role: "system",
+          content: `
+You are a medical first-aid assistant.
+
+Always return ONLY valid JSON.
+
+Schema:
+{
+  "first_instance": {
+    "disease": "",
+    "accuracy": ""
+  },
+  "medical_advice": "",
+  "instant_help": [
+    {
+      "step": 1,
+      "info": ""
+    }
+  ],
+  "symptoms_option": [
+    {
+      "symptom": "",
+      "description": ""
+    }
+  ]
+}
+`
+        },
+        {
+          role: "user",
+          content: data,
+        },
+      ],
     });
 
-    const data = myAssistants?.data || {};
-    return NextResponse.json(data, { status: 200 })
-}
+    const text = response.output_text;
 
-export const POST = async (req) => {
-    const { data } = await req.json();
     try {
-        const createThread = await openai.beta.threads.create();
-        const thread = createThread;
-        const threadID = thread?.id
-
-        const threadMessages = await openai.beta.threads.messages.create(
-            threadID,
-            { role: "user", content: data }
-        );
-
-        const run = await openai.beta.threads.runs.create(
-            threadID,
-            { assistant_id: "asst_hshWN0Qpb6w5DTxNlGGnDffk" }
-        );
-
-        try {
-            const myPromise = new Promise((resolve, reject) => {
-                const timer = setInterval(async () => {
-                    const runStatus = await openai.beta.threads.runs.retrieve(
-                        threadID,
-                        run.id
-                    );
-
-                    if (runStatus.status === "completed") {
-                        clearInterval(timer);
-                        const message = await openai.beta.threads.messages.list(
-                            threadID,
-                            // threadMessages.id
-                        );
-                        resolve(message)
-                    }
-                }, 5000)
-
-                setTimeout(() => {
-                    clearInterval(timer)
-                    reject('err')
-                }, 35000);
-            })
-
-            const result = await myPromise;
-            const getData = result?.data[0];
-            const data = getData?.content[0] || null;
-            const res = JSON.parse(data?.text?.value);
-            return NextResponse.json(res, { status: 200 });
-        }
-        catch (err) {
-            return NextResponse.json({ err: 'error' }, { status: 400 });
-        }
+      const json = JSON.parse(text);
+      return NextResponse.json(json);
+    } catch {
+      return NextResponse.json(
+        {
+          error: "Model returned invalid JSON.",
+          raw: text,
+        },
+        { status: 500 }
+      );
     }
-    catch (err) {
-        console.log(err)
-        return NextResponse.json(err, { status: 500 });
-    }
+  } catch (error) {
+    console.error(error);
 
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+      },
+      { status: 500 }
+    );
+  }
 }
