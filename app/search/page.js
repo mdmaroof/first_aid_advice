@@ -129,7 +129,7 @@ const SearchPage = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="glass mt-4 flex flex-col gap-3 rounded-[1.5rem] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5"
+          className="glass mt-4 mb-12 md:mb-0 flex flex-col gap-3 rounded-[1.5rem] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5"
         >
           <MedicalDisclaimer className="text-xs md:text-sm" />
           <motion.button

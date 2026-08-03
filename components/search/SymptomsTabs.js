@@ -198,13 +198,13 @@ export function SymptomsTabs({ symptomsOption, showPoisonHotline = false }) {
             </motion.ul>
           )}
 
-          {active === "critical" && items.length > 0 ? (
+          {/* {active === "critical" && items.length > 0 ? (
             <EmergencyActions
               className="mt-3"
               compact
               showPoison={showPoisonHotline}
             />
-          ) : null}
+          ) : null} */}
         </motion.div>
       </AnimatePresence>
     </motion.section>
