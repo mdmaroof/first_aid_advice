@@ -1,3 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { fadeUp, scaleTap } from "@/hooks/motion";
+
 export const Title = ({
   size = "w-[150px] h-[150px] md:w-[190px] md:h-[190px]",
   textSize = "text-2xl md:text-4xl",
@@ -15,7 +20,13 @@ export const Title = ({
   }
 
   return (
-    <div
+    <motion.div
+      variants={fadeUp}
+      custom={1}
+      initial="hidden"
+      animate="show"
+      whileHover={scaleTap.whileHover}
+      transition={scaleTap.transition}
       className={`glass-strong relative flex items-center justify-center overflow-hidden rounded-[2rem] ${size}`}
       aria-label="SnapAid"
     >
@@ -24,6 +35,6 @@ export const Title = ({
       >
         SnapAid
       </p>
-    </div>
+    </motion.div>
   );
 };

@@ -5,22 +5,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import { callApi } from "@/hooks/callApi";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
+import { easeOut, scaleTap } from "@/hooks/motion";
 
 const ButtonComponent = ({
   text,
   onClick,
-  initial = {},
-  animate = {},
-  exit = {},
   search = false,
   disabled = false,
 }) => {
   return (
     <motion.button
       type="button"
-      exit={exit}
-      initial={initial}
-      animate={animate}
+      layout
+      initial={{ opacity: 0, scale: 0.96, y: 8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.96, y: -6 }}
+      transition={{ duration: 0.28, ease: easeOut }}
+      whileHover={disabled ? undefined : scaleTap.whileHover}
+      whileTap={disabled ? undefined : scaleTap.whileTap}
       onClick={onClick}
       disabled={disabled}
       aria-busy={search || undefined}
@@ -35,18 +37,19 @@ const ButtonComponent = ({
 
 const InputSearchBox = ({ onSubmit, input, setInput }) => {
   return (
-    <form
+    <motion.form
+      layout
+      initial={{ opacity: 0, scale: 0.96, y: 8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.96, y: -6 }}
+      transition={{ duration: 0.28, ease: easeOut }}
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit();
       }}
       className="w-full max-w-md"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass-strong grid grid-cols-[1fr_auto] overflow-hidden rounded-2xl focus-within:border-white/80"
-      >
+      <div className="glass-strong grid grid-cols-[1fr_auto] overflow-hidden rounded-2xl focus-within:border-white/80">
         <label htmlFor="symptom-input" className="sr-only">
           Describe your symptoms
         </label>
@@ -58,14 +61,16 @@ const InputSearchBox = ({ onSubmit, input, setInput }) => {
           autoComplete="off"
           className="bg-transparent px-4 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
         />
-        <button
+        <motion.button
           type="submit"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           className="bg-aid-ink/90 px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
         >
           Search
-        </button>
-      </motion.div>
-    </form>
+        </motion.button>
+      </div>
+    </motion.form>
   );
 };
 
@@ -103,7 +108,6 @@ export const SearchInput = ({ step, setStep }) => {
           <ButtonComponent
             key="step1"
             onClick={stepMarker}
-            exit={{ opacity: 0 }}
             text="Type symptoms"
           />
         ) : null}
