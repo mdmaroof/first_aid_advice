@@ -26,7 +26,7 @@ export const QUICK_AID_DATA = {
       },
       {
         step: 5,
-        info: "Call emergency services (911) at once if pain is severe, lasts more than 5 minutes, spreads to arm/jaw/back, or they feel faint, nauseous, or short of breath. Do not drive them yourself unless there is no other option.",
+        info: "Call emergency services at once if pain is severe, lasts more than 5 minutes, spreads to arm/jaw/back, or they feel faint, nauseous, or short of breath. Do not drive them yourself unless there is no other option.",
       },
       {
         step: 6,

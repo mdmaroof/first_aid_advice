@@ -1,20 +1,30 @@
+"use client";
+
 import { Phone, Info } from "lucide-react";
+import { useEmergency } from "@/context/EmergencyContext";
 
 export function EmergencyCTA({ className = "", compact = false }) {
+  const { number, label, loading } = useEmergency();
+  const display = loading ? "…" : label;
+
   return (
     <a
-      href="tel:911"
+      href={`tel:${number}`}
       className={`inline-flex items-center justify-center gap-2 rounded-2xl bg-aid-emergency/90 font-bold text-white backdrop-blur-md transition-colors hover:bg-aid-emergency focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-emergency ${
         compact ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm"
       } ${className}`}
-      aria-label="Call emergency services at 911"
+      aria-label={
+        loading
+          ? "Call local emergency services"
+          : `Call emergency services at ${label}`
+      }
     >
       <Phone
         className={compact ? "h-3.5 w-3.5" : "h-4 w-4"}
         strokeWidth={2.5}
         aria-hidden="true"
       />
-      Call 911
+      {loading ? "Emergency" : `Call ${display}`}
     </a>
   );
 }

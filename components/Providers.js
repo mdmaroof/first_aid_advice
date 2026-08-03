@@ -1,7 +1,12 @@
 "use client";
 
 import { ResultsProvider } from "@/context/ResultsContext";
+import { EmergencyProvider } from "@/context/EmergencyContext";
 
 export function Providers({ children }) {
-  return <ResultsProvider>{children}</ResultsProvider>;
+  return (
+    <EmergencyProvider>
+      <ResultsProvider>{children}</ResultsProvider>
+    </EmergencyProvider>
+  );
 }
