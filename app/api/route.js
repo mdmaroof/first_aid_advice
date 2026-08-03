@@ -1,30 +1,36 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPEN_AI_KEY,
+
+const client = new OpenAI({
+    apiKey: process.env.DEEPSEEK_API_KEY,
+    baseURL: "https://api.deepseek.com",
 });
 
 export async function POST(req) {
-  try {
-    const { data } = await req.json();
+    try {
+        const { data } = await req.json();
 
-    if (!data) {
-      return NextResponse.json(
-        { error: "Prompt is required." },
-        { status: 400 }
-      );
-    }
+        if (!data) {
+            return NextResponse.json(
+                { error: "Symptoms are required" },
+                { status: 400 }
+            );
+        }
 
-    const response = await openai.responses.create({
-      model: "gpt-5.6-luna",
-      input: [
-        {
-          role: "system",
-          content: `
+        const completion = await client.chat.completions.create({
+            model: "deepseek-v4-flash",
+            messages: [
+                {
+                    role: "system",
+                    content: `
 You are a medical first-aid assistant.
 
-Always return ONLY valid JSON.
+IMPORTANT:
+- Do not diagnose with certainty.
+- Return ONLY valid JSON.
+- No markdown.
+- No explanations.
 
 Schema:
 {
@@ -46,37 +52,36 @@ Schema:
     }
   ]
 }
-`
-        },
-        {
-          role: "user",
-          content: data,
-        },
-      ],
-    });
+          `,
+                },
+                {
+                    role: "user",
+                    content: data,
+                },
+            ],
+            temperature: 0.2,
+            max_tokens: 350,
+            response_format: {
+                type: "json_object",
+            },
+        });
 
-    const text = response.output_text;
-
-    try {
-      const json = JSON.parse(text);
-      return NextResponse.json(json);
-    } catch {
-      return NextResponse.json(
-        {
-          error: "Model returned invalid JSON.",
-          raw: text,
-        },
-        { status: 500 }
-      );
+        const text = completion.choices[0].message.content;
+        if (!text) {
+            return NextResponse.json(
+                {
+                    error: "No response from the model",
+                },
+                { status: 400 }
+            );
+        }
+        return NextResponse.json(JSON.parse(text));
+    } catch (err) {
+        return NextResponse.json(
+            {
+                error: err?.response?.data?.error || err.message || "Internal server error",
+            },
+            { status: 500 }
+        );
     }
-  } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      {
-        error: "Internal Server Error",
-      },
-      { status: 500 }
-    );
-  }
 }

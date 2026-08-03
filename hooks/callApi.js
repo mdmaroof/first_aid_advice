@@ -13,6 +13,7 @@ export const callApi = async (input) => {
     }
     catch (err) {
         console.log(err)
+        alert(err?.response?.data?.error || err.message)
         return { success: false, error: true }
     }
 }
