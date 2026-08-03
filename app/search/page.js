@@ -45,6 +45,7 @@ const SearchPage = () => {
   } = result;
   const isPoison = category === "poison";
 
+
   const handleNewSearch = () => {
     clearResult();
     router.push("/");
@@ -113,20 +114,10 @@ const SearchPage = () => {
             </p>
           ) : null}
 
-          <EmergencyActions className="mt-3" showPoison={isPoison} />
         </motion.section>
 
         <FirstAidSteps steps={instant_help} />
 
-        <motion.div
-          custom={1.5}
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="mt-3"
-        >
-          <EmergencyActions showPoison={isPoison} />
-        </motion.div>
 
         <SymptomsTabs
           symptomsOption={symptoms_option}

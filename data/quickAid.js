@@ -181,7 +181,8 @@ export const QUICK_AID_DATA = {
   },
 
   burn: {
-    first_instance: { disease: "Burn injury", accuracy: "Guidance" },
+    // Alias for typed "Burn" / legacy — same as heat
+    first_instance: { disease: "Heat burn", accuracy: "Guidance" },
     medical_advice: "Cool under running water 20 minutes. No ice, butter, or cream.",
     instant_help: [
       { step: 1, info: "Stop the burn — get away from heat or flames." },
@@ -214,26 +215,236 @@ export const QUICK_AID_DATA = {
           description: "Possible airway burn — call emergency.",
         },
         {
-          symptom: "Chemical or electrical burn",
-          description: "Flush chemicals; always get checked.",
-        },
-        {
           symptom: "Bigger than a palm",
           description: "Large burn — urgent medical care.",
+        },
+        {
+          symptom: "On face, hands, or joints",
+          description: "Needs urgent assessment.",
         },
       ],
       basic: [
         {
           symptom: "Red, painful, no blisters",
-          description: "Cool 20 min. Light cover. Pain relief if allowed.",
+          description: "Cool 20 min. Light cover.",
         },
         {
           symptom: "Small blister patch",
-          description: "Don't pop. Cover loosely. Recheck tomorrow.",
+          description: "Don't pop. Cover loosely.",
         },
         {
-          symptom: "Sunburn without blistering",
-          description: "Cool water, shade, drink fluids.",
+          symptom: "Cooling eases pain",
+          description: "Keep covered. Recheck tomorrow.",
+        },
+      ],
+    },
+  },
+
+  "burn heat": {
+    first_instance: { disease: "Heat burn", accuracy: "Guidance" },
+    medical_advice: "Cool under running water 20 minutes. No ice, butter, or cream.",
+    instant_help: [
+      { step: 1, info: "Stop the burn — get away from heat or flames." },
+      { step: 2, info: "Cool under cool running water for 20 minutes." },
+      {
+        step: 3,
+        info: "Remove rings and loose clothing before swelling starts.",
+      },
+      {
+        step: 4,
+        info: "Cover loosely with clean non-fluffy cloth or cling film.",
+      },
+      {
+        step: 5,
+        info: "Never pop blisters. No butter, toothpaste, or ice.",
+      },
+      {
+        step: 6,
+        info: "Face, hands, large, or charred burn? Seek urgent care.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "White, waxy, or charred skin",
+          description: "Deep burn — hospital now.",
+        },
+        {
+          symptom: "Cough or singed nose hairs",
+          description: "Possible airway burn — call emergency.",
+        },
+        {
+          symptom: "Bigger than a palm",
+          description: "Large burn — urgent medical care.",
+        },
+        {
+          symptom: "On face, hands, or joints",
+          description: "Needs urgent assessment.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Red, painful, no blisters",
+          description: "Cool 20 min. Light cover.",
+        },
+        {
+          symptom: "Small blister patch",
+          description: "Don't pop. Cover loosely.",
+        },
+        {
+          symptom: "Cooling eases pain",
+          description: "Keep covered. Recheck tomorrow.",
+        },
+      ],
+    },
+  },
+
+  "burn chemical": {
+    category: "poison",
+    first_instance: { disease: "Chemical burn", accuracy: "Guidance" },
+    medical_advice:
+      "Brush off dry powder first. Flush with water 20+ minutes. Call for advice.",
+    instant_help: [
+      { step: 1, info: "Move away from the chemical. Avoid spreading it." },
+      { step: 2, info: "Brush off dry powder before using water." },
+      { step: 3, info: "Remove contaminated clothes carefully." },
+      { step: 4, info: "Flush with cool running water for 20+ minutes." },
+      { step: 5, info: "Don't rub in creams or neutralize with other chemicals." },
+      { step: 6, info: "Call poison control or emergency. Keep the product label." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Eyes also exposed",
+          description: "Rinse eyes 15+ min — emergency.",
+        },
+        {
+          symptom: "Trouble breathing after fumes",
+          description: "Call emergency now.",
+        },
+        {
+          symptom: "Deep blistering or white skin",
+          description: "Urgent hospital care.",
+        },
+        {
+          symptom: "Large area soaked",
+          description: "Call emergency / poison control.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Small splash, mild sting",
+          description: "Flush 20 min. Still get advice.",
+        },
+        {
+          symptom: "Redness after rinse",
+          description: "Cover loosely. Recheck with hotline.",
+        },
+        {
+          symptom: "Household cleaner, tiny amount",
+          description: "Rinse well. Call if unsure.",
+        },
+      ],
+    },
+  },
+
+  "burn electrical": {
+    first_instance: { disease: "Electrical burn", accuracy: "Guidance" },
+    medical_advice:
+      "Power off first. Always get checked — injury can be inside.",
+    instant_help: [
+      { step: 1, info: "Do not touch them until power is off / safe." },
+      { step: 2, info: "Call emergency — electrical injury needs assessment." },
+      { step: 3, info: "Once safe, check breathing and responsiveness." },
+      { step: 4, info: "Cool any visible burns with water — no ice." },
+      { step: 5, info: "Cover burns loosely. Look for entry and exit marks." },
+      {
+        step: 6,
+        info: "If unresponsive and not breathing — start CPR.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Still in contact with power",
+          description: "Don't touch — cut power / call emergency.",
+        },
+        {
+          symptom: "Irregular pulse or collapse",
+          description: "Heart risk — emergency + CPR if needed.",
+        },
+        {
+          symptom: "Entry and exit burn marks",
+          description: "Internal injury possible — hospital.",
+        },
+        {
+          symptom: "Lightning strike",
+          description: "Call emergency even if they seem OK.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Tiny spark, tiny mark",
+          description: "Still get clinical check same day.",
+        },
+        {
+          symptom: "Feels fine after shock",
+          description: "Delayed heart issues possible — get checked.",
+        },
+        {
+          symptom: "Mild skin redness only",
+          description: "Cool, cover, seek assessment.",
+        },
+      ],
+    },
+  },
+
+  "burn sun": {
+    first_instance: { disease: "Sunburn", accuracy: "Guidance" },
+    medical_advice:
+      "Cool water, shade, fluids. Blisters or fever? Escalate care.",
+    instant_help: [
+      { step: 1, info: "Get out of the sun into shade or indoors." },
+      { step: 2, info: "Cool skin with cool (not ice) water or compresses." },
+      { step: 3, info: "Drink water. Avoid alcohol." },
+      { step: 4, info: "Don't pop blisters. Loose cotton clothing helps." },
+      { step: 5, info: "Moisturizer or aloe only on unbroken skin if tolerated." },
+      {
+        step: 6,
+        info: "Large blisters, fever, confusion, or baby/elderly — seek care.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Fever, chills, or confusion",
+          description: "Possible heat illness — urgent care.",
+        },
+        {
+          symptom: "Large blistered areas",
+          description: "Needs medical assessment.",
+        },
+        {
+          symptom: "Severe swelling of face",
+          description: "Seek urgent care.",
+        },
+        {
+          symptom: "Infant or elderly hard hit",
+          description: "Lower threshold — get checked.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Red, hot, no blisters",
+          description: "Cool, hydrate, stay shaded.",
+        },
+        {
+          symptom: "Mild sting after beach day",
+          description: "Cool compress. Loose clothes.",
+        },
+        {
+          symptom: "Peeling skin later",
+          description: "Don't peel forcibly. Keep moisturized.",
         },
       ],
     },
@@ -464,6 +675,321 @@ export const QUICK_AID_DATA = {
         {
           symptom: "Dry bite suspicion",
           description: "Only a clinician can confirm. Don't wait it out alone.",
+        },
+      ],
+    },
+  },
+
+  "insect bite": {
+    first_instance: { disease: "Insect bite or sting", accuracy: "Guidance" },
+    medical_advice:
+      "Remove stinger if seen. Ice and watch for allergy. Hard to breathe? Call.",
+    instant_help: [
+      { step: 1, info: "Move away from bees/wasps. Stay calm." },
+      { step: 2, info: "Scrape out a visible stinger — don't squeeze with tweezers." },
+      { step: 3, info: "Wash with soap and water. Cool with ice wrapped in cloth." },
+      { step: 4, info: "Elevate the area if swollen. Antihistamine if usually safe for them." },
+      {
+        step: 5,
+        info: "If they have an epinephrine auto-injector for allergy — use it for severe signs.",
+      },
+      {
+        step: 6,
+        info: "Face/tongue swelling, wheeze, or faintness — call emergency.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Face, lips, or tongue swelling",
+          description: "Anaphylaxis risk — call now.",
+        },
+        {
+          symptom: "Wheeze or can't breathe",
+          description: "Emergency — epinephrine if prescribed.",
+        },
+        {
+          symptom: "Dizzy or collapsing",
+          description: "Severe reaction — call emergency.",
+        },
+        {
+          symptom: "Many stings at once",
+          description: "Higher risk — get urgent care.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Local redness and itch",
+          description: "Ice, wash, don't scratch hard.",
+        },
+        {
+          symptom: "Mild swelling at the site",
+          description: "Elevate. Recheck over hours.",
+        },
+        {
+          symptom: "Tick still attached",
+          description: "Pull straight out with fine tweezers. Save the tick.",
+        },
+      ],
+    },
+  },
+
+  "other bite": {
+    first_instance: { disease: "Animal or human bite", accuracy: "Guidance" },
+    medical_advice:
+      "Wash well. Skin broken? Get checked same day — infection risk is high.",
+    instant_help: [
+      { step: 1, info: "Get to safety. Don't chase the animal." },
+      { step: 2, info: "Press to stop bleeding if needed." },
+      { step: 3, info: "Wash with soap and running water for 5+ minutes." },
+      { step: 4, info: "Cover with a clean dressing." },
+      {
+        step: 5,
+        info: "Note animal type, time, and vaccine status if known.",
+      },
+      {
+        step: 6,
+        info: "See a clinician today — antibiotics or tetanus may be needed.",
+      },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Heavy bleeding or faintness",
+          description: "Press hard. Call emergency.",
+        },
+        {
+          symptom: "Face, hand, or joint bite",
+          description: "High infection risk — urgent care.",
+        },
+        {
+          symptom: "Spreading redness or fever",
+          description: "Infection rising — seek care now.",
+        },
+        {
+          symptom: "Wild animal or bat",
+          description: "Rabies risk — emergency assessment.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Shallow scratch, little blood",
+          description: "Wash well. Cover. Watch 48 hours.",
+        },
+        {
+          symptom: "Cat bite puncture",
+          description: "Small hole, high infection — still get checked.",
+        },
+        {
+          symptom: "Human bite broke skin",
+          description: "Clean and get clinical advice same day.",
+        },
+      ],
+    },
+  },
+
+  "allergy food": {
+    first_instance: { disease: "Food allergy reaction", accuracy: "Guidance" },
+    medical_advice:
+      "Severe swelling or breathing trouble? Epinephrine if prescribed — call emergency.",
+    instant_help: [
+      { step: 1, info: "Stop eating the food. Call emergency if severe signs." },
+      {
+        step: 2,
+        info: "Use epinephrine auto-injector in the outer thigh if prescribed for anaphylaxis.",
+      },
+      { step: 3, info: "Lie them down with legs raised unless breathing is hard — then sit up." },
+      { step: 4, info: "Call emergency even if epinephrine helped." },
+      { step: 5, info: "Second dose only if their plan allows and help is delayed." },
+      { step: 6, info: "Don't give more of the trigger food. Stay with them." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Throat tightness or wheeze",
+          description: "Anaphylaxis — epinephrine + call.",
+        },
+        {
+          symptom: "Face or tongue swelling",
+          description: "Emergency now.",
+        },
+        {
+          symptom: "Vomiting with breathing trouble",
+          description: "Severe reaction — call.",
+        },
+        {
+          symptom: "Sudden faintness",
+          description: "Shock risk — emergency.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild hives only",
+          description: "Antihistamine if usually safe. Watch closely.",
+        },
+        {
+          symptom: "Itchy mouth after a bite",
+          description: "Stop eating. Escalate if it spreads.",
+        },
+        {
+          symptom: "Known mild allergy pattern",
+          description: "Follow their care plan. Have epinephrine ready.",
+        },
+      ],
+    },
+  },
+
+  "allergy sting": {
+    first_instance: {
+      disease: "Allergy to insect sting",
+      accuracy: "Guidance",
+    },
+    medical_advice:
+      "Past severe allergy + new sting? Epinephrine if prescribed — call emergency.",
+    instant_help: [
+      { step: 1, info: "Move away from the insect. Scrape out stinger if seen." },
+      {
+        step: 2,
+        info: "Use epinephrine auto-injector immediately if this is their severe allergy.",
+      },
+      { step: 3, info: "Call emergency. Stay with them." },
+      { step: 4, info: "Ice the site. Keep them calm and still." },
+      { step: 5, info: "Second epinephrine only if their plan says so." },
+      { step: 6, info: "Even if they improve — hospital check after epinephrine." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Wheeze or can't speak",
+          description: "Anaphylaxis — call now.",
+        },
+        {
+          symptom: "Whole-body hives fast",
+          description: "Severe reaction — epinephrine + call.",
+        },
+        {
+          symptom: "Swelling far from the sting",
+          description: "Systemic allergy — emergency.",
+        },
+        {
+          symptom: "Known anaphylaxis history",
+          description: "Don't wait for peak symptoms — act.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Swelling only at sting site",
+          description: "Ice and clean. Watch 30–60 min.",
+        },
+        {
+          symptom: "Mild itch, no breathing issue",
+          description: "Antihistamine if safe. Stay alert.",
+        },
+        {
+          symptom: "First sting ever, mild",
+          description: "Monitor. Seek care if it worsens.",
+        },
+      ],
+    },
+  },
+
+  "allergy medicine": {
+    first_instance: { disease: "Medicine allergy", accuracy: "Guidance" },
+    medical_advice:
+      "Stop the medicine. Breathing or swelling trouble? Call emergency.",
+    instant_help: [
+      { step: 1, info: "Stop the suspected medicine. Don't take another dose." },
+      {
+        step: 2,
+        info: "Use epinephrine if prescribed and signs are severe (swelling, wheeze, faint).",
+      },
+      { step: 3, info: "Call emergency for severe signs — or urgent care for spreading rash." },
+      { step: 4, info: "Keep the medicine packaging for clinicians." },
+      { step: 5, info: "Note time of dose and when symptoms started." },
+      { step: 6, info: "Don't restart the drug until a clinician clears it." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Throat swelling or wheeze",
+          description: "Emergency — epinephrine if prescribed.",
+        },
+        {
+          symptom: "Blistering rash or peeling skin",
+          description: "Serious drug reaction — emergency care.",
+        },
+        {
+          symptom: "Fever with widespread rash",
+          description: "Urgent medical assessment.",
+        },
+        {
+          symptom: "Collapse after a dose",
+          description: "Call emergency now.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild itchy rash",
+          description: "Stop drug. Contact a clinician today.",
+        },
+        {
+          symptom: "Nausea without breathing issue",
+          description: "May be side effect — still get advice.",
+        },
+        {
+          symptom: "Known mild sensitivity",
+          description: "Avoid the drug. Confirm with a clinician.",
+        },
+      ],
+    },
+  },
+
+  "allergy unknown": {
+    first_instance: { disease: "Allergic reaction", accuracy: "Guidance" },
+    medical_advice:
+      "Hard to breathe or swelling of face/tongue? Call emergency now.",
+    instant_help: [
+      { step: 1, info: "Call emergency if breathing or swallowing is hard." },
+      {
+        step: 2,
+        info: "Use epinephrine auto-injector if they have one for anaphylaxis.",
+      },
+      { step: 3, info: "Help them sit up if breathless; lie down if faint (legs raised)." },
+      { step: 4, info: "Remove any obvious trigger nearby (food, insect, drug)." },
+      { step: 5, info: "Stay with them. Watch breathing and alertness." },
+      { step: 6, info: "Even mild cases that spread fast need urgent advice." },
+    ],
+    symptoms_option: {
+      critical: [
+        {
+          symptom: "Can't breathe or swallow",
+          description: "Emergency now.",
+        },
+        {
+          symptom: "Face or tongue swelling",
+          description: "Airway risk — call.",
+        },
+        {
+          symptom: "Sudden widespread hives + vomit",
+          description: "Severe reaction — emergency.",
+        },
+        {
+          symptom: "Grey or blue lips",
+          description: "Low oxygen — call and stay ready for CPR.",
+        },
+      ],
+      basic: [
+        {
+          symptom: "Mild local itch",
+          description: "Watch 30 min. Escalate if it spreads.",
+        },
+        {
+          symptom: "A few hives, breathing OK",
+          description: "Antihistamine if safe. Keep watching.",
+        },
+        {
+          symptom: "Unclear trigger, mild only",
+          description: "Note foods/drugs/insects today for clinicians.",
         },
       ],
     },

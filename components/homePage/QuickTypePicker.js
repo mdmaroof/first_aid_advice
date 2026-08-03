@@ -10,9 +10,16 @@ import {
   Leaf,
   HelpCircle,
   FlaskConical,
+  Flame,
+  Zap,
+  Sun,
+  Dog,
+  Worm,
+  Bug,
+  Utensils,
+  Syringe,
   X,
 } from "lucide-react";
-import { POISON_TYPES } from "@/data/poisonTypes";
 import { EmergencyCTA, PoisonHotlineCTA } from "@/components/SafetyBanner";
 import { easeOut, scaleTap, staggerContainer, staggerItem } from "@/hooks/motion";
 
@@ -23,14 +30,33 @@ const ICONS = {
   Wind,
   Leaf,
   HelpCircle,
+  FlaskConical,
+  Flame,
+  Zap,
+  Sun,
+  Dog,
+  Worm,
+  Bug,
+  Utensils,
+  Syringe,
 };
 
-export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
+/**
+ * Shared subtype picker for Poison / Burn / Bite / Allergy.
+ * Only used when a quick option has real subtypes.
+ */
+export function QuickTypePicker({
+  open,
+  group,
+  onClose,
+  onSelect,
+  busy = false,
+}) {
   const titleId = useId();
   const closeRef = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || !group) return undefined;
 
     const onKey = (event) => {
       if (event.key === "Escape") onClose();
@@ -45,7 +71,11 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+  }, [open, group, onClose]);
+
+  if (!group) return null;
+
+  const accentEmergency = group.accent === "emergency";
 
   return (
     <AnimatePresence>
@@ -60,7 +90,7 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
           <button
             type="button"
             className="absolute inset-0 bg-aid-ink/45 backdrop-blur-sm"
-            aria-label="Close poison type picker"
+            aria-label={`Close ${group.eyebrow}`}
             onClick={onClose}
           />
 
@@ -76,19 +106,20 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
-                <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-aid-emergency">
-                  <FlaskConical className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
-                  Poison help
+                <p
+                  className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                    accentEmergency ? "text-aid-emergency" : "text-aid-teal"
+                  }`}
+                >
+                  {group.eyebrow}
                 </p>
                 <h2
                   id={titleId}
                   className="mt-1 font-quicksand text-xl font-bold tracking-tight text-aid-ink"
                 >
-                  What kind of poison?
+                  {group.title}
                 </h2>
-                <p className="mt-1 text-sm text-aid-muted">
-                  Pick one — get steps in seconds.
-                </p>
+                <p className="mt-1 text-sm text-aid-muted">{group.subtitle}</p>
               </div>
               <button
                 ref={closeRef}
@@ -103,7 +134,7 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
 
             <div className="mb-4 flex flex-wrap gap-2">
               <EmergencyCTA compact />
-              <PoisonHotlineCTA compact />
+              {group.showPoisonHotline ? <PoisonHotlineCTA compact /> : null}
             </div>
 
             <motion.div
@@ -113,7 +144,7 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
               animate="show"
               className="grid gap-2 sm:grid-cols-2"
             >
-              {POISON_TYPES.map(({ id, key, label, hint, icon }) => {
+              {group.types.map(({ id, key, label, hint, icon }) => {
                 const Icon = ICONS[icon] || HelpCircle;
                 return (
                   <motion.button
@@ -128,8 +159,18 @@ export function PoisonTypePicker({ open, onClose, onSelect, busy = false }) {
                     onClick={() => onSelect(key)}
                     className="glass-strong flex items-start gap-3 rounded-2xl px-3.5 py-3 text-left hover:bg-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal disabled:cursor-wait disabled:opacity-60"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-aid-emergency/10 text-aid-emergency">
-                      <Icon className="h-4 w-4" strokeWidth={2.25} aria-hidden="true" />
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                        accentEmergency
+                          ? "bg-aid-emergency/10 text-aid-emergency"
+                          : "bg-aid-teal/10 text-aid-teal"
+                      }`}
+                    >
+                      <Icon
+                        className="h-4 w-4"
+                        strokeWidth={2.25}
+                        aria-hidden="true"
+                      />
                     </span>
                     <span>
                       <span className="block text-sm font-bold text-aid-ink">

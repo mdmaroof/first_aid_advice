@@ -12,30 +12,39 @@ import {
   Flame,
   CircleAlert,
   Brain,
-  Dog,
-  Worm,
   FlaskConical,
+  ShieldAlert,
+  Bone,
 } from "lucide-react";
 import { scaleTap, staggerContainer, staggerItem } from "@/hooks/motion";
-import { PoisonTypePicker } from "@/components/homePage/PoisonTypePicker";
+import { QuickTypePicker } from "@/components/homePage/QuickTypePicker";
+import { QUICK_TYPE_GROUPS } from "@/data/quickTypeGroups";
 
+/**
+ * Direct options = no subtypes.
+ * `typeGroup` = opens a picker only when subtypes exist in QUICK_TYPE_GROUPS.
+ */
 const QUICK_OPTIONS = [
   { label: "Heart pain", Icon: HeartPulse },
   { label: "Breathing trouble", Icon: Wind },
   { label: "Bleeding", Icon: Droplets },
-  { label: "Burn", Icon: Flame },
+  { label: "Burn", Icon: Flame, typeGroup: "burn" },
   { label: "Choking", Icon: CircleAlert },
-  { label: "Poison", Icon: FlaskConical, opensPoison: true },
+  { label: "Poison", Icon: FlaskConical, typeGroup: "poison" },
+  { label: "Bite", Icon: Bone, typeGroup: "bite" },
+  { label: "Allergy", Icon: ShieldAlert, typeGroup: "allergy" },
   { label: "Headache", Icon: Brain },
-  { label: "Dog bite", Icon: Dog },
-  { label: "Snake bite", Icon: Worm },
 ];
 
 export const QuickOptions = ({ step, setStep, setError }) => {
   const router = useRouter();
   const { setResult } = useResults();
   const isSearching = step === "step3";
-  const [poisonOpen, setPoisonOpen] = useState(false);
+  const [activeGroupId, setActiveGroupId] = useState(null);
+
+  const activeGroup = activeGroupId
+    ? QUICK_TYPE_GROUPS[activeGroupId] ?? null
+    : null;
 
   const callData = async (data) => {
     if (isSearching) return;
@@ -56,16 +65,18 @@ export const QuickOptions = ({ step, setStep, setError }) => {
 
   const onQuickClick = (option) => {
     if (isSearching) return;
-    if (option.opensPoison) {
+
+    if (option.typeGroup && QUICK_TYPE_GROUPS[option.typeGroup]) {
       setError?.(null);
-      setPoisonOpen(true);
+      setActiveGroupId(option.typeGroup);
       return;
     }
+
     callData(option.label);
   };
 
-  const onPoisonSelect = async (key) => {
-    setPoisonOpen(false);
+  const onTypeSelect = async (key) => {
+    setActiveGroupId(null);
     await callData(key);
   };
 
@@ -80,7 +91,8 @@ export const QuickOptions = ({ step, setStep, setError }) => {
         className="mt-8 flex w-full max-w-2xl flex-wrap justify-center gap-2.5 md:mt-9"
       >
         {QUICK_OPTIONS.map((option) => {
-          const { label, Icon } = option;
+          const { label, Icon, typeGroup } = option;
+          const hasTypes = Boolean(typeGroup && QUICK_TYPE_GROUPS[typeGroup]);
           return (
             <motion.button
               key={label}
@@ -95,7 +107,7 @@ export const QuickOptions = ({ step, setStep, setError }) => {
             >
               <Icon
                 className={`h-4 w-4 shrink-0 ${
-                  option.opensPoison ? "text-aid-emergency" : "text-aid-teal"
+                  hasTypes ? "text-aid-emergency" : "text-aid-teal"
                 }`}
                 strokeWidth={2.25}
                 aria-hidden="true"
@@ -106,10 +118,11 @@ export const QuickOptions = ({ step, setStep, setError }) => {
         })}
       </motion.div>
 
-      <PoisonTypePicker
-        open={poisonOpen}
-        onClose={() => setPoisonOpen(false)}
-        onSelect={onPoisonSelect}
+      <QuickTypePicker
+        open={Boolean(activeGroup)}
+        group={activeGroup}
+        onClose={() => setActiveGroupId(null)}
+        onSelect={onTypeSelect}
         busy={isSearching}
       />
     </>
