@@ -1,7 +1,8 @@
 "use client";
 
+import { ListChecks } from "lucide-react";
 import { motion } from "framer-motion";
-import { fadeUp } from "@/hooks/motion";
+import { fadeUp, staggerContainer, staggerItem } from "@/hooks/motion";
 
 export function FirstAidSteps({ steps }) {
   if (!steps?.length) return null;
@@ -13,32 +14,39 @@ export function FirstAidSteps({ steps }) {
       variants={fadeUp}
       initial="hidden"
       animate="show"
-      className="glass-strong mt-3 rounded-[1.5rem] px-4 py-4 md:px-5"
+      className="glass-strong mt-3 rounded-[1.5rem] p-3 md:p-4"
     >
       <h2
         id="help-heading"
-        className="mb-3 font-quicksand text-base font-bold text-aid-ink md:text-lg"
+        className="mb-2.5 inline-flex items-center gap-2 px-1 font-quicksand text-base font-bold text-aid-ink md:text-lg"
       >
+        <ListChecks
+          className="h-4 w-4 text-aid-teal md:h-5 md:w-5"
+          strokeWidth={2.25}
+          aria-hidden="true"
+        />
         First aid steps
       </h2>
 
-      <ol className="flex flex-col gap-2.5">
+      <motion.ol
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid gap-2 sm:grid-cols-2"
+      >
         {steps.map((item, index) => (
-          <li key={`${item.step}-${index}`}>
-            <article className="glass-strong relative overflow-hidden rounded-xl px-3 pb-3 pt-5">
-              <span className="absolute -top-2 left-3 z-10 rounded-lg bg-aid-teal px-2.5 py-0.5 font-quicksand text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
-                Step {item.step}
+          <motion.li key={`${item.step}-${index}`} variants={staggerItem}>
+            <article className="glass flex h-full gap-3 rounded-xl px-3 py-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aid-teal/10 font-quicksand text-sm font-bold text-aid-teal">
+                {item.step}
               </span>
-              <span className="absolute right-0 top-0 rounded-bl-xl bg-aid-ink/90 px-2.5 py-1 font-quicksand text-xs font-bold text-white">
-                {String(item.step).padStart(2, "0")}
-              </span>
-              <p className="pr-8 text-sm leading-relaxed text-aid-ink md:leading-6">
+              <p className="text-sm leading-relaxed text-aid-ink md:leading-6">
                 {item.info}
               </p>
             </article>
-          </li>
+          </motion.li>
         ))}
-      </ol>
+      </motion.ol>
     </motion.section>
   );
 }

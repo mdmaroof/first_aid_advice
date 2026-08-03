@@ -5,49 +5,61 @@ const USE_DEMO_DATA = true;
 
 const getDemoData = (input) => ({
   first_instance: {
-    disease: `Possible concern related to “${input}”`,
-    accuracy: "68%",
+    disease: `Assessment needed for “${input}”`,
+    accuracy: "Guidance",
   },
-  medical_advice:
-    "This is demo guidance for UI testing only. Rest, monitor symptoms, and seek professional care if they worsen. SnapAid is not a substitute for emergency or medical care.",
+  medical_advice: `You described “${input}”. This app cannot diagnose you. If symptoms are sudden, severe, or getting worse — especially chest pain, trouble breathing, confusion, heavy bleeding, or loss of consciousness — call emergency services now. Otherwise, rest in a safe place, avoid alcohol and un-prescribed drugs, and contact a doctor or nurse for advice today.`,
   instant_help: [
     {
       step: 1,
-      info: "Move to a safe, calm place and check breathing and responsiveness.",
+      info: "Check the scene is safe. Ask the person their name; if they respond, note level of alertness, breathing, and whether they can move all limbs normally.",
     },
     {
       step: 2,
-      info: "If symptoms are severe (chest pain, trouble breathing, confusion), call emergency services immediately.",
+      info: "Help them sit or lie in the most comfortable position for their symptoms — upright if breathless, flat if faint (unless vomiting, then on their side).",
     },
     {
       step: 3,
-      info: "Note when symptoms started, what makes them better or worse, and any recent injuries or illnesses.",
+      info: "Call emergency services if you see red flags: chest pain, severe breathlessness, stroke signs (face droop, arm weakness, speech difficulty), heavy bleeding, seizure, or sudden confusion.",
     },
     {
       step: 4,
-      info: "Avoid food, drink, or medication unless advised by a clinician or emergency responder.",
+      info: "Record when symptoms started, what triggered them, current medications, allergies, and relevant medical history — clinicians will need this.",
+    },
+    {
+      step: 5,
+      info: "Do not give food, drink, or medication (including aspirin) unless a clinician or emergency operator tells you to — some conditions worsen with the wrong treatment.",
+    },
+    {
+      step: 6,
+      info: "Stay with them, keep them warm, and recheck breathing and responsiveness every few minutes until help arrives or symptoms clearly improve.",
     },
   ],
   symptoms_option: [
     {
-      symptom: "Shortness of breath",
+      symptom: "Worsening over minutes",
       description:
-        "Difficulty breathing at rest or with light activity. May feel like you cannot get enough air.",
+        "Rapidly increasing pain, breathlessness, or weakness — treat as urgent and call for help.",
     },
     {
-      symptom: "Dizziness or faintness",
+      symptom: "Difficulty breathing",
       description:
-        "Lightheaded feeling, unsteady balance, or nearly passing out when standing or moving.",
+        "Shortness of breath at rest, unable to speak full sentences, or lips turning blue — emergency.",
     },
     {
-      symptom: "Spreading pain or numbness",
+      symptom: "Chest pain or pressure",
       description:
-        "Pain, tingling, or numbness moving into the arm, jaw, neck, or legs.",
+        "Squeezing chest pain, especially with sweat, nausea, or pain into arm or jaw — call emergency services.",
     },
     {
-      symptom: "Fever or chills",
+      symptom: "Confusion or drowsiness",
       description:
-        "Raised body temperature, shivering, or feeling unusually hot or cold.",
+        "Hard to wake, slurred speech, or not making sense — may signal serious illness or injury.",
+    },
+    {
+      symptom: "Fever with stiff neck",
+      description:
+        "Headache with high fever and neck stiffness — possible meningitis; seek urgent hospital care.",
     },
   ],
 });
