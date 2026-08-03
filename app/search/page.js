@@ -1,6 +1,7 @@
 "use client";
 
 import { Title } from "@/components/homePage";
+import { FirstAidSteps } from "@/components/search/FirstAidSteps";
 import { EmergencyCTA, MedicalDisclaimer } from "@/components/SafetyBanner";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
@@ -119,45 +120,7 @@ const SearchPage = () => {
           ) : null}
         </motion.section>
 
-        {instant_help?.length > 0 ? (
-          <motion.section
-            aria-labelledby="help-heading"
-            custom={1}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            className="glass-strong mt-3 rounded-[1.5rem] px-4 py-4 md:px-5"
-          >
-            <h2
-              id="help-heading"
-              className="mb-3 font-quicksand text-base font-bold text-aid-ink md:text-lg"
-            >
-              First aid steps
-            </h2>
-
-            <ol className="relative space-y-0 border-l-2 border-aid-teal/25 pl-4">
-              {instant_help.map((item, index) => {
-                const isLast = index === instant_help.length - 1;
-                return (
-                  <li
-                    key={`${item.step}-${index}`}
-                    className={`relative ${isLast ? "" : "pb-4"}`}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-[calc(1rem+5px)] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-aid-teal text-[10px] font-bold text-white"
-                    >
-                      {item.step}
-                    </span>
-                    <p className="text-sm leading-relaxed text-aid-ink md:text-[0.95rem] md:leading-6">
-                      {item.info}
-                    </p>
-                  </li>
-                );
-              })}
-            </ol>
-          </motion.section>
-        ) : null}
+        <FirstAidSteps steps={instant_help} />
 
         {symptoms_option?.length > 0 ? (
           <motion.section
