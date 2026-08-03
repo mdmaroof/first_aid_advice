@@ -47,6 +47,9 @@ const SearchPage = () => {
   const { first_instance, instant_help, medical_advice, symptoms_option } =
     result;
 
+  const symptomsLastSpansFull =
+    (symptoms_option?.length ?? 0) % 2 !== 0;
+
   const handleNewSearch = () => {
     clearResult();
     router.push("/");
@@ -146,7 +149,16 @@ const SearchPage = () => {
               className="grid gap-2 sm:grid-cols-2"
             >
               {symptoms_option.map((item, index) => (
-                <motion.li key={`${item.symptom}-${index}`} variants={staggerItem}>
+                <motion.li
+                  key={`${item.symptom}-${index}`}
+                  variants={staggerItem}
+                  className={
+                    symptomsLastSpansFull &&
+                    index === symptoms_option.length - 1
+                      ? "sm:col-span-2"
+                      : ""
+                  }
+                >
                   <article className="glass h-full rounded-xl px-3 py-2.5">
                     <p className="text-sm font-semibold text-aid-ink">
                       {item.symptom}
