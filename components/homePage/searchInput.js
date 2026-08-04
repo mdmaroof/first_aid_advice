@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { callApi } from "@/hooks/callApi";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
-import { Keyboard, Search } from "lucide-react";
+import { Keyboard, Mic, MicOff, Search } from "lucide-react";
 import { easeOut, scaleTap } from "@/hooks/motion";
+import { useSpeechToText } from "@/hooks/useSpeechToText";
 import { InlineError } from "@/components/InlineStatus";
 import { MAX_SYMPTOM_LENGTH } from "@/lib/aidResult";
 
@@ -20,6 +21,75 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
   const router = useRouter();
   const { setResult } = useResults();
   const expanded = step === "step2";
+  const searchingRef = useRef(false);
+
+  const runSearch = useCallback(
+    async (raw) => {
+      const query = String(raw ?? "").trim();
+      if (!query || searchingRef.current) return;
+
+      searchingRef.current = true;
+      setError?.(null);
+      setStep("step3");
+
+      try {
+        const res = await callApi(query);
+
+        if (res.error) {
+          setError?.(res.message || "Something went wrong. Please try again.");
+          setStep("step2");
+          return;
+        }
+
+        setResult(res.data);
+        router.push("/search");
+      } finally {
+        searchingRef.current = false;
+      }
+    },
+    [router, setError, setResult, setStep]
+  );
+
+  const handleSpeechResult = useCallback(
+    (transcript) => {
+      setInput(transcript);
+      if (error) setError?.(null);
+    },
+    [error, setError]
+  );
+
+  const handleSpeechComplete = useCallback(
+    ({ transcript }) => {
+      const text = String(transcript ?? "").trim();
+      if (!text) {
+        // Silence / no speech — mic already closed; do not search.
+        return;
+      }
+      setInput(text);
+      runSearch(text);
+    },
+    [runSearch]
+  );
+
+  const handleSpeechError = useCallback(
+    (message) => {
+      setError?.(message);
+    },
+    [setError]
+  );
+
+  const { supported: speechSupported, listening, toggle, stop } =
+    useSpeechToText({
+      lang: "en-US",
+      maxLength: MAX_SYMPTOM_LENGTH,
+      onResult: handleSpeechResult,
+      onComplete: handleSpeechComplete,
+      onError: handleSpeechError,
+    });
+
+  useEffect(() => {
+    if (step !== "step2") stop();
+  }, [step, stop]);
 
   const stepMarker = async () => {
     if (step === "step1") {
@@ -30,22 +100,12 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
 
     if (step === "step2") {
       if (!input.trim()) {
-        setError?.("Type a symptom first.");
+        setError?.("Type or speak a symptom first.");
         return;
       }
 
-      setError?.(null);
-      setStep("step3");
-      const res = await callApi(input.trim());
-
-      if (res.error) {
-        setError?.(res.message || "Something went wrong. Please try again.");
-        setStep("step2");
-        return;
-      }
-
-      setResult(res.data);
-      router.push("/search");
+      stop();
+      await runSearch(input);
     }
   };
 
@@ -110,7 +170,9 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
                     setInput(event.target.value);
                     if (error) setError?.(null);
                   }}
-                  placeholder="e.g. chest pain"
+                  placeholder={
+                    listening ? "Listening…" : "e.g. chest pain"
+                  }
                   autoComplete="off"
                   autoFocus
                   maxLength={MAX_SYMPTOM_LENGTH}
@@ -118,6 +180,31 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
                   aria-describedby={error ? "symptom-error" : undefined}
                   className="min-w-0 flex-1 bg-transparent px-2 py-2.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
                 />
+                {speechSupported ? (
+                  <motion.button
+                    type="button"
+                    whileHover={scaleTap.whileHover}
+                    whileTap={scaleTap.whileTap}
+                    transition={scaleTap.transition}
+                    onClick={toggle}
+                    aria-pressed={listening}
+                    aria-label={
+                      listening ? "Stop voice input" : "Speak symptoms"
+                    }
+                    title={listening ? "Stop listening" : "Speak symptoms"}
+                    className={`shrink-0 rounded-xl p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal ${
+                      listening
+                        ? "bg-aid-emergency/90 text-white hover:bg-aid-emergency"
+                        : "bg-aid-teal/15 text-aid-teal hover:bg-aid-teal/25"
+                    }`}
+                  >
+                    {listening ? (
+                      <MicOff className="h-4 w-4" strokeWidth={2.25} />
+                    ) : (
+                      <Mic className="h-4 w-4" strokeWidth={2.25} />
+                    )}
+                  </motion.button>
+                ) : null}
                 <motion.button
                   type="submit"
                   whileHover={scaleTap.whileHover}
