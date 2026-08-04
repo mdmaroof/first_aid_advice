@@ -81,14 +81,16 @@ export function EmergencyActions({
   );
 }
 
-export function MedicalDisclaimer({ className = "" }) {
+export function MedicalDisclaimer({ className = "", boxed = false }) {
   return (
     <p
       role="note"
-      className={`flex items-start gap-2 text-sm leading-relaxed text-aid-muted ${className}`}
+      className={`inline-flex max-w-md items-start gap-1.5 text-left text-sm leading-relaxed text-aid-muted ${
+        boxed ? "glass rounded-2xl px-3 py-2.5" : ""
+      } ${className}`}
     >
       <Info
-        className="shrink-0 text-aid-teal"
+        className="mt-0.5 h-4 w-4 shrink-0 text-aid-teal"
         strokeWidth={2.25}
         aria-hidden="true"
       />

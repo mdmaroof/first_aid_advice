@@ -5,7 +5,6 @@ import { AlertTriangle, HeartHandshake } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, staggerContainer, staggerItem } from "@/hooks/motion";
 import { normalizeSymptoms } from "@/lib/aidResult";
-import { EmergencyActions } from "@/components/SafetyBanner";
 
 const TABS = [
   {

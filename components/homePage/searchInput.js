@@ -50,17 +50,17 @@ const InputSearchBox = ({ onSubmit, input, setInput, error }) => {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96, y: -6 }}
       transition={{ duration: 0.28, ease: easeOut }}
-      className="flex w-full max-w-md flex-col items-center"
+      className="flex w-full min-w-0 max-w-md flex-col items-center"
     >
       <form
         onSubmit={(event) => {
           event.preventDefault();
           onSubmit();
         }}
-        className="w-full"
+        className="w-full min-w-0"
       >
-        <div className="glass-strong grid grid-cols-[auto_1fr_auto] items-center overflow-hidden rounded-2xl focus-within:border-white/80">
-          <span className="pl-4 text-aid-teal" aria-hidden="true">
+        <div className="glass-strong flex w-full min-w-0 items-center gap-1 rounded-2xl p-1.5 focus-within:border-white/80">
+          <span className="pl-2.5 text-aid-teal" aria-hidden="true">
             <Search className="h-4 w-4" strokeWidth={2.25} />
           </span>
           <label htmlFor="symptom-input" className="sr-only">
@@ -70,18 +70,19 @@ const InputSearchBox = ({ onSubmit, input, setInput, error }) => {
             id="symptom-input"
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="e.g. sharp chest pain"
+            placeholder="e.g. chest pain"
             autoComplete="off"
             maxLength={MAX_SYMPTOM_LENGTH}
             aria-invalid={Boolean(error) || undefined}
             aria-describedby={error ? "symptom-error" : undefined}
-            className="bg-transparent px-3 py-3.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
+            className="min-w-0 flex-1 bg-transparent px-2 py-2.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
           />
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="bg-aid-ink/90 px-5 py-3.5 font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
+            whileHover={scaleTap.whileHover}
+            whileTap={scaleTap.whileTap}
+            transition={scaleTap.transition}
+            className="shrink-0 rounded-xl bg-aid-ink/90 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-aid-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-ink"
           >
             Search
           </motion.button>
@@ -126,7 +127,7 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
   };
 
   return (
-    <div className="mt-8 flex w-full flex-col items-center justify-center md:mt-9">
+    <div className="mt-8 flex w-full min-w-0 flex-col items-center justify-center md:mt-9">
       <AnimatePresence mode="wait">
         {step === "step1" ? (
           <ButtonComponent
