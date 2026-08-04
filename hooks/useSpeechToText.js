@@ -77,7 +77,7 @@ export function useSpeechToText({
 
   const start = useCallback(() => {
     if (!Recognition) {
-      onErrorRef.current?.("Voice input isn’t supported in this browser.");
+      onErrorRef.current?.("Voice input isn't supported in this browser.");
       return;
     }
 
@@ -145,7 +145,7 @@ export function useSpeechToText({
           "Microphone blocked. Allow mic access to speak symptoms."
         );
       } else {
-        onErrorRef.current?.("Couldn’t hear that. Try again or type.");
+        onErrorRef.current?.("Couldn't hear that. Try again or type.");
       }
       completeOnce(sessionId, "error");
     };
@@ -161,7 +161,7 @@ export function useSpeechToText({
     try {
       recognition.start();
     } catch {
-      onErrorRef.current?.("Couldn’t start voice input. Try again.");
+      onErrorRef.current?.("Couldn't start voice input. Try again.");
       setListening(false);
       recognitionRef.current = null;
       completedRef.current = true;

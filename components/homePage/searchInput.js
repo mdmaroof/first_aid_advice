@@ -5,9 +5,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { callApi } from "@/hooks/callApi";
 import { useResults } from "@/context/ResultsContext";
 import { useRouter } from "next/navigation";
-import { Keyboard, Mic, MicOff, Search } from "lucide-react";
+import { Keyboard, Mic, Search } from "lucide-react";
 import { easeOut, scaleTap } from "@/hooks/motion";
 import { useSpeechToText } from "@/hooks/useSpeechToText";
+import { ListeningMicIcon, ListeningLabel } from "@/components/ListeningMicIcon";
 import { InlineError } from "@/components/InlineStatus";
 import { MAX_SYMPTOM_LENGTH } from "@/lib/aidResult";
 
@@ -163,27 +164,33 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
                 <label htmlFor="symptom-input" className="sr-only">
                   Describe your symptoms
                 </label>
-                <input
-                  id="symptom-input"
-                  value={input}
-                  onChange={(event) => {
-                    setInput(event.target.value);
-                    if (error) setError?.(null);
-                  }}
-                  placeholder={
-                    listening ? "Listening…" : "e.g. chest pain"
-                  }
-                  autoComplete="off"
-                  autoFocus
-                  maxLength={MAX_SYMPTOM_LENGTH}
-                  aria-invalid={Boolean(error) || undefined}
-                  aria-describedby={error ? "symptom-error" : undefined}
-                  className="min-w-0 flex-1 bg-transparent px-2 py-2.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
-                />
+                <div className="relative min-w-0 flex-1">
+                  {listening && !input.trim() ? (
+                    <div className="pointer-events-none absolute inset-0 flex items-center px-2">
+                      <ListeningLabel />
+                    </div>
+                  ) : null}
+                  <input
+                    id="symptom-input"
+                    value={input}
+                    onChange={(event) => {
+                      setInput(event.target.value);
+                      if (error) setError?.(null);
+                    }}
+                    placeholder={listening ? "" : "e.g. chest pain"}
+                    autoComplete="off"
+                    autoFocus
+                    maxLength={MAX_SYMPTOM_LENGTH}
+                    aria-invalid={Boolean(error) || undefined}
+                    aria-describedby={error ? "symptom-error" : undefined}
+                    className="w-full min-w-0 bg-transparent px-2 py-2.5 text-base text-aid-ink placeholder:text-aid-muted/70 focus-visible:outline-none"
+                  />
+                </div>
                 {speechSupported ? (
                   <motion.button
                     type="button"
-                    whileHover={scaleTap.whileHover}
+                    layout={false}
+                    whileHover={listening ? undefined : scaleTap.whileHover}
                     whileTap={scaleTap.whileTap}
                     transition={scaleTap.transition}
                     onClick={toggle}
@@ -192,16 +199,16 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
                       listening ? "Stop voice input" : "Speak symptoms"
                     }
                     title={listening ? "Stop listening" : "Speak symptoms"}
-                    className={`shrink-0 rounded-xl p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal ${
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aid-teal ${
                       listening
-                        ? "bg-aid-emergency/90 text-white hover:bg-aid-emergency"
+                        ? "bg-aid-teal text-white hover:bg-aid-seafoam"
                         : "bg-aid-teal/15 text-aid-teal hover:bg-aid-teal/25"
                     }`}
                   >
                     {listening ? (
-                      <MicOff className="h-4 w-4" strokeWidth={2.25} />
+                      <ListeningMicIcon />
                     ) : (
-                      <Mic className="h-4 w-4" strokeWidth={2.25} />
+                      <Mic className="h-4 w-4 shrink-0" strokeWidth={2.25} />
                     )}
                   </motion.button>
                 ) : null}
