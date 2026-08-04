@@ -85,18 +85,28 @@ export function MedicalDisclaimer({ className = "", boxed = false }) {
   return (
     <p
       role="note"
-      className={`inline-flex max-w-md items-start gap-1.5 text-left text-sm leading-relaxed text-aid-muted ${
-        boxed ? "glass rounded-2xl px-3 py-2.5" : ""
+      className={`inline-flex max-w-md items-start text-left leading-relaxed ${
+        boxed
+          ? "glass-strong gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold"
+          : "gap-1.5 text-sm text-aid-muted"
       } ${className}`}
     >
       <Info
-        className="mt-0.5 h-4 w-4 shrink-0 text-aid-teal"
-        strokeWidth={2.25}
+        className={`mt-0.5 shrink-0 text-aid-teal ${
+          boxed ? "h-5 w-5" : "h-4 w-4"
+        }`}
+        strokeWidth={boxed ? 2.5 : 2.25}
         aria-hidden="true"
       />
-      <span>
-        General first-aid only — not a diagnosis. In danger? Call emergency
-        services now.
+      <span className={boxed ? "text-aid-teal" : undefined}>
+        General first-aid only — not a diagnosis.{" "}
+        {boxed ? (
+          <span className="text-aid-emergency">
+            In danger? Call emergency services now.
+          </span>
+        ) : (
+          "In danger? Call emergency services now."
+        )}
       </span>
     </p>
   );
