@@ -2,7 +2,7 @@
 
 ## Architecture direction
 
-Keep the current Next.js application as the R1 presentation and immediate-guidance layer. Introduce a dedicated authenticated data platform only when R2 begins; do not retrofit personal health records into browser session storage or the current AI endpoint.
+Keep the current Next.js application as the R1 presentation and immediate-guidance layer. Authenticated records remain in the Go data platform and are never copied into browser session storage. For a signed-in, explicitly opted-in search, the server may attach a minimized snapshot of allergies, current medicines, and up to five recent history entries to that single AI request; the snapshot is not persisted with the session result.
 
 ```mermaid
 flowchart LR
@@ -44,6 +44,6 @@ flowchart LR
 
 - Curated content wins for known high-risk scenarios; AI is a fallback with a strict schema and escalation policy.
 - The model must receive the minimum symptom context; provider retention/training settings must be contractually reviewed before R2.
+- Saved context is off by default, requires an explicit per-search choice, excludes identity/contact fields, is length/count limited, and must never reduce emergency escalation or produce diagnosis/prescribing advice.
 - Store an immutable content/version identifier with saved guidance so it can be explained or withdrawn later.
 - Design APIs around patient-controlled sharing grants rather than clinic-wide record visibility.
-

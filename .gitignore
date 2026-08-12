@@ -15,6 +15,10 @@
 **/.next-verify/
 /out/
 
+apps/doctor/.next
+apps/patient/.next
+apps/landing/.next
+
 # production
 /build
 

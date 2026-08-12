@@ -2,7 +2,7 @@
 
 ## Scope and current posture
 
-This assessment covers the current SnapAid codebase and the planned Curais expansion. Public Curais Immediate Care sends user-entered symptom text to a third-party AI API, keeps results in browser session storage, and provides emergency guidance without requiring an account. Authenticated Curais records are isolated behind patient sessions. Immediate Care fetches profile/history only after explicit user action and persists a care moment only after a separate explicit save action.
+This assessment covers the current SnapAid codebase and the planned Curais expansion. Public Curais Immediate Care sends user-entered symptom text to a third-party AI API, keeps results in browser session storage, and provides emergency guidance without requiring an account. Authenticated Curais records are isolated behind patient sessions. A signed-in patient may explicitly enable saved context for one search; the server then sends only allergy names, medicine names, and a bounded recent-history snapshot, excluding identity/contact fields. Care moments persist only after a separate explicit save action.
 
 ## Current strengths
 
@@ -16,7 +16,7 @@ This assessment covers the current SnapAid codebase and the planned Curais expan
 | Priority | Finding | Required action |
 | --- | --- | --- |
 | P0 | AI content can be unsafe or misleading despite structured output. | Add clinical-review governance, high-risk keyword routing to curated emergency content, output safety checks, and user reporting before a public Curais launch. |
-| P0 | Health information is transmitted to a third-party model provider. | Publish a clear privacy notice; minimize/strip identifiers; verify provider data-retention, regional processing, and no-training terms; obtain explicit consent before record saving. |
+| P0 | Symptom text and optional saved context are transmitted to a third-party model provider. | Publish a clear privacy notice; keep saved context off by default; minimize/strip identifiers; verify provider data-retention, regional processing, and no-training terms; log consent without logging health content; obtain separate consent before record saving. |
 | P1 | Current in-memory rate limiter does not work reliably across serverless instances. | Move to a shared, durable rate-limit store with bot/abuse monitoring. |
 | P1 | No authentication/authorization model exists for future records. | Implement scoped RBAC/ABAC, patient sharing grants, MFA for clinicians, and audit logs before storing PHI/health records. |
 | P1 | No formal security headers/CSP are visible in the current app configuration. | Add CSP, HSTS, frame protections, secure cookies, dependency scanning, and production error redaction. |
