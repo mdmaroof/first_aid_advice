@@ -28,12 +28,23 @@ type stubAccess struct{}
 
 type stubAuth struct{}
 type stubClinical struct{}
-func (stubClinical) ListHistory(context.Context, string) ([]clinical.HistoryEntry, error) { return nil, nil }
-func (stubClinical) AddHistory(context.Context, string, string, clinical.HistoryEntry) (clinical.HistoryEntry, error) { return clinical.HistoryEntry{}, nil }
+
+func (stubClinical) ListHistory(context.Context, string) ([]clinical.HistoryEntry, error) {
+	return nil, nil
+}
+func (stubClinical) AddHistory(context.Context, string, string, clinical.HistoryEntry) (clinical.HistoryEntry, error) {
+	return clinical.HistoryEntry{}, nil
+}
+
 type stubFamily struct{}
+
 func (stubFamily) List(context.Context, string) ([]family.Link, error) { return nil, nil }
-func (stubFamily) Invite(context.Context, string, string, string) (family.Link, error) { return family.Link{}, nil }
-func (stubFamily) Respond(context.Context, string, string, bool, bool) (family.Link, error) { return family.Link{}, nil }
+func (stubFamily) Invite(context.Context, string, string, string) (family.Link, error) {
+	return family.Link{}, nil
+}
+func (stubFamily) Respond(context.Context, string, string, bool, bool) (family.Link, error) {
+	return family.Link{}, nil
+}
 
 func (stubAuth) SignUp(context.Context, string, string, string, string) (auth.Session, error) {
 	return auth.Session{}, nil

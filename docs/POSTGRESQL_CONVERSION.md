@@ -15,7 +15,7 @@ PostgreSQL is the recommended production system of record. Curais relies on rela
 | `?` placeholder | `$1`, `$2`, ... |
 | single process connection | bounded pool with timeouts and health metrics |
 
-Keep `users`, `patient_profiles`, `patient_allergies`, `patient_medications`, `clinics`, `clinic_memberships`, `sharing_grants`, and `audit_events` normalized. Add partial indexes for active grants and memberships.
+Keep `users`, `auth_accounts`, `auth_sessions`, `patient_profiles`, `patient_contacts`, `patient_allergies`, `patient_medications`, `clinics`, `clinic_memberships`, `sharing_grants`, `medical_history_entries`, `family_links`, and `audit_events` normalized. Add partial indexes for active grants and memberships.
 
 ```sql
 CREATE UNIQUE INDEX sharing_grants_active_unique

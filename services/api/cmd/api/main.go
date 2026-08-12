@@ -14,9 +14,9 @@ import (
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/clinical"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/config"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/family"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/httpapi"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
-	"github.com/mdmaroof/first_aid_advice/services/api/internal/family"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/platform/database"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
@@ -45,7 +45,7 @@ func main() {
 
 	profileRepository := profile.NewSQLiteRepository(db)
 	accessRepository := access.NewSQLiteRepository(db)
-	authRepository := auth.NewSQLiteRepository(db)
+	authRepository := auth.NewSQLiteRepository(db, cfg.Environment == "local")
 	clinicalRepository := clinical.NewSQLiteRepository(db)
 	familyRepository := family.NewSQLiteRepository(db)
 	identityResolver := identity.NewSessionResolver(authRepository, identity.NewLocalHeaderResolver(cfg.Environment))

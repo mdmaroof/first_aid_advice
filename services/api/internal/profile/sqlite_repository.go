@@ -69,7 +69,9 @@ func (r *SQLiteRepository) Upsert(ctx context.Context, actorID string, input Pro
 		return Profile{}, err
 	}
 	if strings.TrimSpace(input.MobilePhone) == "" {
-		if _, err := tx.ExecContext(ctx, `DELETE FROM patient_contacts WHERE patient_id=?`, input.PatientID); err != nil { return Profile{}, err }
+		if _, err := tx.ExecContext(ctx, `DELETE FROM patient_contacts WHERE patient_id=?`, input.PatientID); err != nil {
+			return Profile{}, err
+		}
 	} else if _, err := tx.ExecContext(ctx, `INSERT INTO patient_contacts(patient_id, mobile_e164) VALUES(?, ?) ON CONFLICT(patient_id) DO UPDATE SET mobile_e164=excluded.mobile_e164, verified_at=NULL`, input.PatientID, strings.TrimSpace(input.MobilePhone)); err != nil {
 		return Profile{}, fmt.Errorf("save mobile number: %w", err)
 	}

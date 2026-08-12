@@ -9,6 +9,8 @@ MongoDB should not replace PostgreSQL for identity, clinic membership, consent g
 ### PostgreSQL retains
 
 - Users and verified identities.
+- Authentication accounts and hashed sessions.
+- Verified mobile identifiers and family relationship/consent edges.
 - Clinics and role memberships.
 - Sharing grants, consent purpose/version/expiry, and revocation.
 - Audit events and clinical document indexes.

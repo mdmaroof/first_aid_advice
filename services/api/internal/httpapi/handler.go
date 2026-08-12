@@ -55,56 +55,141 @@ func (h *Handler) Routes() http.Handler {
 }
 
 func (h *Handler) listPatientHistory(w http.ResponseWriter, r *http.Request) {
-	patientID := r.PathValue("patientID"); if _, ok := h.authorizePatient(w, r, patientID); !ok { return }
+	patientID := r.PathValue("patientID")
+	if _, ok := h.authorizePatient(w, r, patientID); !ok {
+		return
+	}
 	h.writeHistory(w, r, patientID)
 }
 
 func (h *Handler) addPatientHistory(w http.ResponseWriter, r *http.Request) {
-	patientID := r.PathValue("patientID"); actor, ok := h.authorizePatient(w, r, patientID); if !ok { return }
+	patientID := r.PathValue("patientID")
+	actor, ok := h.authorizePatient(w, r, patientID)
+	if !ok {
+		return
+	}
 	h.createHistory(w, r, patientID, actor.ID, "patient")
 }
 
 func (h *Handler) listDoctorHistory(w http.ResponseWriter, r *http.Request) {
-	actor, ok := h.authorizeRole(w, r, "doctor"); if !ok { return }; patientID := r.PathValue("patientID")
-	if !h.authorizeDoctorPatient(w, r, actor.ID, patientID) { return }; h.writeHistory(w, r, patientID)
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	patientID := r.PathValue("patientID")
+	if !h.authorizeDoctorPatient(w, r, actor.ID, patientID) {
+		return
+	}
+	h.writeHistory(w, r, patientID)
 }
 
 func (h *Handler) addDoctorHistory(w http.ResponseWriter, r *http.Request) {
-	actor, ok := h.authorizeRole(w, r, "doctor"); if !ok { return }; patientID := r.PathValue("patientID")
-	if !h.authorizeDoctorPatient(w, r, actor.ID, patientID) { return }; h.createHistory(w, r, patientID, actor.ID, "doctor")
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	patientID := r.PathValue("patientID")
+	if !h.authorizeDoctorPatient(w, r, actor.ID, patientID) {
+		return
+	}
+	h.createHistory(w, r, patientID, actor.ID, "doctor")
 }
 
 func (h *Handler) writeHistory(w http.ResponseWriter, r *http.Request, patientID string) {
-	items, err := h.clinical.ListHistory(r.Context(), patientID); if err != nil { h.internalError(w, "list history", err); return }
+	items, err := h.clinical.ListHistory(r.Context(), patientID)
+	if err != nil {
+		h.internalError(w, "list history", err)
+		return
+	}
 	writeJSON(w, http.StatusOK, map[string]any{"history": items})
 }
 
 func (h *Handler) createHistory(w http.ResponseWriter, r *http.Request, patientID, actorID, source string) {
-	var input clinical.HistoryEntry; if !decodeJSON(w, r, &input) { return }; input.PatientID = patientID
-	item, err := h.clinical.AddHistory(r.Context(), actorID, source, input); if err != nil { writeError(w, http.StatusBadRequest, "invalid_history", "Enter a title and valid history category."); return }
+	var input clinical.HistoryEntry
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	input.PatientID = patientID
+	item, err := h.clinical.AddHistory(r.Context(), actorID, source, input)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_history", "Enter a title and valid history category.")
+		return
+	}
 	writeJSON(w, http.StatusCreated, item)
 }
 
 func (h *Handler) authorizeDoctorPatient(w http.ResponseWriter, r *http.Request, doctorID, patientID string) bool {
-	allowed, err := h.access.CanDoctorReadPatient(r.Context(), doctorID, patientID); if err != nil { h.internalError(w, "authorize patient", err); return false }
-	if !allowed { writeError(w, http.StatusForbidden, "sharing_grant_required", "An active patient sharing grant is required."); return false }; return true
+	allowed, err := h.access.CanDoctorReadPatient(r.Context(), doctorID, patientID)
+	if err != nil {
+		h.internalError(w, "authorize patient", err)
+		return false
+	}
+	if !allowed {
+		writeError(w, http.StatusForbidden, "sharing_grant_required", "An active patient sharing grant is required.")
+		return false
+	}
+	return true
 }
 
 func (h *Handler) listFamily(w http.ResponseWriter, r *http.Request) {
-	patientID := r.PathValue("patientID"); if _, ok := h.authorizePatient(w, r, patientID); !ok { return }
-	items, err := h.family.List(r.Context(), patientID); if err != nil { h.internalError(w, "list family", err); return }; writeJSON(w, http.StatusOK, map[string]any{"family": items})
+	patientID := r.PathValue("patientID")
+	if _, ok := h.authorizePatient(w, r, patientID); !ok {
+		return
+	}
+	items, err := h.family.List(r.Context(), patientID)
+	if err != nil {
+		h.internalError(w, "list family", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"family": items})
 }
 
 func (h *Handler) inviteFamily(w http.ResponseWriter, r *http.Request) {
-	patientID := r.PathValue("patientID"); if _, ok := h.authorizePatient(w, r, patientID); !ok { return }
-	var input struct { Email string `json:"email"`; Relationship string `json:"relationship"` }; if !decodeJSON(w, r, &input) { return }
-	item, err := h.family.Invite(r.Context(), patientID, input.Email, input.Relationship); if errors.Is(err, family.ErrNotFound) { writeError(w, http.StatusNotFound, "patient_not_found", "No patient account was found for that email."); return }; if err != nil { h.internalError(w, "invite family", err); return }; writeJSON(w, http.StatusCreated, item)
+	patientID := r.PathValue("patientID")
+	if _, ok := h.authorizePatient(w, r, patientID); !ok {
+		return
+	}
+	var input struct {
+		Email        string `json:"email"`
+		Relationship string `json:"relationship"`
+	}
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.family.Invite(r.Context(), patientID, input.Email, input.Relationship)
+	if errors.Is(err, family.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "patient_not_found", "No patient account was found for that email.")
+		return
+	}
+	if err != nil {
+		h.internalError(w, "invite family", err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, item)
 }
 
 func (h *Handler) respondFamily(w http.ResponseWriter, r *http.Request) {
-	patientID := r.PathValue("patientID"); if _, ok := h.authorizePatient(w, r, patientID); !ok { return }
-	var input struct { Accept bool `json:"accept"`; ShareFamilyHistory bool `json:"shareFamilyHistory"` }; if !decodeJSON(w, r, &input) { return }
-	item, err := h.family.Respond(r.Context(), patientID, r.PathValue("linkID"), input.Accept, input.ShareFamilyHistory); if errors.Is(err, family.ErrNotFound) { writeError(w, http.StatusNotFound, "invitation_not_found", "Pending invitation not found."); return }; if err != nil { h.internalError(w, "respond family", err); return }; writeJSON(w, http.StatusOK, item)
+	patientID := r.PathValue("patientID")
+	if _, ok := h.authorizePatient(w, r, patientID); !ok {
+		return
+	}
+	var input struct {
+		Accept             bool `json:"accept"`
+		ShareFamilyHistory bool `json:"shareFamilyHistory"`
+	}
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.family.Respond(r.Context(), patientID, r.PathValue("linkID"), input.Accept, input.ShareFamilyHistory)
+	if errors.Is(err, family.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "invitation_not_found", "Pending invitation not found.")
+		return
+	}
+	if err != nil {
+		h.internalError(w, "respond family", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, item)
 }
 
 type credentialsInput struct {

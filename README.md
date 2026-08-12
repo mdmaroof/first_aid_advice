@@ -18,22 +18,27 @@ npm run api:dev     # http://localhost:8080
 
 Patient routes:
 
-- `/` and `/search` - existing SnapAid Immediate Care flow.
-- `/patient` - Curais patient home.
+- `/signin` - patient sign-in and sign-up.
+- `/patient` - authenticated Curais patient home.
+- `/patient/snapaid` - existing SnapAid Immediate Care flow.
 - `/patient/profile` - local My Health vertical slice backed by the Go API.
 - `/patient/care-team` - grant/revoke local clinic profile access.
+- `/patient/history` - patient-authored longitudinal health history.
+- `/patient/family` - invitation-based family account connections.
 
 Doctor routes:
 
-- `/` - doctor workspace.
+- `/signin` - doctor sign-in and sign-up.
+- `/` - authenticated doctor EMR workspace.
 - `/patients` - patients with active grants to the doctor's clinic.
-- `/patients/{patientID}` - consent-checked shared profile.
+- `/patients/{patientID}` - consent-checked shared profile and clinical history.
 
-The local profile proxy uses `patient-local-1` only for development. It is not
-a production authentication mechanism.
+The apps use opaque Go API sessions stored in HttpOnly cookies. Local identity
+headers remain available only as a development testing adapter.
 
 API endpoints and migration runbooks are documented in `docs/API_REFERENCE.md`,
-`docs/POSTGRESQL_CONVERSION.md`, and `docs/MONGODB_CONVERSION.md`.
+`docs/openapi.yaml`, `docs/SWAGGER_GUIDE.md`, `docs/POSTGRESQL_CONVERSION.md`,
+and `docs/MONGODB_CONVERSION.md`.
 
 For deployment, create separate projects rooted at `apps/patient` and
 `apps/doctor`, and deploy `services/api` as an independent Go service. Do not

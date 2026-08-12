@@ -18,9 +18,14 @@ import (
 
 const sessionLifetime = 7 * 24 * time.Hour
 
-type SQLiteRepository struct{ db *sql.DB }
+type SQLiteRepository struct {
+	db                  *sql.DB
+	joinLocalDemoClinic bool
+}
 
-func NewSQLiteRepository(db *sql.DB) *SQLiteRepository { return &SQLiteRepository{db: db} }
+func NewSQLiteRepository(db *sql.DB, joinLocalDemoClinic ...bool) *SQLiteRepository {
+	return &SQLiteRepository{db: db, joinLocalDemoClinic: len(joinLocalDemoClinic) > 0 && joinLocalDemoClinic[0]}
+}
 
 func (r *SQLiteRepository) SignUp(ctx context.Context, email, password, displayName, role string) (Session, error) {
 	email = normalizeEmail(email)
@@ -56,6 +61,11 @@ func (r *SQLiteRepository) SignUp(ctx context.Context, email, password, displayN
 	}
 	if role == "patient" {
 		if _, err = tx.ExecContext(ctx, `INSERT INTO patient_profiles(patient_id, display_name, version, updated_at) VALUES(?, ?, 1, ?)`, userID, displayName, now.Format(time.RFC3339Nano)); err != nil {
+			return Session{}, err
+		}
+	}
+	if role == "doctor" && r.joinLocalDemoClinic {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO clinic_memberships(clinic_id, user_id, role, status, created_at) VALUES('clinic-local-1', ?, 'doctor', 'active', ?) ON CONFLICT(clinic_id, user_id) DO NOTHING`, userID, now.Format(time.RFC3339Nano)); err != nil {
 			return Session{}, err
 		}
 	}
