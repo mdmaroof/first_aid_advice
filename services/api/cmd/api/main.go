@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/curais/curais/services/api/internal/config"
-	"github.com/curais/curais/services/api/internal/httpapi"
-	"github.com/curais/curais/services/api/internal/platform/database"
-	"github.com/curais/curais/services/api/internal/profile"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/config"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/httpapi"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/platform/database"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
 
 func main() {

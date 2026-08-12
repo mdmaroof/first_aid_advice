@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/curais/curais/services/api/internal/platform/database"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/platform/database"
 )
 
 func TestSQLiteRepositoryRoundTrip(t *testing.T) {

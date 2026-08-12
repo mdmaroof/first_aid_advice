@@ -1,4 +1,4 @@
-module github.com/curais/curais/services/api
+module github.com/mdmaroof/first_aid_advice/services/api
 
 go 1.23
 

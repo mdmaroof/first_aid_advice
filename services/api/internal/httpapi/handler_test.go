@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/curais/curais/services/api/internal/profile"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
 
 type stubProfiles struct{}
