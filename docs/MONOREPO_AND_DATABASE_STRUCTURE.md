@@ -6,6 +6,7 @@
 apps/
   patient/      Next.js patient application; SnapAid is Immediate Care
   doctor/       Next.js consent-led clinical workspace
+  landing/      Public Curais website and legal information
 packages/
   ui/           shared Curais brand, shell, and presentation primitives
 services/

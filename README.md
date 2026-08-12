@@ -4,6 +4,7 @@ Curais contains two independently deployable applications and a Go API:
 
 - `apps/patient` - patient experience; the existing SnapAid product remains its Immediate Care feature.
 - `apps/doctor` - clinical workspace.
+- `apps/landing` - public Curais website, product story, modal entry points, privacy and terms.
 - `packages/ui` - shared visual primitives and Curais identity.
 - `services/api` - Go backend using SQLite locally.
 
@@ -13,6 +14,7 @@ Curais contains two independently deployable applications and a Go API:
 npm install
 npm run dev:patient # http://localhost:3000
 npm run dev:doctor  # http://localhost:3001
+npm run dev:landing # http://localhost:4000
 npm run api:dev     # http://localhost:8080
 ```
 
@@ -41,6 +43,12 @@ Doctor routes:
 - `/prescriptions` - attributable medication orders and instructions.
 - `/labs` - routine and urgent diagnostic orders.
 
+Public website routes:
+
+- `/` - Curais landing page.
+- `/privacy` - plain-language privacy policy draft.
+- `/terms` - terms and conditions draft.
+
 The apps use opaque Go API sessions stored in HttpOnly cookies. Local identity
 headers remain available only as a development testing adapter.
 
@@ -49,7 +57,8 @@ API endpoints and migration runbooks are documented in `docs/API_REFERENCE.md`,
 and `docs/MONGODB_CONVERSION.md`.
 
 For deployment, create separate projects rooted at `apps/patient` and
-`apps/doctor`, and deploy `services/api` as an independent Go service. Do not
+`apps/doctor`, deploy `apps/landing` as the public `curais.com` project, and
+deploy `services/api` as an independent Go service. Do not
 serve the local SQLite database from a serverless filesystem.
 
 ## SnapAid

@@ -18,6 +18,7 @@
 - OpenAPI 3.1 Swagger contract and credential guide.
 - Doctor EMR dashboard, appointments, encounters/vitals, prescriptions, and lab orders.
 - Standard error envelopes, request-ID correlation, panic recovery, structured failure logs, shared UI parsing, and an operational error catalog.
+- Public landing website on port 4000 with responsive glass UI, scroll motion, product entry modals, modern navigation/footer, privacy policy and terms.
 
 ## Ticket mapping
 

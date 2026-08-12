@@ -9,9 +9,11 @@
   "scripts": {
     "dev:patient": "npm run dev --workspace=@curais/patient",
     "dev:doctor": "npm run dev --workspace=@curais/doctor",
+    "dev:landing": "npm run dev --workspace=@curais/landing",
     "build": "npm run build --workspaces --if-present",
     "build:patient": "npm run build --workspace=@curais/patient",
     "build:doctor": "npm run build --workspace=@curais/doctor",
+    "build:landing": "npm run build --workspace=@curais/landing",
     "lint": "npm run lint --workspaces --if-present",
     "api:dev": "cd services/api && go run ./cmd/api",
     "api:test": "cd services/api && go test ./..."
