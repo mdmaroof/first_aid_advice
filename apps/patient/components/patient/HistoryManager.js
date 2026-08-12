@@ -1,12 +1,13 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { errorMessage, readApiResponse } from "@curais/ui";
+import { errorMessage, readApiResponse, useToast } from "@curais/ui";
 
 export function HistoryManager() {
+  const { showToast } = useToast();
   const [items, setItems] = useState([]); const [message, setMessage] = useState("Loading history…");
   const load = useCallback(async () => { const response = await fetch("/api/curais/history", { cache: "no-store" }); const payload = await readApiResponse(response); setItems(payload.history || []); setMessage(""); }, []);
-  useEffect(() => { load().catch((error) => setMessage(errorMessage(error, "Unable to load history."))); }, [load]);
-  async function add(event) { event.preventDefault(); const form = event.currentTarget; setMessage("Saving…"); try { const response = await fetch("/api/curais/history", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }); await readApiResponse(response); form.reset(); await load(); } catch (error) { setMessage(errorMessage(error, "Could not save the history entry.")); } }
+  useEffect(() => { load().catch((error) => { setMessage(""); showToast({ type: "error", title: "History could not load", message: errorMessage(error, "Unable to load history.") }); }); }, [load, showToast]);
+  async function add(event) { event.preventDefault(); const form = event.currentTarget; setMessage("Saving…"); try { const response = await fetch("/api/curais/history", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }); await readApiResponse(response); form.reset(); await load(); showToast({ type: "success", title: "History updated", message: "The health event was added to your timeline." }); } catch (error) { setMessage(""); showToast({ type: "error", title: "History was not updated", message: errorMessage(error, "Could not save the history entry.") }); } }
   return <div className="mt-8 grid gap-6 md:grid-cols-[0.8fr_1.2fr]"><form onSubmit={add} className="glass-strong h-fit rounded-[2rem] p-5"><h2 className="font-quicksand text-xl font-bold">Add health event</h2><Field name="title" label="Title" placeholder="e.g. Asthma diagnosis" /><label className="mt-4 block text-sm font-bold">Category<select name="category" className="mt-1.5 w-full rounded-xl bg-white/60 px-3 py-3"><option value="condition">Condition</option><option value="procedure">Procedure</option><option value="diagnosis">Diagnosis</option><option value="visit">Visit</option><option value="family_history">Family history</option><option value="other">Other</option></select></label><Field name="occurredAt" label="Date" type="date" /><label className="mt-4 block text-sm font-bold">Details<textarea name="details" className="mt-1.5 min-h-24 w-full rounded-xl bg-white/60 px-3 py-3" /></label><button className="mt-5 w-full rounded-xl bg-aid-teal px-4 py-3 font-bold text-white">Save to history</button><p className="mt-3 text-sm text-aid-muted">{message}</p></form><HistoryList items={items} /></div>;
 }
 function Field({ label, ...props }) { return <label className="mt-4 block text-sm font-bold">{label}<input required {...props} className="mt-1.5 w-full rounded-xl bg-white/60 px-3 py-3" /></label>; }

@@ -2,6 +2,8 @@
 
 This is the operational reference for errors returned by the Curais API, the Patient app, the Doctor EMR, and SnapAid.
 
+Application-level errors appear in the shared floating glass toast. The toast includes the safe API message and request reference when available. Input-specific validation remains inline so the user can correct the exact field.
+
 ## Standard error response
 
 Every Go API error uses this shape:

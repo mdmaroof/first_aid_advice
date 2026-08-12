@@ -2,11 +2,14 @@
 
 import { ResultsProvider } from "@/context/ResultsContext";
 import { EmergencyProvider } from "@/context/EmergencyContext";
+import { ToastProvider } from "@curais/ui";
 
 export function Providers({ children }) {
   return (
-    <EmergencyProvider>
-      <ResultsProvider>{children}</ResultsProvider>
-    </EmergencyProvider>
+    <ToastProvider>
+      <EmergencyProvider>
+        <ResultsProvider>{children}</ResultsProvider>
+      </EmergencyProvider>
+    </ToastProvider>
   );
 }

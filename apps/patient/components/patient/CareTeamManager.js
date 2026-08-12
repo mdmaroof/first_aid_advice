@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Building2, Loader2, ShieldCheck, ShieldX } from "lucide-react";
-import { errorMessage, readApiResponse } from "@curais/ui";
+import { errorMessage, readApiResponse, useToast } from "@curais/ui";
 
 export function CareTeamManager() {
+  const { showToast } = useToast();
   const [data, setData] = useState({ clinics: [], grants: [] });
   const [status, setStatus] = useState({ type: "loading", message: "Loading access…" });
 
@@ -16,9 +17,10 @@ export function CareTeamManager() {
       setData(result);
       setStatus({ type: "idle", message: "Access is controlled by you" });
     } catch (error) {
-      setStatus({ type: "error", message: errorMessage(error, "Unable to load care team.") });
+      setStatus({ type: "idle", message: "Access information unavailable" });
+      showToast({ type: "error", title: "Care Team could not load", message: errorMessage(error, "Unable to load care team.") });
     }
-  }, []);
+  }, [showToast]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -26,14 +28,14 @@ export function CareTeamManager() {
 
   async function grant(clinicId) {
     setStatus({ type: "saving", message: "Granting access…" });
-    try { const response = await fetch("/api/curais/care-team", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ clinicId, scope: "profile.read" }) }); await readApiResponse(response); await load(); }
-    catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to grant access.") }); }
+    try { const response = await fetch("/api/curais/care-team", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ clinicId, scope: "profile.read" }) }); await readApiResponse(response); await load(); showToast({ type: "success", title: "Clinic access granted", message: "The clinic can now read your essential health profile." }); }
+    catch (error) { setStatus({ type: "idle", message: "Access unchanged" }); showToast({ type: "error", title: "Access was not granted", message: errorMessage(error, "Unable to grant access.") }); }
   }
 
   async function revoke(grantId) {
     setStatus({ type: "saving", message: "Revoking access…" });
-    try { const response = await fetch(`/api/curais/care-team/${encodeURIComponent(grantId)}`, { method: "DELETE" }); await readApiResponse(response); await load(); }
-    catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to revoke access.") }); }
+    try { const response = await fetch(`/api/curais/care-team/${encodeURIComponent(grantId)}`, { method: "DELETE" }); await readApiResponse(response); await load(); showToast({ type: "warning", title: "Clinic access revoked", message: "Future access is blocked immediately. Existing attributable clinical records are retained." }); }
+    catch (error) { setStatus({ type: "idle", message: "Access unchanged" }); showToast({ type: "error", title: "Access was not revoked", message: errorMessage(error, "Unable to revoke access.") }); }
   }
 
   return (

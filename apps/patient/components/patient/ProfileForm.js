@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Save, ShieldCheck } from "lucide-react";
-import { errorMessage, readApiResponse } from "@curais/ui";
+import { errorMessage, readApiResponse, useToast } from "@curais/ui";
 
 const emptyProfile = {
   displayName: "",
@@ -23,6 +23,7 @@ function textToList(value, extraField) {
 }
 
 export function ProfileForm() {
+  const { showToast } = useToast();
   const [profile, setProfile] = useState(emptyProfile);
   const [allergies, setAllergies] = useState("");
   const [medications, setMedications] = useState("");
@@ -44,9 +45,9 @@ export function ProfileForm() {
         }
         setStatus({ type: "idle", message: value ? `Saved profile version ${value.version}` : "No saved profile yet" });
       })
-      .catch((error) => active && setStatus({ type: "error", message: errorMessage(error, "Unable to load your profile.") }));
+      .catch((error) => { if (active) { setStatus({ type: "idle", message: "Profile unavailable" }); showToast({ type: "error", title: "Profile could not load", message: errorMessage(error, "Unable to load your profile.") }); } });
     return () => { active = false; };
-  }, []);
+  }, [showToast]);
 
   const update = (field, value) => setProfile((current) => ({ ...current, [field]: value }));
   const updateContact = (field, value) => setProfile((current) => ({ ...current, emergencyContact: { ...current.emergencyContact, [field]: value } }));
@@ -63,8 +64,10 @@ export function ProfileForm() {
       const result = await readApiResponse(response);
       setProfile(result);
       setStatus({ type: "success", message: `Saved profile version ${result.version}` });
+      showToast({ type: "success", title: "Profile saved", message: "Your latest health information is now available." });
     } catch (error) {
-      setStatus({ type: "error", message: errorMessage(error, "Unable to save profile.") });
+      setStatus({ type: "idle", message: "Changes not saved" });
+      showToast({ type: "error", title: "Profile was not saved", message: errorMessage(error, "Unable to save profile.") });
     }
   }
 

@@ -1,5 +1,16 @@
 # Curais Frontend Specification
 
+## Notifications and validation
+
+Both Patient and Doctor apps use the shared glassmorphism toast viewport at the top-right on desktop and full-width near the top on mobile.
+
+- `error`: failed network, authentication, authorization, load, or save action.
+- `success`: completed save, creation, consent, or invitation action.
+- `info`: neutral workflow outcome that does not require correction.
+- `warning`: consequential but successful action or caution, such as consent revocation.
+
+Toasts are dismissible, stack to four visible items, use accessible live regions, and normally close after six seconds. Field-level validation stays inline beneath the relevant input and moves focus to the first invalid field. Loading state stays next to the active control/content; it is not a toast.
+
 ## Information architecture
 
 R1 has one immediate-care experience. R2 introduces a patient home with **Immediate Care**, **My Health**, and **Care Team**. Clinic users access a distinct, clearly labelled workspace; never mix clinical controls into the emergency flow.
@@ -41,4 +52,3 @@ R1 has one immediate-care experience. R2 introduces a patient home with **Immedi
 | Invalid/unsafe result | show retry plus emergency/safety path; do not render partial guidance |
 | Signed out | allow immediate care; explain sign-in benefit before saving |
 | Consent required | concise purpose, data categories, retention, revoke link |
-

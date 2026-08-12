@@ -3,19 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandMark } from "./BrandMark";
+import { useToast } from "./Toast";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function AuthForm({ role, homePath, counterpart }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [mode, setMode] = useState("signin");
   const [busy, setBusy] = useState(false);
-  const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
   function changeMode(nextMode) {
     setMode(nextMode);
-    setFormError("");
     setFieldErrors({});
   }
 
@@ -41,13 +41,11 @@ export function AuthForm({ role, homePath, counterpart }) {
 
     if (Object.keys(validationErrors).length > 0) {
       setFieldErrors(validationErrors);
-      setFormError("");
       form.elements.namedItem(Object.keys(validationErrors)[0])?.focus();
       return;
     }
 
     setBusy(true);
-    setFormError("");
     setFieldErrors({});
     try {
       const response = await fetch(`/api/auth/${mode}`, {
@@ -61,13 +59,27 @@ export function AuthForm({ role, homePath, counterpart }) {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setFormError(payload?.error?.message || "We could not complete that request. Please try again.");
+        showToast({
+          type: "error",
+          title: mode === "signin" ? "Sign-in failed" : "Account could not be created",
+          message: payload?.error?.message || "We could not complete that request. Please try again.",
+        });
         return;
       }
+      showToast({
+        type: "success",
+        title: mode === "signin" ? "Welcome back" : "Account created",
+        message: `Opening your ${role === "doctor" ? "clinical workspace" : "health home"}.`,
+        duration: 3500,
+      });
       router.replace(homePath);
       router.refresh();
     } catch {
-      setFormError("Curais is temporarily unavailable. Please wait a moment and try again.");
+      showToast({
+        type: "error",
+        title: "Curais is unavailable",
+        message: "Please wait a moment and try again.",
+      });
     } finally {
       setBusy(false);
     }
@@ -134,11 +146,6 @@ export function AuthForm({ role, homePath, counterpart }) {
             error={fieldErrors.password}
             onChange={() => clearFieldError("password")}
           />
-          {formError ? (
-            <p role="alert" className="rounded-xl border border-red-200 bg-red-50/80 px-3 py-2.5 text-sm font-semibold text-aid-emergency">
-              {formError}
-            </p>
-          ) : null}
           <button
             disabled={busy}
             className="w-full rounded-2xl bg-aid-teal px-4 py-3 font-bold text-white transition hover:bg-aid-teal-deep disabled:cursor-wait disabled:opacity-60"

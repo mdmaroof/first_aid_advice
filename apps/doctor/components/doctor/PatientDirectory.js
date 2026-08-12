@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, Search, ShieldCheck, UserRound } from "lucide-react";
-import { errorMessage, readApiResponse } from "@curais/ui";
+import { errorMessage, readApiResponse, useToast } from "@curais/ui";
 
 export function PatientDirectory() {
+  const { showToast } = useToast();
   const [query, setQuery] = useState("");
   const [patients, setPatients] = useState([]);
   const [status, setStatus] = useState({ type: "loading", message: "Loading consented patients…" });
@@ -16,8 +17,8 @@ export function PatientDirectory() {
       const result = await readApiResponse(response);
       setPatients(result.patients || []);
       setStatus({ type: "idle", message: `${result.patients?.length || 0} actively shared patient${result.patients?.length === 1 ? "" : "s"}` });
-    } catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to load shared patients.") }); }
-  }, []);
+    } catch (error) { setStatus({ type: "idle", message: "Patient directory unavailable" }); showToast({ type: "error", title: "Patients could not load", message: errorMessage(error, "Unable to load shared patients.") }); }
+  }, [showToast]);
 
   useEffect(() => { load(); }, [load]);
 
