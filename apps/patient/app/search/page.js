@@ -21,7 +21,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (hydrated && !result) {
-      router.replace("/");
+      router.replace("/patient/snapaid");
     }
   }, [result, router, hydrated]);
 
@@ -48,7 +48,7 @@ const SearchPage = () => {
 
   const handleNewSearch = () => {
     clearResult();
-    router.push("/");
+    router.push("/patient/snapaid");
   };
 
   return (

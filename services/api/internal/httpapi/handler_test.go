@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
@@ -23,6 +24,19 @@ func (stubProfiles) Upsert(context.Context, string, profile.Profile) (profile.Pr
 
 type stubAccess struct{}
 
+type stubAuth struct{}
+
+func (stubAuth) SignUp(context.Context, string, string, string, string) (auth.Session, error) {
+	return auth.Session{}, nil
+}
+func (stubAuth) SignIn(context.Context, string, string, string) (auth.Session, error) {
+	return auth.Session{}, auth.ErrInvalidCredentials
+}
+func (stubAuth) CurrentUser(context.Context, string) (auth.User, error) {
+	return auth.User{}, auth.ErrInvalidCredentials
+}
+func (stubAuth) SignOut(context.Context, string) error { return nil }
+
 func (stubAccess) ListClinics(context.Context) ([]access.Clinic, error)              { return nil, nil }
 func (stubAccess) ListPatientGrants(context.Context, string) ([]access.Grant, error) { return nil, nil }
 func (stubAccess) GrantClinic(context.Context, string, string, string) (access.Grant, error) {
@@ -37,7 +51,7 @@ func (stubAccess) CanDoctorReadPatient(context.Context, string, string) (bool, e
 }
 
 func newTestHandler() http.Handler {
-	return NewHandler(slog.Default(), stubProfiles{}, stubAccess{}, identity.NewLocalHeaderResolver("local")).Routes()
+	return NewHandler(slog.Default(), stubProfiles{}, stubAccess{}, stubAuth{}, identity.NewLocalHeaderResolver("local")).Routes()
 }
 
 func TestHealth(t *testing.T) {

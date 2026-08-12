@@ -1,6 +1,7 @@
 package identity
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strings"
@@ -15,6 +16,33 @@ type Actor struct {
 
 type Resolver interface {
 	Resolve(*http.Request) (Actor, error)
+}
+
+type SessionStore interface {
+	ResolveSession(context.Context, string) (Actor, error)
+}
+
+type SessionResolver struct {
+	sessions SessionStore
+	fallback Resolver
+}
+
+func NewSessionResolver(sessions SessionStore, fallback Resolver) *SessionResolver {
+	return &SessionResolver{sessions: sessions, fallback: fallback}
+}
+
+func (r *SessionResolver) Resolve(request *http.Request) (Actor, error) {
+	value := strings.TrimSpace(request.Header.Get("Authorization"))
+	if strings.HasPrefix(value, "Bearer ") {
+		token := strings.TrimSpace(strings.TrimPrefix(value, "Bearer "))
+		if token != "" {
+			return r.sessions.ResolveSession(request.Context(), token)
+		}
+	}
+	if r.fallback != nil {
+		return r.fallback.Resolve(request)
+	}
+	return Actor{}, ErrUnauthenticated
 }
 
 type LocalHeaderResolver struct{ environment string }

@@ -60,7 +60,7 @@ export const QuickOptions = ({ step, setStep, setError }) => {
     }
 
     setResult(res.data);
-    router.push("/search");
+    router.push("/patient/snapaid/search");
   };
 
   const onQuickClick = (option) => {

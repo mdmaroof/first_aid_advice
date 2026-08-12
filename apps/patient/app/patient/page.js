@@ -1,5 +1,5 @@
 import { Activity, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
-import { AppShell, FeatureCard } from "@curais/ui";
+import { AppShell, FeatureCard, SignOutButton } from "@curais/ui";
 
 const features = [
   {
@@ -7,7 +7,7 @@ const features = [
     eyebrow: "Available now",
     title: "Immediate Care",
     description: "Use SnapAid for clear first-aid steps and emergency escalation without creating an account.",
-    href: "/",
+    href: "/patient/snapaid",
     action: "Get help now",
   },
   {
@@ -35,7 +35,7 @@ export const metadata = {
 
 export default function PatientHome() {
   return (
-    <AppShell audience="Patient app" actions={<a href="/" className="rounded-xl bg-aid-ink px-3 py-2 text-xs font-bold text-white">Immediate care</a>}>
+    <AppShell audience="Patient app" actions={<div className="flex items-center gap-2"><a href="/patient/snapaid" className="rounded-xl bg-aid-teal px-3 py-2 text-xs font-bold text-white">SnapAid</a><SignOutButton /></div>}>
       <section className="grid gap-8 pb-8 pt-14 md:grid-cols-[1.2fr_0.8fr] md:items-center md:pt-20">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-aid-teal">Your care, connected</p>

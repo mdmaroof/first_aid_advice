@@ -1,5 +1,5 @@
 import { CalendarDays, ClipboardPlus, Search, ShieldCheck, Users } from "lucide-react";
-import { AppShell, FeatureCard } from "@curais/ui";
+import { AppShell, FeatureCard, SignOutButton } from "@curais/ui";
 
 const features = [
   { icon: Users, eyebrow: "Patient access", title: "Shared patients", description: "Open records only through an active patient sharing grant or an approved clinical workflow.", href: "/patients", action: "View shared patients" },
@@ -9,7 +9,7 @@ const features = [
 
 export default function DoctorHome() {
   return (
-    <AppShell audience="Doctor app" actions={<button className="rounded-xl bg-aid-ink px-3 py-2 text-xs font-bold text-white">Sign in</button>}>
+    <AppShell audience="Doctor EMR" actions={<SignOutButton />}>
       <section className="pb-8 pt-14 md:pt-20">
         <p className="text-sm font-bold uppercase tracking-[0.18em] text-aid-teal">Clinical workspace</p>
         <h1 className="mt-3 max-w-4xl font-quicksand text-4xl font-bold tracking-tight text-aid-ink md:text-6xl">Focused care, with patient permission built in.</h1>

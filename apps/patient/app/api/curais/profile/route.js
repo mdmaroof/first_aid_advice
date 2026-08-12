@@ -1,23 +1,15 @@
 import { NextResponse } from "next/server";
+import { apiURL, bearerHeaders, sessionUser } from "@/lib/serverAuth";
 
 export const dynamic = "force-dynamic";
 
-const apiURL = process.env.CURAIS_API_URL || "http://127.0.0.1:8080";
-const localPatientID = "patient-local-1";
-
-function headers() {
-  return {
-    "Content-Type": "application/json",
-    "X-Curais-Actor-ID": localPatientID,
-    "X-Curais-Actor-Role": "patient",
-  };
-}
-
 async function forward(method, body) {
   try {
-    const response = await fetch(`${apiURL}/v1/patients/${localPatientID}/profile`, {
+	const user = await sessionUser();
+	if (!user) return NextResponse.json({ error: { code: "unauthenticated", message: "Sign in again." } }, { status: 401 });
+    const response = await fetch(`${apiURL}/v1/patients/${user.id}/profile`, {
       method,
-      headers: headers(),
+      headers: bearerHeaders({ "Content-Type": "application/json" }),
       body: body ? JSON.stringify(body) : undefined,
       cache: "no-store",
     });

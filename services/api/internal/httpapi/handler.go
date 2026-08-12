@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
@@ -16,16 +17,21 @@ type Handler struct {
 	logger   *slog.Logger
 	profiles profile.Repository
 	access   access.Repository
+	auth     auth.Repository
 	identity identity.Resolver
 }
 
-func NewHandler(logger *slog.Logger, profiles profile.Repository, accessRepository access.Repository, identityResolver identity.Resolver) *Handler {
-	return &Handler{logger: logger, profiles: profiles, access: accessRepository, identity: identityResolver}
+func NewHandler(logger *slog.Logger, profiles profile.Repository, accessRepository access.Repository, authRepository auth.Repository, identityResolver identity.Resolver) *Handler {
+	return &Handler{logger: logger, profiles: profiles, access: accessRepository, auth: authRepository, identity: identityResolver}
 }
 
 func (h *Handler) Routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", h.health)
+	mux.HandleFunc("POST /v1/auth/signup", h.signUp)
+	mux.HandleFunc("POST /v1/auth/signin", h.signIn)
+	mux.HandleFunc("GET /v1/auth/me", h.currentUser)
+	mux.HandleFunc("POST /v1/auth/signout", h.signOut)
 	mux.HandleFunc("GET /v1/directory/clinics", h.listClinics)
 	mux.HandleFunc("GET /v1/patients/{patientID}/profile", h.getProfile)
 	mux.HandleFunc("PUT /v1/patients/{patientID}/profile", h.putProfile)
@@ -35,6 +41,96 @@ func (h *Handler) Routes() http.Handler {
 	mux.HandleFunc("GET /v1/doctor/patients", h.listDoctorPatients)
 	mux.HandleFunc("GET /v1/doctor/patients/{patientID}/profile", h.getDoctorPatientProfile)
 	return h.securityHeaders(h.requestLog(mux))
+}
+
+type credentialsInput struct {
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	DisplayName string `json:"displayName"`
+	Role        string `json:"role"`
+}
+
+func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
+	var input credentialsInput
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	result, err := h.auth.SignUp(r.Context(), input.Email, input.Password, input.DisplayName, input.Role)
+	if errors.Is(err, auth.ErrEmailTaken) {
+		writeError(w, http.StatusConflict, "email_taken", "An account already exists for this email address.")
+		return
+	}
+	if errors.Is(err, auth.ErrInvalidCredentials) || errors.Is(err, auth.ErrInvalidRole) {
+		writeError(w, http.StatusBadRequest, "invalid_signup", "Enter a valid name, email, role, and a password of at least 10 characters.")
+		return
+	}
+	if err != nil {
+		h.internalError(w, "sign up", err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, result)
+}
+
+func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
+	var input credentialsInput
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	result, err := h.auth.SignIn(r.Context(), input.Email, input.Password, input.Role)
+	if errors.Is(err, auth.ErrInvalidCredentials) {
+		writeError(w, http.StatusUnauthorized, "invalid_credentials", "Email or password is incorrect.")
+		return
+	}
+	if err != nil {
+		h.internalError(w, "sign in", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (h *Handler) currentUser(w http.ResponseWriter, r *http.Request) {
+	token := bearerToken(r)
+	if token == "" {
+		writeError(w, http.StatusUnauthorized, "unauthenticated", "A valid session is required.")
+		return
+	}
+	user, err := h.auth.CurrentUser(r.Context(), token)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "unauthenticated", "The session is invalid or expired.")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"user": user})
+}
+
+func (h *Handler) signOut(w http.ResponseWriter, r *http.Request) {
+	token := bearerToken(r)
+	if token != "" {
+		if err := h.auth.SignOut(r.Context(), token); err != nil {
+			h.internalError(w, "sign out", err)
+			return
+		}
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func decodeJSON(w http.ResponseWriter, r *http.Request, value any) bool {
+	r.Body = http.MaxBytesReader(w, r.Body, 32<<10)
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(value); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_request", "Use a valid request payload.")
+		return false
+	}
+	return true
+}
+
+func bearerToken(r *http.Request) string {
+	value := strings.TrimSpace(r.Header.Get("Authorization"))
+	if !strings.HasPrefix(value, "Bearer ") {
+		return ""
+	}
+	return strings.TrimSpace(strings.TrimPrefix(value, "Bearer "))
 }
 
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {

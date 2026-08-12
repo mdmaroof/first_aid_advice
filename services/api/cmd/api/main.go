@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/config"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/httpapi"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
@@ -42,8 +43,9 @@ func main() {
 
 	profileRepository := profile.NewSQLiteRepository(db)
 	accessRepository := access.NewSQLiteRepository(db)
-	identityResolver := identity.NewLocalHeaderResolver(cfg.Environment)
-	handler := httpapi.NewHandler(logger, profileRepository, accessRepository, identityResolver)
+	authRepository := auth.NewSQLiteRepository(db)
+	identityResolver := identity.NewSessionResolver(authRepository, identity.NewLocalHeaderResolver(cfg.Environment))
+	handler := httpapi.NewHandler(logger, profileRepository, accessRepository, authRepository, identityResolver)
 	server := &http.Server{
 		Addr:              cfg.Address,
 		Handler:           handler.Routes(),
