@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/maroof/work/snapAId/apps/patient/app/layout":["static/media/3be83a346553616c-s.p.woff2","static/media/a74fb1607b845cb0-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';

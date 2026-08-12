@@ -1,4 +1,22 @@
-# SnapAid
+# Curais monorepo
+
+Curais contains two independently deployable applications and a Go API:
+
+- `apps/patient` - patient experience; the existing SnapAid product remains its Immediate Care feature.
+- `apps/doctor` - clinical workspace.
+- `packages/ui` - shared visual primitives and Curais identity.
+- `services/api` - Go backend using SQLite locally.
+
+## Development
+
+```bash
+npm install
+npm run dev:patient # http://localhost:3000
+npm run dev:doctor  # http://localhost:3001
+npm run api:dev     # http://localhost:8080
+```
+
+## SnapAid
 
 Instant first-aid guidance. Describe symptoms (or tap a common emergency) and get clear, step-by-step actions — plus a one-tap call to local emergency services.
 
