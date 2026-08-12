@@ -1,4 +1,4 @@
-import { LegalPage, LegalSection } from "@/components/LegalPage";
+import { LegalPage, LegalSection } from "../../components/LegalPage";
 
 export const metadata = { title: "Terms and Conditions", description: "Terms for using Curais, Immediate Care, the Patient app and Doctor EMR." };
 

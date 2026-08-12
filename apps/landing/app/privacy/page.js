@@ -1,4 +1,4 @@
-import { LegalPage, LegalSection } from "@/components/LegalPage";
+import { LegalPage, LegalSection } from "../../components/LegalPage";
 
 export const metadata = { title: "Privacy Policy", description: "How Curais handles information across its public website, patient app, Immediate Care and clinical workspace." };
 
