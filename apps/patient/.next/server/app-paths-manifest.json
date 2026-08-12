@@ -2,5 +2,9 @@
   "/page": "app/page.js",
   "/patient/profile/page": "app/patient/profile/page.js",
   "/patient/page": "app/patient/page.js",
+  "/icon/[[...__metadata_id__]]/route": "app/icon/[[...__metadata_id__]]/route.js",
+  "/api/curais/care-team/route": "app/api/curais/care-team/route.js",
+  "/api/emergency/route": "app/api/emergency/route.js",
+  "/patient/care-team/page": "app/patient/care-team/page.js",
   "/search/page": "app/search/page.js"
 }
