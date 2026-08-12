@@ -262,17 +262,32 @@ function FamilyStoryVisual({ activeStep }) {
 function ConnectionVisual() {
   return (
     <div className="relative h-full">
-      <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 rounded-2xl bg-aid-teal px-7 py-5 text-center text-white shadow-xl">
-        <HeartPulse className="mx-auto h-5 w-5" />
-        <p className="mt-2 font-quicksand text-sm font-bold">You</p>
+      <div className="absolute left-1/2 top-0 z-20 flex min-w-44 -translate-x-1/2 items-center gap-3 rounded-2xl bg-aid-teal p-3 pr-5 text-white shadow-[0_16px_35px_rgba(10,107,111,.24)]">
+        <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20">
+          <HeartPulse className="h-5 w-5" />
+        </span>
+        <div>
+          <p className="font-quicksand text-sm font-bold">Your profile</p>
+          <p className="mt-0.5 text-[11px] text-white/65">Connection owner</p>
+        </div>
       </div>
-      <div className="absolute left-[23%] top-[37%] h-px w-[54%] rotate-[25deg] bg-aid-teal/25" />
-      <div className="absolute left-[23%] top-[37%] h-px w-[54%] -rotate-[25deg] bg-aid-teal/25" />
-      <StoryNode className="bottom-7 left-2 sm:left-6" label="Parent" />
-      <StoryNode className="bottom-7 right-2 sm:right-6" label="Sibling" />
-      <div className="glass absolute bottom-0 left-1/2 z-20 -translate-x-1/2 rounded-full px-3 py-2 text-center text-[11px] font-extrabold text-aid-teal">
-        Invitation accepted
+
+      <div className="absolute left-1/2 top-[4.5rem] h-[3.35rem] w-px -translate-x-1/2 bg-gradient-to-b from-aid-teal/45 to-aid-teal/20" />
+      <div className="absolute left-[20%] right-[20%] top-[7.75rem] h-px bg-aid-teal/20" />
+      <div className="absolute left-[20%] top-[7.75rem] h-[4.7rem] w-px bg-gradient-to-b from-aid-teal/20 to-aid-teal/35" />
+      <div className="absolute right-[20%] top-[7.75rem] h-[4.7rem] w-px bg-gradient-to-b from-aid-teal/20 to-aid-teal/35" />
+
+      <motion.span
+        animate={{ scale: [1, 1.18, 1] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-1/2 top-[7.37rem] z-10 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white bg-aid-seafoam shadow-[0_0_0_6px_rgba(26,143,152,.10)]"
+      />
+      <div className="glass absolute left-1/2 top-[8.65rem] z-20 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-aid-teal">
+        Both accepted
       </div>
+
+      <StoryNode className="bottom-2 left-0 sm:left-4" label="Parent" initial="P" />
+      <StoryNode className="bottom-2 right-0 sm:right-4" label="Sibling" initial="S" />
     </div>
   );
 }
@@ -321,11 +336,24 @@ function ControlVisual() {
   );
 }
 
-function StoryNode({ className, label }) {
+function StoryNode({ className, label, initial }) {
   return (
-    <div className={`absolute z-10 flex w-28 flex-col items-center rounded-2xl border border-white/70 bg-white/70 p-4 text-center shadow-lg backdrop-blur-2xl ${className}`}>
-      <Users className="h-5 w-5" />
-      <span className="mt-2 font-quicksand text-sm font-bold">{label}</span>
+    <div className={`absolute z-10 w-[8.6rem] rounded-2xl border border-white/80 bg-white/70 p-3 shadow-[0_14px_30px_rgba(18,32,38,.10),inset_0_1px_0_rgba(255,255,255,.9)] backdrop-blur-2xl sm:w-[9.4rem] ${className}`}>
+      <div className="flex items-center gap-2.5">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-aid-teal/10 font-quicksand text-sm font-bold text-aid-teal">
+          {initial}
+        </span>
+        <div className="min-w-0">
+          <p className="font-quicksand text-sm font-bold">{label}</p>
+          <p className="mt-0.5 flex items-center gap-1 text-[10px] font-bold text-emerald-700">
+            <Check className="h-3 w-3" /> Connected
+          </p>
+        </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between border-t border-aid-teal/10 pt-2 text-[10px] text-aid-muted">
+        <span>Separate account</span>
+        <ShieldCheck className="h-3.5 w-3.5 text-aid-teal" />
+      </div>
     </div>
   );
 }
