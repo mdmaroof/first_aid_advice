@@ -60,6 +60,34 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 			expires_at TEXT NOT NULL
 		)`,
 		`CREATE INDEX IF NOT EXISTS idx_auth_sessions_expiry ON auth_sessions(expires_at)`,
+		`CREATE TABLE IF NOT EXISTS patient_contacts (
+			patient_id TEXT PRIMARY KEY REFERENCES patient_profiles(patient_id) ON DELETE CASCADE,
+			mobile_e164 TEXT NOT NULL UNIQUE,
+			verified_at TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS medical_history_entries (
+			id TEXT PRIMARY KEY,
+			patient_id TEXT NOT NULL REFERENCES patient_profiles(patient_id) ON DELETE CASCADE,
+			category TEXT NOT NULL CHECK (category IN ('condition', 'procedure', 'diagnosis', 'visit', 'family_history', 'other')),
+			title TEXT NOT NULL,
+			details TEXT NOT NULL DEFAULT '',
+			occurred_at TEXT,
+			source TEXT NOT NULL CHECK (source IN ('patient', 'doctor')),
+			recorded_by TEXT NOT NULL REFERENCES users(id),
+			created_at TEXT NOT NULL
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_history_patient_time ON medical_history_entries(patient_id, occurred_at DESC, created_at DESC)`,
+		`CREATE TABLE IF NOT EXISTS family_links (
+			id TEXT PRIMARY KEY,
+			requester_patient_id TEXT NOT NULL REFERENCES patient_profiles(patient_id) ON DELETE CASCADE,
+			relative_patient_id TEXT NOT NULL REFERENCES patient_profiles(patient_id) ON DELETE CASCADE,
+			relationship TEXT NOT NULL,
+			status TEXT NOT NULL CHECK (status IN ('pending', 'active', 'declined', 'revoked')),
+			share_family_history INTEGER NOT NULL DEFAULT 0,
+			created_at TEXT NOT NULL,
+			updated_at TEXT NOT NULL,
+			UNIQUE(requester_patient_id, relative_patient_id)
+		)`,
 		`CREATE TABLE IF NOT EXISTS patient_allergies (
 			id TEXT PRIMARY KEY,
 			patient_id TEXT NOT NULL REFERENCES patient_profiles(patient_id) ON DELETE CASCADE,

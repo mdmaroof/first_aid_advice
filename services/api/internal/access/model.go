@@ -32,6 +32,7 @@ type SharedPatient struct {
 	BloodGroup  string `json:"bloodGroup,omitempty"`
 	Scope       string `json:"scope"`
 	GrantedAt   string `json:"grantedAt"`
+	MobilePhone string `json:"mobilePhone,omitempty"`
 }
 
 type Repository interface {

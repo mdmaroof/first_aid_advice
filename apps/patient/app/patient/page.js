@@ -1,4 +1,4 @@
-import { Activity, HeartPulse, ShieldCheck, Stethoscope } from "lucide-react";
+import { Activity, HeartPulse, ShieldCheck, Stethoscope, Users, History } from "lucide-react";
 import { AppShell, FeatureCard, SignOutButton } from "@curais/ui";
 
 const features = [
@@ -10,6 +10,8 @@ const features = [
     href: "/patient/snapaid",
     action: "Get help now",
   },
+  { icon: History, eyebrow: "Personal timeline", title: "Health History", description: "Record diagnoses, procedures, visits, and important family-health context.", href: "/patient/history", action: "Open history" },
+  { icon: Users, eyebrow: "Consent-led", title: "My Family", description: "Connect individual family accounts while each person controls what they share.", href: "/patient/family", action: "Manage family" },
   {
     icon: Activity,
     eyebrow: "Local foundation",
@@ -53,7 +55,7 @@ export default function PatientHome() {
           </div>
         </div>
       </section>
-      <section className="grid gap-4 pb-16 md:grid-cols-3">
+      <section className="grid gap-4 pb-16 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature) => <FeatureCard key={feature.title} {...feature} />)}
       </section>
     </AppShell>

@@ -15,9 +15,9 @@ type SQLiteRepository struct{ db *sql.DB }
 func NewSQLiteRepository(db *sql.DB) *SQLiteRepository { return &SQLiteRepository{db: db} }
 
 func (r *SQLiteRepository) Get(ctx context.Context, patientID string) (Profile, error) {
-	row := r.db.QueryRowContext(ctx, `SELECT patient_id, display_name, COALESCE(date_of_birth, ''), COALESCE(blood_group, ''), COALESCE(emergency_contact_name, ''), COALESCE(emergency_contact_phone, ''), version, updated_at FROM patient_profiles WHERE patient_id = ?`, patientID)
+	row := r.db.QueryRowContext(ctx, `SELECT p.patient_id, p.display_name, COALESCE(p.date_of_birth, ''), COALESCE(p.blood_group, ''), COALESCE(c.mobile_e164, ''), COALESCE(p.emergency_contact_name, ''), COALESCE(p.emergency_contact_phone, ''), p.version, p.updated_at FROM patient_profiles p LEFT JOIN patient_contacts c ON c.patient_id=p.patient_id WHERE p.patient_id = ?`, patientID)
 	var result Profile
-	if err := row.Scan(&result.PatientID, &result.DisplayName, &result.DateOfBirth, &result.BloodGroup, &result.EmergencyContact.Name, &result.EmergencyContact.Phone, &result.Version, &result.UpdatedAt); err != nil {
+	if err := row.Scan(&result.PatientID, &result.DisplayName, &result.DateOfBirth, &result.BloodGroup, &result.MobilePhone, &result.EmergencyContact.Name, &result.EmergencyContact.Phone, &result.Version, &result.UpdatedAt); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return Profile{}, ErrNotFound
 		}
@@ -67,6 +67,11 @@ func (r *SQLiteRepository) Upsert(ctx context.Context, actorID string, input Pro
 	}
 	if _, err := tx.ExecContext(ctx, `INSERT INTO patient_profiles(patient_id, display_name, date_of_birth, blood_group, emergency_contact_name, emergency_contact_phone, version, updated_at) VALUES(?, ?, NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''), 1, ?) ON CONFLICT(patient_id) DO UPDATE SET display_name=excluded.display_name, date_of_birth=excluded.date_of_birth, blood_group=excluded.blood_group, emergency_contact_name=excluded.emergency_contact_name, emergency_contact_phone=excluded.emergency_contact_phone, version=patient_profiles.version+1, updated_at=excluded.updated_at`, input.PatientID, strings.TrimSpace(input.DisplayName), input.DateOfBirth, input.BloodGroup, input.EmergencyContact.Name, input.EmergencyContact.Phone, now); err != nil {
 		return Profile{}, err
+	}
+	if strings.TrimSpace(input.MobilePhone) == "" {
+		if _, err := tx.ExecContext(ctx, `DELETE FROM patient_contacts WHERE patient_id=?`, input.PatientID); err != nil { return Profile{}, err }
+	} else if _, err := tx.ExecContext(ctx, `INSERT INTO patient_contacts(patient_id, mobile_e164) VALUES(?, ?) ON CONFLICT(patient_id) DO UPDATE SET mobile_e164=excluded.mobile_e164, verified_at=NULL`, input.PatientID, strings.TrimSpace(input.MobilePhone)); err != nil {
+		return Profile{}, fmt.Errorf("save mobile number: %w", err)
 	}
 	if _, err := tx.ExecContext(ctx, `DELETE FROM patient_allergies WHERE patient_id = ?`, input.PatientID); err != nil {
 		return Profile{}, err

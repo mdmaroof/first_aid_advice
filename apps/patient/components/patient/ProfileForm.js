@@ -7,6 +7,7 @@ const emptyProfile = {
   displayName: "",
   dateOfBirth: "",
   bloodGroup: "",
+  mobilePhone: "",
   emergencyContact: { name: "", phone: "" },
   allergies: [],
   medications: [],
@@ -76,6 +77,7 @@ export function ProfileForm() {
         <label className="text-sm font-bold text-aid-ink">Full name<input required value={profile.displayName} onChange={(event) => update("displayName", event.target.value)} className={fieldClass} /></label>
         <label className="text-sm font-bold text-aid-ink">Date of birth<input type="date" value={profile.dateOfBirth} onChange={(event) => update("dateOfBirth", event.target.value)} className={fieldClass} /></label>
         <label className="text-sm font-bold text-aid-ink">Blood group<input placeholder="e.g. O+" value={profile.bloodGroup} onChange={(event) => update("bloodGroup", event.target.value)} className={fieldClass} /></label>
+        <label className="text-sm font-bold text-aid-ink">Mobile number<input type="tel" placeholder="e.g. +919876543210" value={profile.mobilePhone} onChange={(event) => update("mobilePhone", event.target.value)} className={fieldClass} /><span className="mt-1 block text-xs font-normal text-aid-muted">Include country code. Verification will be required in production.</span></label>
         <label className="text-sm font-bold text-aid-ink">Emergency contact name<input value={profile.emergencyContact.name} onChange={(event) => updateContact("name", event.target.value)} className={fieldClass} /></label>
         <label className="text-sm font-bold text-aid-ink sm:col-span-2">Emergency contact phone<input type="tel" value={profile.emergencyContact.phone} onChange={(event) => updateContact("phone", event.target.value)} className={fieldClass} /></label>
         <label className="text-sm font-bold text-aid-ink sm:col-span-2">Allergies <span className="font-normal text-aid-muted">(comma separated)</span><input placeholder="e.g. peanuts, penicillin" value={allergies} onChange={(event) => setAllergies(event.target.value)} className={fieldClass} /></label>

@@ -103,7 +103,7 @@ func (r *SQLiteRepository) RevokeGrant(ctx context.Context, patientID, grantID s
 
 func (r *SQLiteRepository) ListDoctorPatients(ctx context.Context, doctorID, query string) ([]SharedPatient, error) {
 	search := "%" + strings.ToLower(strings.TrimSpace(query)) + "%"
-	rows, err := r.db.QueryContext(ctx, `SELECT p.patient_id, p.display_name, COALESCE(p.blood_group, ''), g.scope, g.granted_at FROM clinic_memberships m JOIN sharing_grants g ON g.clinic_id=m.clinic_id AND g.status='active' JOIN patient_profiles p ON p.patient_id=g.patient_id WHERE m.user_id=? AND m.status='active' AND (LOWER(p.display_name) LIKE ? OR LOWER(p.patient_id) LIKE ?) ORDER BY p.display_name LIMIT 50`, doctorID, search, search)
+	rows, err := r.db.QueryContext(ctx, `SELECT p.patient_id, p.display_name, COALESCE(p.blood_group, ''), g.scope, g.granted_at, COALESCE(c.mobile_e164, '') FROM clinic_memberships m JOIN sharing_grants g ON g.clinic_id=m.clinic_id AND g.status='active' JOIN patient_profiles p ON p.patient_id=g.patient_id LEFT JOIN patient_contacts c ON c.patient_id=p.patient_id WHERE m.user_id=? AND m.status='active' AND (LOWER(p.display_name) LIKE ? OR LOWER(p.patient_id) LIKE ? OR c.mobile_e164 = ?) ORDER BY p.display_name LIMIT 50`, doctorID, search, search, strings.TrimSpace(query))
 	if err != nil {
 		return nil, fmt.Errorf("list doctor patients: %w", err)
 	}
@@ -111,7 +111,7 @@ func (r *SQLiteRepository) ListDoctorPatients(ctx context.Context, doctorID, que
 	result := []SharedPatient{}
 	for rows.Next() {
 		var item SharedPatient
-		if err := rows.Scan(&item.PatientID, &item.DisplayName, &item.BloodGroup, &item.Scope, &item.GrantedAt); err != nil {
+		if err := rows.Scan(&item.PatientID, &item.DisplayName, &item.BloodGroup, &item.Scope, &item.GrantedAt, &item.MobilePhone); err != nil {
 			return nil, err
 		}
 		result = append(result, item)

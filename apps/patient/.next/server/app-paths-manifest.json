@@ -1,9 +1,8 @@
 {
-  "/patient/profile/page": "app/patient/profile/page.js",
   "/patient/page": "app/patient/page.js",
-  "/page": "app/page.js",
+  "/patient/profile/page": "app/patient/profile/page.js",
   "/signin/page": "app/signin/page.js",
-  "/icon/[[...__metadata_id__]]/route": "app/icon/[[...__metadata_id__]]/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/patient/care-team/page": "app/patient/care-team/page.js",
   "/search/page": "app/search/page.js"
 }

@@ -27,6 +27,7 @@ type Profile struct {
 	DisplayName      string           `json:"displayName"`
 	DateOfBirth      string           `json:"dateOfBirth,omitempty"`
 	BloodGroup       string           `json:"bloodGroup,omitempty"`
+	MobilePhone      string           `json:"mobilePhone,omitempty"`
 	EmergencyContact EmergencyContact `json:"emergencyContact"`
 	Allergies        []Allergy        `json:"allergies"`
 	Medications      []Medication     `json:"medications"`
