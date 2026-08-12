@@ -134,12 +134,6 @@ function TrustStrip() {
 }
 
 function Journey() {
-  const stages = [
-    [HeartPulse, "Immediate Care", "Act with clear first-aid steps and direct emergency escalation.", "Right now"],
-    [ClipboardList, "My Health", "Keep allergies, medicines, conditions and meaningful care moments together.", "Over time"],
-    [Building2, "Connected care", "Give a clinic time-bound access to the health context you choose.", "When you choose"],
-  ];
-
   return (
     <section id="how" className="site-shell py-24">
       <div className="grid gap-6 lg:grid-cols-[1fr_.65fr] lg:items-end">
@@ -158,92 +152,65 @@ function Journey() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: .18 }}
-        className="glass-strong relative mt-12 overflow-hidden rounded-[2.75rem] p-4 sm:p-6"
+        className="glass-strong relative mt-12 grid gap-3 overflow-hidden rounded-[2.75rem] p-3 sm:p-4 lg:grid-cols-[.9fr_1.1fr]"
       >
-        <div className="absolute -left-20 top-1/3 h-56 w-56 rounded-full bg-aid-seafoam/15 blur-3xl" />
-        <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-white/70 blur-3xl" />
+        <article className="relative flex min-h-[29rem] flex-col overflow-hidden rounded-[2.2rem] bg-aid-teal p-6 text-white shadow-[0_24px_55px_rgba(10,107,111,.22)] sm:p-8">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border-[48px] border-white/5" />
+          <div className="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-aid-seafoam/25 blur-3xl" />
+          <div className="relative flex items-center justify-between gap-4">
+            <span className="rounded-full bg-white/10 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[.14em] text-[#a6e5df] ring-1 ring-white/10">Right now</span>
+            <span className="font-quicksand text-sm font-bold text-white/35">01 / 03</span>
+          </div>
+          <span className="relative mt-10 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 text-white ring-1 ring-white/20">
+            <HeartPulse className="h-8 w-8" />
+          </span>
+          <div className="relative mt-8">
+            <h3 className="font-quicksand text-3xl font-bold sm:text-4xl">Immediate Care</h3>
+            <p className="mt-4 max-w-md text-base leading-7 text-white/70">Act with clear first-aid steps and direct emergency escalation when the next few minutes matter.</p>
+          </div>
+          <div className="relative mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-5">
+            <p className="text-xs font-bold text-[#a6e5df]">Start with the health moment</p>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-aid-teal"><ArrowRight className="h-4 w-4" /></span>
+          </div>
+        </article>
 
-        <div className="relative hidden h-[34rem] lg:block">
-          <div className="absolute inset-x-[6%] top-1/2 h-px bg-gradient-to-r from-aid-teal/15 via-aid-teal/65 to-aid-seafoam/25" />
-          <div className="absolute left-[2%] top-[calc(50%-1.65rem)] rounded-full bg-white/60 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal backdrop-blur-xl">A health moment</div>
-          <div className="absolute right-[2%] top-[calc(50%-1.65rem)] rounded-full bg-white/60 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal backdrop-blur-xl">An informed handoff</div>
-
-          {stages.map(([Icon, title, text, timing], index) => (
-            <JourneyStage
-              key={title}
-              icon={Icon}
-              title={title}
-              text={text}
-              timing={timing}
-              index={index}
-              placement={index === 1 ? "bottom" : "top"}
-            />
-          ))}
-        </div>
-
-        <div className="relative space-y-4 lg:hidden">
-          <div className="absolute bottom-8 left-[1.4rem] top-8 w-px bg-gradient-to-b from-aid-teal/60 to-aid-seafoam/15" />
-          {stages.map(([Icon, title, text, timing], index) => (
-            <motion.article
-              key={title}
-              initial={{ opacity: 0, x: 18 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: .5 }}
-              transition={{ delay: index * .06 }}
-              className="glass relative ml-12 rounded-2xl p-5"
-            >
-              <span className="absolute -left-[3.35rem] top-6 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-aid-teal text-white shadow-lg ring-4 ring-[#d9ecee]">
-                <Icon className="h-5 w-5" />
-              </span>
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal">{timing}</p>
-                <span className="font-quicksand text-xs font-bold text-aid-teal/35">0{index + 1}</span>
+        <div className="grid gap-3">
+          <article className="group relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-white/55 p-6 backdrop-blur-2xl sm:p-7">
+            <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#dceff0] transition duration-500 group-hover:scale-125" />
+            <div className="relative grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-aid-teal/10 text-aid-teal"><ClipboardList className="h-5 w-5" /></span>
+                  <div><p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal">Over time</p><p className="mt-0.5 font-quicksand text-xs font-bold text-aid-teal/35">02 / 03</p></div>
+                </div>
+                <h3 className="mt-5 font-quicksand text-2xl font-bold">My Health</h3>
+                <p className="mt-2 max-w-lg text-sm leading-6 text-aid-muted">Turn individual care moments into health context you can actually use.</p>
               </div>
-              <h3 className="mt-3 font-quicksand text-xl font-bold">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-aid-muted">{text}</p>
-            </motion.article>
-          ))}
+              <div className="relative flex flex-wrap gap-2 sm:max-w-[12rem] sm:justify-end">
+                {["Allergies", "Medicines", "History"].map((item) => <span key={item} className="rounded-full border border-aid-teal/10 bg-white/60 px-3 py-2 text-[10px] font-bold text-aid-teal">{item}</span>)}
+              </div>
+            </div>
+          </article>
+
+          <article className="group relative overflow-hidden rounded-[2.2rem] border border-aid-teal/10 bg-[#e1f2ef]/75 p-6 backdrop-blur-2xl sm:p-7">
+            <div className="relative grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/70 text-aid-teal shadow-sm"><Building2 className="h-5 w-5" /></span>
+                  <div><p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal">When you choose</p><p className="mt-0.5 font-quicksand text-xs font-bold text-aid-teal/35">03 / 03</p></div>
+                </div>
+                <h3 className="mt-5 font-quicksand text-2xl font-bold">Connected care</h3>
+                <p className="mt-2 max-w-lg text-sm leading-6 text-aid-muted">Give a clinic time-bound access to the health context you select.</p>
+              </div>
+              <div className="relative min-w-[11rem] rounded-2xl border border-white/80 bg-white/55 p-4 shadow-[0_12px_28px_rgba(18,32,38,.06)]">
+                <div className="flex items-center justify-between gap-3"><span className="text-xs font-bold">Clinic access</span><span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_5px_rgba(16,185,129,.10)]" /></div>
+                <p className="mt-3 text-[10px] leading-4 text-aid-muted">Active only with your consent</p>
+              </div>
+            </div>
+          </article>
         </div>
       </motion.div>
     </section>
-  );
-}
-
-function JourneyStage({ icon: Icon, title, text, timing, index, placement }) {
-  const positions = ["left-[3%]", "left-[36%]", "left-[69%]"];
-  const isTop = placement === "top";
-
-  return (
-    <div className={`absolute w-[28%] ${positions[index]} ${isTop ? "top-10" : "top-[calc(50%-0.375rem)]"}`}>
-      {!isTop ? (
-        <>
-          <span className="mx-auto block h-3 w-3 rounded-full border-2 border-white bg-aid-teal shadow-[0_0_0_7px_rgba(10,107,111,.10)]" />
-          <span className="mx-auto block h-9 w-px bg-aid-teal/25" />
-        </>
-      ) : null}
-
-      <motion.article
-        whileHover={{ y: isTop ? -5 : 5 }}
-        transition={{ duration: .25, ease: [.22, 1, .36, 1] }}
-        className={`group min-h-48 rounded-[1.75rem] border p-5 backdrop-blur-2xl ${index === 0 ? "border-aid-teal/15 bg-aid-teal text-white shadow-[0_20px_45px_rgba(10,107,111,.20)]" : "border-white/75 bg-white/60 shadow-[0_18px_40px_rgba(18,32,38,.08)]"}`}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <span className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${index === 0 ? "bg-white/15 text-white" : "bg-aid-teal/10 text-aid-teal"}`}>
-            <Icon className="h-5 w-5" />
-          </span>
-          <span className={`text-[10px] font-extrabold uppercase tracking-[.14em] ${index === 0 ? "text-white/60" : "text-aid-teal"}`}>{timing}</span>
-        </div>
-        <h3 className="mt-5 font-quicksand text-xl font-bold">{title}</h3>
-        <p className={`mt-2 text-sm leading-6 ${index === 0 ? "text-white/70" : "text-aid-muted"}`}>{text}</p>
-      </motion.article>
-
-      {isTop ? (
-        <>
-          <span className="mx-auto block h-9 w-px bg-aid-teal/25" />
-          <span className="mx-auto block h-3 w-3 rounded-full border-2 border-white bg-aid-teal shadow-[0_0_0_7px_rgba(10,107,111,.10)]" />
-        </>
-      ) : null}
-    </div>
   );
 }
 
