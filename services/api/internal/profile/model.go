@@ -23,15 +23,15 @@ type EmergencyContact struct {
 }
 
 type Profile struct {
-	PatientID       string           `json:"patientId"`
-	DisplayName     string           `json:"displayName"`
-	DateOfBirth     string           `json:"dateOfBirth,omitempty"`
-	BloodGroup      string           `json:"bloodGroup,omitempty"`
+	PatientID        string           `json:"patientId"`
+	DisplayName      string           `json:"displayName"`
+	DateOfBirth      string           `json:"dateOfBirth,omitempty"`
+	BloodGroup       string           `json:"bloodGroup,omitempty"`
 	EmergencyContact EmergencyContact `json:"emergencyContact"`
-	Allergies       []Allergy        `json:"allergies"`
-	Medications     []Medication     `json:"medications"`
-	Version         int              `json:"version"`
-	UpdatedAt       string           `json:"updatedAt"`
+	Allergies        []Allergy        `json:"allergies"`
+	Medications      []Medication     `json:"medications"`
+	Version          int              `json:"version"`
+	UpdatedAt        string           `json:"updatedAt"`
 }
 
 type Repository interface {

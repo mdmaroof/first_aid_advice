@@ -16,6 +16,19 @@ npm run dev:doctor  # http://localhost:3001
 npm run api:dev     # http://localhost:8080
 ```
 
+Patient routes:
+
+- `/` and `/search` - existing SnapAid Immediate Care flow.
+- `/patient` - Curais patient home.
+- `/patient/profile` - local My Health vertical slice backed by the Go API.
+
+The local profile proxy uses `patient-local-1` only for development. It is not
+a production authentication mechanism.
+
+For deployment, create separate projects rooted at `apps/patient` and
+`apps/doctor`, and deploy `services/api` as an independent Go service. Do not
+serve the local SQLite database from a serverless filesystem.
+
 ## SnapAid
 
 Instant first-aid guidance. Describe symptoms (or tap a common emergency) and get clear, step-by-step actions — plus a one-tap call to local emergency services.

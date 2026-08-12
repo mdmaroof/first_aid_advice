@@ -1,13 +1,5 @@
 {
-  "/api/emergency/route": "app/api/emergency/route.js",
-  "/page": "app/page.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
-  "/api/route": "app/api/route.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/icon/[[...__metadata_id__]]/route": "app/icon/[[...__metadata_id__]]/route.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/patient/page": "app/patient/page.js",
-  "/icon/route": "app/icon/route.js",
-  "/apple-icon/route": "app/apple-icon/route.js",
-  "/search/page": "app/search/page.js",
-  "/opengraph-image/route": "app/opengraph-image/route.js"
+  "/page": "app/page.js"
 }

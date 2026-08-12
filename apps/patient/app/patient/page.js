@@ -12,10 +12,11 @@ const features = [
   },
   {
     icon: Activity,
-    eyebrow: "Next release",
+    eyebrow: "Local foundation",
     title: "My Health",
     description: "Keep allergies, medications, conditions, emergency contacts, and saved care moments under your control.",
-    action: "Coming soon",
+    href: "/patient/profile",
+    action: "Set up profile",
   },
   {
     icon: Stethoscope,
