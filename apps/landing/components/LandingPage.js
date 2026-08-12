@@ -360,7 +360,94 @@ function StoryNode({ className, label, initial }) {
 
 function ClinicSection({openModal}){return <section id="clinics" className="site-shell py-24"><SectionIntro eyebrow="For clinics and hospitals" title="A focused EMR, built around patient permission." text="Give clinicians the context they need without turning every record into an open directory. Curais keeps consent visible inside the workflow."/><div className="mt-12 grid gap-5 lg:grid-cols-[1.2fr_.8fr]"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-strong rounded-[2rem] p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="eyebrow">Clinical command center</p><h3 className="mt-2 font-quicksand text-2xl font-bold">Today at a glance</h3></div><span className="rounded-full bg-aid-teal/10 px-3 py-2 text-xs font-bold text-aid-teal">Consent checked on every record</span></div><div className="mt-7 grid gap-3 sm:grid-cols-4">{[[Users,"24","Patients"],[CalendarCheck2,"8","Appointments"],[ClipboardList,"3","Draft notes"],[Activity,"5","Labs"]].map(([Icon,value,label])=><div key={label} className="glass rounded-2xl p-4"><Icon className="h-4 w-4 text-aid-teal"/><p className="mt-5 font-quicksand text-2xl font-bold">{value}</p><p className="text-xs text-aid-muted">{label}</p></div>)}</div><div className="mt-4 grid gap-3 sm:grid-cols-2">{["Appointments and patient lookup","Encounters, vitals and SOAP notes","Medication instructions","Routine and urgent lab orders"].map(text=><div key={text} className="flex items-center gap-3 rounded-xl bg-white/40 p-3 text-sm font-bold"><Check className="h-4 w-4 text-aid-teal"/>{text}</div>)}</div></motion.div><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-dark flex flex-col justify-between rounded-[2rem] p-7 text-white"><div><Stethoscope className="h-8 w-8 text-[#79d5ce]"/><h3 className="mt-8 font-quicksand text-3xl font-bold">Bring calm structure to everyday care.</h3><p className="mt-4 leading-7 text-white/65">Designed first for small clinics and growing care teams that need clarity, continuity and accountable access.</p></div><button onClick={()=>openModal("demo")} className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Request a clinic walkthrough <ArrowRight className="h-4 w-4"/></button></motion.div></div></section>}
 
-function SafetySection(){return <section id="safety" className="site-shell py-24"><div className="glass-strong grid gap-10 rounded-[2.5rem] p-6 sm:p-10 lg:grid-cols-[.8fr_1.2fr] lg:p-14"><div><span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-aid-teal/10 text-aid-teal"><ShieldCheck className="h-7 w-7"/></span><p className="eyebrow mt-7">Trust is a feature</p><h2 className="section-title mt-3">Calm by default. Urgent when it matters.</h2></div><div className="grid gap-4 sm:grid-cols-2">{[["Guidance, not diagnosis","Immediate Care provides general first-aid steps and clear escalation—not a confirmed condition."],["Minimum necessary data","Health information is collected only for a defined capability and protected behind an account."],["Consent before access","Clinic visibility comes from an active patient sharing grant, not broad organization access."],["Accessible by design","Readable type, keyboard support, 44px touch targets and reduced-motion behavior are built in."]].map(([title,text])=><article key={title} className="rounded-2xl border border-white/65 bg-white/35 p-5"><h3 className="font-quicksand font-bold">{title}</h3><p className="mt-2 text-sm leading-6 text-aid-muted">{text}</p></article>)}</div></div></section>}
+function SafetySection() {
+  const safeguards = [
+    [HeartPulse, "Guidance, not diagnosis", "Immediate Care gives general first-aid steps and clear escalation—not a confirmed condition."],
+    [FileHeart, "Minimum necessary data", "Health information is collected for a defined capability and protected behind an account."],
+    [ShieldCheck, "Consent before access", "A clinic sees a record only through an active patient sharing grant."],
+    [MessageCircleHeart, "Accessible by design", "Readable type, keyboard support, large touch targets and reduced-motion behavior are built in."],
+  ];
+
+  return (
+    <section id="safety" className="site-shell py-24">
+      <motion.div
+        variants={reveal}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: .2 }}
+        className="glass-strong grid gap-3 overflow-hidden rounded-[2.75rem] p-3 sm:p-4 lg:grid-cols-[.86fr_1.14fr]"
+      >
+        <div className="glass-dark relative flex min-h-[35rem] flex-col overflow-hidden rounded-[2.2rem] p-7 text-white sm:p-10">
+          <div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border-[54px] border-white/5" />
+          <div className="absolute -bottom-36 -left-28 h-80 w-80 rounded-full bg-aid-seafoam/20 blur-3xl" />
+
+          <div className="relative flex items-center justify-between gap-4">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2 text-xs font-extrabold text-[#8adbd4] backdrop-blur-xl">
+              <span className="h-2 w-2 rounded-full bg-[#79d5ce] shadow-[0_0_0_5px_rgba(121,213,206,.10)]" />
+              Trust system active
+            </span>
+            <span className="font-quicksand text-sm font-bold text-white/35">04 safeguards</span>
+          </div>
+
+          <div className="relative mt-12">
+            <p className="eyebrow !text-[#79d5ce]">Trust is a feature</p>
+            <h2 className="mt-4 max-w-lg font-quicksand text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
+              Calm by default.<span className="mt-2 block text-[#8adbd4]">Urgent when it matters.</span>
+            </h2>
+            <p className="mt-5 max-w-md text-base leading-7 text-white/65">
+              Safety is not a disclaimer at the bottom of Curais. It shapes the guidance, permissions and interface from the first screen.
+            </p>
+          </div>
+
+          <div className="relative mt-auto pt-10">
+            <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-2xl">
+              <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-aid-teal shadow-xl">
+                <ShieldCheck className="h-7 w-7" />
+                <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-[#173a3e] bg-emerald-400" />
+              </span>
+              <div>
+                <p className="font-quicksand font-bold">Protection stays visible</p>
+                <p className="mt-1 text-xs leading-5 text-white/55">Clear boundaries at every important decision.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[2.2rem] bg-white/25 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+          <div className="flex items-end justify-between gap-5 border-b border-aid-teal/10 pb-6">
+            <div>
+              <p className="eyebrow">Built into every layer</p>
+              <h3 className="mt-2 font-quicksand text-2xl font-bold sm:text-3xl">Four safeguards. One calmer experience.</h3>
+            </div>
+            <Sparkles className="hidden h-6 w-6 text-aid-seafoam sm:block" />
+          </div>
+
+          <div>
+            {safeguards.map(([Icon, title, text], index) => (
+              <motion.article
+                key={title}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: .55 }}
+                transition={{ delay: index * .06, duration: .45 }}
+                className="group grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-aid-teal/10 py-6 last:border-b-0"
+              >
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aid-teal/10 text-aid-teal transition duration-300 group-hover:bg-aid-teal group-hover:text-white">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <h4 className="font-quicksand text-base font-bold sm:text-lg">{title}</h4>
+                  <p className="mt-2 text-sm leading-6 text-aid-muted">{text}</p>
+                </div>
+                <span className="pt-1 font-quicksand text-xs font-bold tracking-[.14em] text-aid-teal/30">0{index + 1}</span>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
 
 function FinalCTA({openModal}){return <section className="site-shell py-24"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative overflow-hidden rounded-[2.75rem] bg-aid-teal px-6 py-14 text-center text-white shadow-[0_30px_90px_rgba(10,107,111,.28)] sm:px-12 sm:py-20"><div className="absolute -left-20 -top-20 h-64 w-64 rounded-full border-[55px] border-white/5"/><div className="absolute -bottom-28 -right-20 h-72 w-72 rounded-full border-[65px] border-white/5"/><Sparkles className="relative mx-auto h-7 w-7 text-[#a6e5df]"/><h2 className="relative mx-auto mt-5 max-w-3xl font-quicksand text-4xl font-bold leading-tight sm:text-5xl">Care should feel clearer from the very first step.</h2><p className="relative mx-auto mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">Start with Immediate Care, build your record at your pace, or bring Curais into your clinic workflow.</p><div className="relative mt-8 flex flex-col justify-center gap-3 sm:flex-row"><button onClick={()=>openModal("start")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Choose your Curais app <ArrowRight className="h-4 w-4"/></button><button onClick={()=>openModal("demo")} className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-extrabold text-white backdrop-blur-xl">Talk to us</button></div></motion.div></section>}
 
