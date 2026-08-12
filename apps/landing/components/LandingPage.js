@@ -137,9 +137,198 @@ function Journey(){const cards=[[HeartPulse,"Immediate Care","Act with clear fir
 
 function PatientSection({openModal}){return <section id="patients" className="site-shell py-24"><div className="glass-dark relative overflow-hidden rounded-[2.5rem] px-5 py-10 text-white sm:px-10 lg:grid lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-14 lg:p-14"><div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-aid-seafoam/25 blur-3xl"/><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative"><p className="eyebrow !text-[#79d5ce]">For you and the people you love</p><h2 className="mt-3 font-quicksand text-4xl font-bold leading-tight sm:text-5xl">A health record that feels like yours—because it is.</h2><p className="mt-5 text-base leading-7 text-white/70 sm:text-lg">Build a useful picture over time, connect individual family accounts and decide when a clinician can see your information.</p><button onClick={()=>openModal("start")} className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Open patient app <ArrowRight className="h-4 w-4"/></button></motion.div><div className="relative mt-10 grid gap-3 sm:grid-cols-2 lg:mt-0">{[[FileHeart,"Health timeline","See conditions, visits and important events together."],[Pill,"Medication context","Keep current medicines and allergy information close."],[Users,"Family connections","Separate logins, connected only after both people agree."],[ShieldCheck,"Sharing controls","Grant and revoke clinic access from one clear screen."]].map(([Icon,title,text])=><div key={title} className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl"><Icon className="h-5 w-5 text-[#79d5ce]"/><h3 className="mt-5 font-quicksand font-bold">{title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{text}</p></div>)}</div></div></section>}
 
-function FamilySection(){return <section className="site-shell grid items-center gap-12 py-24 lg:grid-cols-2"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.25}} className="order-2 lg:order-1"><div className="glass-strong relative mx-auto min-h-[24rem] max-w-lg rounded-[2.5rem] p-6"><p className="eyebrow">Your family circle</p><FamilyNode className="left-1/2 top-16 -translate-x-1/2" label="You" icon={HeartPulse} primary/><FamilyNode className="bottom-12 left-7" label="Parent" icon={Users}/><FamilyNode className="bottom-12 right-7" label="Sibling" icon={Users}/><div className="absolute left-[28%] top-[44%] h-px w-[44%] rotate-[28deg] bg-aid-teal/25"/><div className="absolute left-[28%] top-[44%] h-px w-[44%] -rotate-[28deg] bg-aid-teal/25"/><div className="glass absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-2 text-center text-xs font-bold text-aid-teal">Every connection requires consent</div></div></motion.div><div className="order-1 lg:order-2"><SectionIntro eyebrow="Family context, with boundaries" title="Health can run in families. Access should not." text="Curais can help relatives contribute useful family-health context while every person keeps a separate login and controls what is shared."/><ul className="mt-7 space-y-3">{["Invitation and acceptance before connection","Separate permission for family-history context","No automatic access to a relative’s complete record"].map(item=><li key={item} className="flex items-start gap-3 text-aid-muted"><span className="mt-1 rounded-full bg-aid-teal/10 p-1 text-aid-teal"><Check className="h-3.5 w-3.5"/></span><span className="leading-7">{item}</span></li>)}</ul></div></section>}
+function FamilySection() {
+  const [activeStep, setActiveStep] = useState(0);
+  const stories = [
+    {
+      eyebrow: "01 — Connect",
+      title: "Connection starts with an invitation.",
+      text: "Every relative keeps a separate Curais account. A family connection appears only after both people agree.",
+      points: ["Separate login for every person", "Invite, review and accept", "No silent account linking"],
+    },
+    {
+      eyebrow: "02 — Share context",
+      title: "Useful family history—not an open record.",
+      text: "A relative can contribute hereditary context without exposing appointments, prescriptions or their complete health timeline.",
+      points: ["Family-history permission is separate", "Only relevant context is shared", "Private records remain private"],
+    },
+    {
+      eyebrow: "03 — Stay in control",
+      title: "Consent is a living choice.",
+      text: "Connections and clinic access stay visible. People can review what is shared and withdraw permission when circumstances change.",
+      points: ["Clear active-access status", "Revoke access at any time", "Every change is accountable"],
+    },
+  ];
 
-function FamilyNode({className,label,icon:Icon,primary}){return <div className={`absolute z-10 flex w-28 flex-col items-center rounded-2xl border p-4 text-center shadow-lg backdrop-blur-2xl ${primary?"border-aid-teal/25 bg-aid-teal text-white":"border-white/70 bg-white/65 text-aid-ink"} ${className}`}><Icon className="h-5 w-5"/><span className="mt-2 font-quicksand text-sm font-bold">{label}</span></div>}
+  return (
+    <section className="site-shell py-24" aria-labelledby="family-story-title">
+      <div className="grid gap-12 lg:grid-cols-[.92fr_1.08fr] lg:items-start lg:gap-16">
+        <div className="lg:sticky lg:top-28 lg:flex lg:h-[calc(100dvh-8.5rem)] lg:items-center">
+          <FamilyStoryVisual activeStep={activeStep} />
+        </div>
+
+        <div>
+          <div className="mb-14 lg:mb-6 lg:min-h-[38vh] lg:pt-12">
+            <p className="eyebrow">Family context, with boundaries</p>
+            <h2 id="family-story-title" className="section-title mt-3">
+              Health can run in families. Access should not.
+            </h2>
+            <p className="body-copy mt-5">
+              Curais connects the context that can improve care while keeping every person’s record and choices distinct.
+            </p>
+          </div>
+
+          {stories.map((story, index) => (
+            <motion.article
+              key={story.title}
+              onViewportEnter={() => setActiveStep(index)}
+              viewport={{ amount: .62 }}
+              initial={{ opacity: .4 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: .35 }}
+              className="flex min-h-[62vh] items-center py-10 lg:min-h-[78vh]"
+            >
+              <div className={`w-full rounded-[2rem] border p-6 transition duration-500 sm:p-8 ${activeStep === index ? "border-white/80 bg-white/55 shadow-[0_24px_70px_rgba(18,32,38,.09)] backdrop-blur-2xl" : "border-transparent"}`}>
+                <p className="eyebrow">{story.eyebrow}</p>
+                <h3 className="mt-4 max-w-xl font-quicksand text-3xl font-bold leading-tight sm:text-4xl">{story.title}</h3>
+                <p className="mt-5 max-w-xl text-base leading-8 text-aid-muted sm:text-lg">{story.text}</p>
+                <ul className="mt-7 grid gap-3">
+                  {story.points.map((point) => (
+                    <li key={point} className="flex items-center gap-3 text-sm font-bold text-aid-muted sm:text-base">
+                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-aid-teal/10 text-aid-teal">
+                        <Check className="h-4 w-4" />
+                      </span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FamilyStoryVisual({ activeStep }) {
+  const labels = ["A mutual connection", "Only selected context", "Permission stays visible"];
+
+  return (
+    <motion.div
+      variants={reveal}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: .25 }}
+      className="glass-strong relative mx-auto min-h-[28rem] w-full max-w-[34rem] overflow-hidden rounded-[2.5rem] p-6 sm:p-8"
+    >
+      <div className="absolute -right-24 -top-20 h-64 w-64 rounded-full bg-aid-seafoam/15 blur-3xl" />
+      <div className="relative flex items-center justify-between">
+        <div>
+          <p className="eyebrow">Your family circle</p>
+          <p className="mt-2 font-quicksand text-lg font-bold">{labels[activeStep]}</p>
+        </div>
+        <span className="rounded-full bg-aid-teal/10 px-3 py-2 text-xs font-extrabold text-aid-teal">
+          0{activeStep + 1} / 03
+        </span>
+      </div>
+
+      <div className="relative mt-8 h-[19rem]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeStep}
+            initial={{ opacity: 0, y: 18, scale: .97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -12, scale: .98 }}
+            transition={{ duration: .38, ease: [.22, 1, .36, 1] }}
+            className="absolute inset-0"
+          >
+            {activeStep === 0 ? <ConnectionVisual /> : null}
+            {activeStep === 1 ? <ContextVisual /> : null}
+            {activeStep === 2 ? <ControlVisual /> : null}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="relative flex gap-2" aria-hidden="true">
+        {[0, 1, 2].map((step) => (
+          <span key={step} className={`h-1.5 flex-1 rounded-full transition-colors duration-500 ${step <= activeStep ? "bg-aid-teal" : "bg-aid-teal/10"}`} />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function ConnectionVisual() {
+  return (
+    <div className="relative h-full">
+      <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 rounded-2xl bg-aid-teal px-7 py-5 text-center text-white shadow-xl">
+        <HeartPulse className="mx-auto h-5 w-5" />
+        <p className="mt-2 font-quicksand text-sm font-bold">You</p>
+      </div>
+      <div className="absolute left-[23%] top-[37%] h-px w-[54%] rotate-[25deg] bg-aid-teal/25" />
+      <div className="absolute left-[23%] top-[37%] h-px w-[54%] -rotate-[25deg] bg-aid-teal/25" />
+      <StoryNode className="bottom-7 left-2 sm:left-6" label="Parent" />
+      <StoryNode className="bottom-7 right-2 sm:right-6" label="Sibling" />
+      <div className="glass absolute bottom-0 left-1/2 z-20 -translate-x-1/2 rounded-full px-3 py-2 text-center text-[11px] font-extrabold text-aid-teal">
+        Invitation accepted
+      </div>
+    </div>
+  );
+}
+
+function ContextVisual() {
+  return (
+    <div className="flex h-full flex-col justify-center gap-3">
+      <div className="rounded-2xl border border-aid-teal/20 bg-aid-teal p-5 text-white shadow-xl">
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-3 font-quicksand font-bold"><FileHeart className="h-5 w-5" />Family-history context</span>
+          <Check className="h-5 w-5" />
+        </div>
+        <p className="mt-3 text-sm text-white/70">Diabetes and cardiac history</p>
+      </div>
+      <div className="rounded-2xl border border-white/70 bg-white/45 p-5 text-aid-muted backdrop-blur-xl">
+        <div className="flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-3 font-quicksand font-bold"><ClipboardList className="h-5 w-5" />Complete health record</span>
+          <ShieldCheck className="h-5 w-5 text-aid-teal" />
+        </div>
+        <p className="mt-3 text-sm">Private unless separately shared</p>
+      </div>
+    </div>
+  );
+}
+
+function ControlVisual() {
+  return (
+    <div className="flex h-full flex-col justify-center">
+      <div className="glass rounded-[2rem] p-5">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-aid-teal text-white"><ShieldCheck className="h-5 w-5" /></span>
+          <div>
+            <p className="font-quicksand font-bold">Family-history access</p>
+            <p className="text-xs text-aid-muted">Shared with Meera Family Clinic</p>
+          </div>
+        </div>
+        <div className="mt-5 flex items-center justify-between rounded-xl bg-emerald-50/80 p-3">
+          <span className="text-sm font-bold text-emerald-800">Active with consent</span>
+          <span className="relative h-7 w-12 rounded-full bg-aid-teal"><span className="absolute right-1 top-1 h-5 w-5 rounded-full bg-white shadow" /></span>
+        </div>
+        <div className="mt-3 w-full rounded-xl border border-aid-emergency/20 bg-red-50/70 px-4 py-3 text-center text-sm font-extrabold text-aid-emergency">
+          Revoke access
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StoryNode({ className, label }) {
+  return (
+    <div className={`absolute z-10 flex w-28 flex-col items-center rounded-2xl border border-white/70 bg-white/70 p-4 text-center shadow-lg backdrop-blur-2xl ${className}`}>
+      <Users className="h-5 w-5" />
+      <span className="mt-2 font-quicksand text-sm font-bold">{label}</span>
+    </div>
+  );
+}
 
 function ClinicSection({openModal}){return <section id="clinics" className="site-shell py-24"><SectionIntro eyebrow="For clinics and hospitals" title="A focused EMR, built around patient permission." text="Give clinicians the context they need without turning every record into an open directory. Curais keeps consent visible inside the workflow."/><div className="mt-12 grid gap-5 lg:grid-cols-[1.2fr_.8fr]"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-strong rounded-[2rem] p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="eyebrow">Clinical command center</p><h3 className="mt-2 font-quicksand text-2xl font-bold">Today at a glance</h3></div><span className="rounded-full bg-aid-teal/10 px-3 py-2 text-xs font-bold text-aid-teal">Consent checked on every record</span></div><div className="mt-7 grid gap-3 sm:grid-cols-4">{[[Users,"24","Patients"],[CalendarCheck2,"8","Appointments"],[ClipboardList,"3","Draft notes"],[Activity,"5","Labs"]].map(([Icon,value,label])=><div key={label} className="glass rounded-2xl p-4"><Icon className="h-4 w-4 text-aid-teal"/><p className="mt-5 font-quicksand text-2xl font-bold">{value}</p><p className="text-xs text-aid-muted">{label}</p></div>)}</div><div className="mt-4 grid gap-3 sm:grid-cols-2">{["Appointments and patient lookup","Encounters, vitals and SOAP notes","Medication instructions","Routine and urgent lab orders"].map(text=><div key={text} className="flex items-center gap-3 rounded-xl bg-white/40 p-3 text-sm font-bold"><Check className="h-4 w-4 text-aid-teal"/>{text}</div>)}</div></motion.div><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-dark flex flex-col justify-between rounded-[2rem] p-7 text-white"><div><Stethoscope className="h-8 w-8 text-[#79d5ce]"/><h3 className="mt-8 font-quicksand text-3xl font-bold">Bring calm structure to everyday care.</h3><p className="mt-4 leading-7 text-white/65">Designed first for small clinics and growing care teams that need clarity, continuity and accountable access.</p></div><button onClick={()=>openModal("demo")} className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Request a clinic walkthrough <ArrowRight className="h-4 w-4"/></button></motion.div></div></section>}
 
