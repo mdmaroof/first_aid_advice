@@ -1,25 +1,21 @@
 {
-  "name": "snapaid",
+  "name": "curais",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "framer-motion": "^11.2.12",
-    "lucide-react": "^1.28.0",
-    "next": "14.2.4",
-    "openai": "^4.52.2",
-    "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "dev:patient": "npm run dev --workspace=@curais/patient",
+    "dev:doctor": "npm run dev --workspace=@curais/doctor",
+    "dev:landing": "npm run dev --workspace=@curais/landing",
+    "build": "npm run build --workspaces --if-present",
+    "build:patient": "npm run build --workspace=@curais/patient",
+    "build:doctor": "npm run build --workspace=@curais/doctor",
+    "build:landing": "npm run build --workspace=@curais/landing",
+    "lint": "npm run lint --workspaces --if-present",
+    "api:dev": "cd services/api && go run ./cmd/api",
+    "api:test": "cd services/api && go test ./..."
   }
 }

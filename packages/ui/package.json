@@ -1,0 +1,10 @@
+{
+  "name": "@curais/ui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.js",
+  "peerDependencies": {
+    "lucide-react": "^1.28.0",
+    "react": "^18"
+  }
+}

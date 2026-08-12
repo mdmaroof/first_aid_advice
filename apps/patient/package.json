@@ -1,0 +1,26 @@
+{
+  "name": "@curais/patient",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@curais/ui": "*",
+    "framer-motion": "^11.2.12",
+    "lucide-react": "^1.28.0",
+    "next": "14.2.4",
+    "openai": "^4.52.2",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1"
+  }
+}

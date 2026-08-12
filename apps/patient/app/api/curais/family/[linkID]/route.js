@@ -1,0 +1,3 @@
+import { NextResponse } from "next/server";
+import { apiURL, bearerHeaders, sessionUser } from "@/lib/serverAuth";
+export async function POST(request, { params }) { try { const user = await sessionUser(); if (!user) return NextResponse.json({ error: { message: "Sign in again." } }, { status: 401 }); const response = await fetch(`${apiURL}/v1/patients/${user.id}/family/invitations/${encodeURIComponent(params.linkID)}/response`, { method: "POST", headers: bearerHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(await request.json()), cache: "no-store" }); return NextResponse.json(await response.json(), { status: response.status }); } catch { return NextResponse.json({ error: { message: "API unavailable." } }, { status: 503 }); } }

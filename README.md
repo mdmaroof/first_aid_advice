@@ -1,4 +1,69 @@
-# SnapAid
+# Curais monorepo
+
+Curais contains two independently deployable applications and a Go API:
+
+- `apps/patient` - patient experience; the existing SnapAid product remains its Immediate Care feature.
+- `apps/doctor` - clinical workspace.
+- `apps/landing` - public Curais website, product story, modal entry points, privacy and terms.
+- `packages/ui` - shared visual primitives and Curais identity.
+- `services/api` - Go backend using SQLite locally.
+
+## Development
+
+```bash
+npm install
+npm run dev:patient # http://localhost:3000
+npm run dev:doctor  # http://localhost:3001
+npm run dev:landing # http://localhost:4000
+npm run api:dev     # http://localhost:8080
+```
+
+Interactive Swagger documentation: [http://localhost:8080/swagger](http://localhost:8080/swagger)
+
+Error codes and operational troubleshooting: [`docs/ERROR_CATALOG.md`](docs/ERROR_CATALOG.md)
+
+Patient routes:
+
+- `/immediate-care` - public SnapAid guidance; no account required.
+- `/immediate-care/search` - session-only guidance result with optional signed-in context and explicit save.
+- `/signin` - patient sign-in and sign-up.
+- `/patient` - authenticated Curais patient home.
+- `/patient/snapaid` - compatibility redirect to `/immediate-care`.
+- `/patient/profile` - local My Health vertical slice backed by the Go API.
+- `/patient/care-team` - grant/revoke local clinic profile access.
+- `/patient/history` - patient-authored longitudinal health history.
+- `/patient/family` - invitation-based family account connections.
+
+Doctor routes:
+
+- `/signin` - doctor sign-in and sign-up.
+- `/` - authenticated doctor EMR workspace.
+- `/patients` - patients with active grants to the doctor's clinic.
+- `/patients/{patientID}` - consent-checked shared profile and clinical history.
+- `/appointments` - clinic scheduling for consented patients.
+- `/encounters` - vitals and SOAP-style clinical documentation.
+- `/prescriptions` - attributable medication orders and instructions.
+- `/labs` - routine and urgent diagnostic orders.
+
+Public website routes:
+
+- `/` - Curais landing page.
+- `/privacy` - plain-language privacy policy draft.
+- `/terms` - terms and conditions draft.
+
+The apps use opaque Go API sessions stored in HttpOnly cookies. Local identity
+headers remain available only as a development testing adapter.
+
+API endpoints and migration runbooks are documented in `docs/API_REFERENCE.md`,
+`docs/openapi.yaml`, `docs/SWAGGER_GUIDE.md`, `docs/POSTGRESQL_CONVERSION.md`,
+and `docs/MONGODB_CONVERSION.md`.
+
+For deployment, create separate projects rooted at `apps/patient` and
+`apps/doctor`, deploy `apps/landing` as the public `curais.com` project, and
+deploy `services/api` as an independent Go service. Do not
+serve the local SQLite database from a serverless filesystem.
+
+## SnapAid
 
 Instant first-aid guidance. Describe symptoms (or tap a common emergency) and get clear, step-by-step actions — plus a one-tap call to local emergency services.
 
