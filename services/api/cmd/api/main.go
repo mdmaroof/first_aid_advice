@@ -10,8 +10,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/config"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/httpapi"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/platform/database"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
 )
@@ -31,9 +33,17 @@ func main() {
 		logger.Error("migrate database", "error", err)
 		os.Exit(1)
 	}
+	if cfg.Environment == "local" {
+		if err := database.SeedLocal(context.Background(), db); err != nil {
+			logger.Error("seed local database", "error", err)
+			os.Exit(1)
+		}
+	}
 
 	profileRepository := profile.NewSQLiteRepository(db)
-	handler := httpapi.NewHandler(logger, profileRepository, cfg.Environment)
+	accessRepository := access.NewSQLiteRepository(db)
+	identityResolver := identity.NewLocalHeaderResolver(cfg.Environment)
+	handler := httpapi.NewHandler(logger, profileRepository, accessRepository, identityResolver)
 	server := &http.Server{
 		Addr:              cfg.Address,
 		Handler:           handler.Routes(),
