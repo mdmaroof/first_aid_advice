@@ -2,9 +2,7 @@
   "/patient/profile/page": "app/patient/profile/page.js",
   "/signin/page": "app/signin/page.js",
   "/immediate-care/search/page": "app/immediate-care/search/page.js",
-  "/immediate-care/page": "app/immediate-care/page.js",
   "/patient/care-team/page": "app/patient/care-team/page.js",
-  "/api/curais/history/route": "app/api/curais/history/route.js",
-  "/api/curais/profile/route": "app/api/curais/profile/route.js",
-  "/page": "app/page.js"
+  "/icon/[[...__metadata_id__]]/route": "app/icon/[[...__metadata_id__]]/route.js",
+  "/immediate-care/page": "app/immediate-care/page.js"
 }

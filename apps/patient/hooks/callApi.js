@@ -61,7 +61,7 @@ const getDemoData = (input) => ({
   },
 });
 
-export const callApi = async (input) => {
+export const callApi = async (input, { useHealthContext = false } = {}) => {
   const trimmed = clampSymptomInput(input);
 
   if (!trimmed) {
@@ -86,7 +86,7 @@ export const callApi = async (input) => {
     const quickData = getQuickAidData(trimmed);
     if (quickData) {
       const normalized = normalizeAidResult(quickData);
-      return { success: true, error: false, message: null, data: normalized };
+      return { success: true, error: false, message: null, data: { ...normalized, context_status: useHealthContext ? "not_applied_curated" : "not_requested" } };
     }
     return {
       success: false,
@@ -101,7 +101,7 @@ export const callApi = async (input) => {
     const quickData = getQuickAidData(trimmed);
     if (quickData) {
       const normalized = normalizeAidResult(quickData);
-      return { success: true, error: false, message: null, data: normalized };
+      return { success: true, error: false, message: null, data: { ...normalized, context_status: useHealthContext ? "not_applied_curated" : "not_requested" } };
     }
 
     if (USE_DEMO_DATA) {
@@ -110,7 +110,7 @@ export const callApi = async (input) => {
         success: true,
         error: false,
         message: null,
-        data: normalizeAidResult(getDemoData(trimmed)),
+        data: { ...normalizeAidResult(getDemoData(trimmed)), context_status: useHealthContext ? "unavailable" : "not_requested" },
       };
     }
 
@@ -119,7 +119,7 @@ export const callApi = async (input) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data: trimmed }),
+      body: JSON.stringify({ data: trimmed, useHealthContext }),
     });
 
     const payload = await res.json().catch(() => ({}));

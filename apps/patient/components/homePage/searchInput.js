@@ -17,7 +17,7 @@ const layoutSpring = {
   opacity: { duration: 0.14, ease: easeOut },
 };
 
-export const SearchInput = ({ step, setStep, error, setError }) => {
+export const SearchInput = ({ step, setStep, error, setError, useHealthContext = false }) => {
   const [input, setInput] = useState("");
   const router = useRouter();
   const { setResult } = useResults();
@@ -34,7 +34,7 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
       setStep("step3");
 
       try {
-        const res = await callApi(query);
+        const res = await callApi(query, { useHealthContext });
 
         if (res.error) {
           setError?.(res.message || "Something went wrong. Please try again.");
@@ -48,7 +48,7 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
         searchingRef.current = false;
       }
     },
-    [router, setError, setResult, setStep]
+    [router, setError, setResult, setStep, useHealthContext]
   );
 
   const handleSpeechResult = useCallback(

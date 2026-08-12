@@ -71,6 +71,7 @@ export function normalizeAidResult(raw) {
       basic: normalizeSymptomList(symptoms.basic),
     },
     category: String(raw.category ?? "").trim() || null,
+    context_status: String(raw.context_status ?? "not_requested").trim() || "not_requested",
   };
 }
 

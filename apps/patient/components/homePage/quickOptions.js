@@ -36,7 +36,7 @@ const QUICK_OPTIONS = [
   { label: "Headache", Icon: Brain },
 ];
 
-export const QuickOptions = ({ step, setStep, setError }) => {
+export const QuickOptions = ({ step, setStep, setError, useHealthContext = false }) => {
   const router = useRouter();
   const { setResult } = useResults();
   const isSearching = step === "step3";
@@ -51,7 +51,7 @@ export const QuickOptions = ({ step, setStep, setError }) => {
 
     setError?.(null);
     setStep("step3");
-    const res = await callApi(data);
+    const res = await callApi(data, { useHealthContext });
 
     if (res.error) {
       setError?.(res.message || "Something went wrong. Please try again.");

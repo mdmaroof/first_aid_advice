@@ -115,6 +115,8 @@ const SearchPage = () => {
             </p>
           ) : null}
 
+          <GuidanceContextStatus status={result.context_status} />
+
         </motion.section>
 
         <FirstAidSteps steps={instant_help} />
@@ -163,3 +165,10 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+
+function GuidanceContextStatus({ status }) {
+  if (!status || status === "not_requested") return null;
+  const applied = status === "applied";
+  const curated = status === "not_applied_curated";
+  return <p className={`mt-3 rounded-xl px-3 py-2 text-xs font-semibold leading-5 ${applied ? "bg-aid-teal/10 text-aid-teal" : "bg-amber-50/80 text-amber-800"}`}>{applied ? "Saved allergies, medicines and recent history were included for relevant safety context." : curated ? "This is a curated first-aid guide; saved health context was not sent or needed." : "Saved health context could not be applied. This guidance is general and remains available."}</p>;
+}
