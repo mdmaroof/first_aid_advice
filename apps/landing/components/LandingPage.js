@@ -56,7 +56,82 @@ function Hero({ openModal, reduceMotion }) {
 
 function JourneyRow({ icon:Icon,step,title,text,active=false }) { return <div className={`rounded-2xl border p-4 ${active?"border-aid-teal/20 bg-aid-teal/10":"border-white/60 bg-white/30"}`}><div className="flex items-start gap-3"><span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active?"bg-aid-teal text-white":"bg-white/60 text-aid-teal"}`}><Icon className="h-5 w-5"/></span><div className="min-w-0"><p className="text-[10px] font-extrabold tracking-[.18em] text-aid-teal">STEP {step}</p><p className="font-quicksand text-sm font-bold sm:text-base">{title}</p><p className="mt-1 text-xs leading-5 text-aid-muted">{text}</p></div></div></div> }
 
-function TrustStrip(){return <section className="site-shell pb-24"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="glass grid divide-y divide-white/55 rounded-3xl md:grid-cols-3 md:divide-x md:divide-y-0">{[[HeartHandshake,"Human-first","AI supports care; it never replaces a professional."],[ShieldCheck,"Consent-led","Share only what you choose, and revoke access."],[MessageCircleHeart,"Easy to understand","Calm language, readable type and clear next steps."]].map(([Icon,title,text])=><div key={title} className="flex gap-3 p-5 sm:p-6"><Icon className="h-5 w-5 shrink-0 text-aid-teal"/><div><h2 className="font-quicksand font-bold">{title}</h2><p className="mt-1 text-sm leading-6 text-aid-muted">{text}</p></div></div>)}</motion.div></section>}
+function TrustStrip() {
+  const points = [
+    {
+      icon: HeartHandshake,
+      title: "Human-first",
+      text: "AI supports care; it never replaces the judgment of a professional.",
+      label: "Clinical oversight",
+      tone: "from-[#d7f3ec] to-[#eef9f5]",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Consent-led",
+      text: "Share only what you choose, with clear controls to revoke access.",
+      label: "Granular control",
+      tone: "from-[#d8eef5] to-[#f0f8fa]",
+    },
+    {
+      icon: MessageCircleHeart,
+      title: "Easy to understand",
+      text: "Calm language, readable type and one clear next step at a time.",
+      label: "Plain-language care",
+      tone: "from-[#e5e5f7] to-[#f5f4fb]",
+    },
+  ];
+
+  return (
+    <section className="site-shell pb-24" aria-labelledby="trust-title">
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: .25 }}
+        variants={{ show: { transition: { staggerChildren: .09 } } }}
+      >
+        <div className="mb-5 flex items-end justify-between gap-5 px-1">
+          <div>
+            <p className="eyebrow">Designed around people</p>
+            <h2 id="trust-title" className="mt-2 font-quicksand text-2xl font-bold tracking-tight sm:text-3xl">
+              Technology that feels careful, not complicated.
+            </h2>
+          </div>
+          <p className="hidden max-w-xs text-right text-sm leading-6 text-aid-muted lg:block">
+            Three principles guide every Curais experience.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {points.map(({ icon: Icon, title, text, label, tone }, index) => (
+            <motion.article
+              key={title}
+              variants={reveal}
+              whileHover={{ y: -6 }}
+              transition={{ duration: .25, ease: [.22, 1, .36, 1] }}
+              className="glass-strong group relative min-h-[17rem] overflow-hidden rounded-[2rem] p-6 sm:p-7"
+            >
+              <div className={`absolute -right-16 -top-16 h-44 w-44 rounded-full bg-gradient-to-br ${tone} opacity-90 blur-xl transition duration-500 group-hover:scale-125`} />
+              <div className="relative flex items-start justify-between">
+                <span className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${tone} text-aid-teal shadow-[inset_0_1px_0_rgba(255,255,255,.9),0_10px_24px_rgba(10,107,111,.10)]`}>
+                  <Icon className="h-6 w-6" strokeWidth={2.2} />
+                </span>
+                <span className="font-quicksand text-sm font-bold tracking-[.16em] text-aid-teal/35">0{index + 1}</span>
+              </div>
+              <div className="relative mt-8">
+                <h3 className="font-quicksand text-xl font-bold sm:text-2xl">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-aid-muted sm:text-base">{text}</p>
+              </div>
+              <div className="absolute inset-x-6 bottom-6 flex items-center gap-2 border-t border-aid-teal/10 pt-4 text-xs font-extrabold uppercase tracking-[.12em] text-aid-teal">
+                <span className="h-2 w-2 rounded-full bg-aid-seafoam shadow-[0_0_0_5px_rgba(26,143,152,.10)]" />
+                {label}
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
 
 function Journey(){const cards=[[HeartPulse,"Immediate Care","Act with clear first-aid steps and direct emergency escalation."],[ClipboardList,"My Health","Keep allergies, medicines, conditions and care moments together."],[Building2,"Connected care","Give a clinic time-bound access to the context you choose."]];return <section id="how" className="site-shell py-24"><SectionIntro eyebrow="One connected path" title="From uncertain moment to informed care." text="Curais is designed around the way health actually unfolds—not as isolated screens, but as a careful handoff from action to memory to professional care."/><div className="mt-12 grid gap-4 lg:grid-cols-3">{cards.map(([Icon,title,text],index)=><motion.article key={title} variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.25}} transition={{delay:index*.08}} className="glass-strong group rounded-[2rem] p-6 sm:p-7"><div className="flex items-center justify-between"><span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aid-teal/10 text-aid-teal transition group-hover:bg-aid-teal group-hover:text-white"><Icon/></span><span className="font-quicksand text-4xl font-bold text-aid-teal/15">0{index+1}</span></div><h3 className="mt-8 font-quicksand text-2xl font-bold">{title}</h3><p className="mt-3 leading-7 text-aid-muted">{text}</p></motion.article>)}</div></section>}
 
