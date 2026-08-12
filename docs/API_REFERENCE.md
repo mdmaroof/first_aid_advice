@@ -40,12 +40,15 @@ Passwords require at least 10 characters and use salted PBKDF2-SHA256 hashes. Se
 {
   "error": {
     "code": "sharing_grant_required",
-    "message": "An active patient sharing grant is required."
+    "message": "An active patient sharing grant is required.",
+    "requestId": "req-184a44e235632291397d2a3c"
   }
 }
 ```
 
-Common status codes: `400` validation, `401` no identity, `403` wrong role/ownership or missing grant, `404` resource missing, `500` internal failure.
+The same reference is returned in the `X-Request-ID` header and structured API logs. Field validation may include `details`. See [`ERROR_CATALOG.md`](./ERROR_CATALOG.md) for the complete code-to-resolution mapping.
+
+Common status codes: `400` validation, `401` no identity, `403` wrong role/ownership or missing grant, `404` resource missing, `409` conflict, `413` request too large, `500` internal failure, and `503` unavailable dependency.
 
 ## Health
 

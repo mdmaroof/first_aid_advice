@@ -141,11 +141,19 @@ func TestErrorsIncludeStableCodeAndRequestID(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/v1/missing", nil)
 	response := httptest.NewRecorder()
 	newTestHandler().ServeHTTP(response, request)
-	if response.Code != http.StatusNotFound { t.Fatalf("expected 404, got %d", response.Code) }
+	if response.Code != http.StatusNotFound {
+		t.Fatalf("expected 404, got %d", response.Code)
+	}
 	var payload errorEnvelope
-	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil { t.Fatal(err) }
-	if payload.Error.Code != "route_not_found" || payload.Error.RequestID == "" { t.Fatalf("unexpected error: %#v", payload.Error) }
-	if payload.Error.RequestID != response.Header().Get("X-Request-ID") { t.Fatal("response and payload request IDs differ") }
+	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if payload.Error.Code != "route_not_found" || payload.Error.RequestID == "" {
+		t.Fatalf("unexpected error: %#v", payload.Error)
+	}
+	if payload.Error.RequestID != response.Header().Get("X-Request-ID") {
+		t.Fatal("response and payload request IDs differ")
+	}
 }
 
 func TestMalformedJSONReturnsDiagnosticError(t *testing.T) {
@@ -154,8 +162,12 @@ func TestMalformedJSONReturnsDiagnosticError(t *testing.T) {
 	response := httptest.NewRecorder()
 	newTestHandler().ServeHTTP(response, request)
 	var payload errorEnvelope
-	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil { t.Fatal(err) }
-	if response.Code != http.StatusBadRequest || payload.Error.Code != "malformed_json" { t.Fatalf("unexpected response: %d %#v", response.Code, payload.Error) }
+	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if response.Code != http.StatusBadRequest || payload.Error.Code != "malformed_json" {
+		t.Fatalf("unexpected response: %d %#v", response.Code, payload.Error)
+	}
 }
 
 func TestProfileRejectsMismatchedPatient(t *testing.T) {

@@ -18,6 +18,8 @@ npm run api:dev     # http://localhost:8080
 
 Interactive Swagger documentation: [http://localhost:8080/swagger](http://localhost:8080/swagger)
 
+Error codes and operational troubleshooting: [`docs/ERROR_CATALOG.md`](docs/ERROR_CATALOG.md)
+
 Patient routes:
 
 - `/signin` - patient sign-in and sign-up.

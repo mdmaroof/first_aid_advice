@@ -4,6 +4,8 @@ Start the Go API with `npm run api:dev`, then open [http://localhost:8080/swagge
 
 The machine-readable OpenAPI 3.1 contract is [`openapi.yaml`](./openapi.yaml). Import it into Swagger UI, Swagger Editor, Postman, Insomnia, Bruno, or an SDK generator.
 
+For failed requests, copy `error.code` and `error.requestId`, then consult [`ERROR_CATALOG.md`](./ERROR_CATALOG.md).
+
 ## Local Swagger UI
 
 Run a Swagger UI container and mount the contract, or paste `openapi.yaml` into [Swagger Editor](https://editor.swagger.io/). The local server URL is `http://127.0.0.1:8080`.
