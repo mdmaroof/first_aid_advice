@@ -51,7 +51,7 @@ function Navigation({ menuOpen, setMenuOpen, openModal }) {
 }
 
 function Hero({ openModal, reduceMotion }) {
-  return <section id="top" className="site-shell relative grid min-h-[calc(100dvh-5rem)] items-center gap-10 pb-16 pt-14 lg:grid-cols-[1.05fr_.95fr] lg:pb-24 lg:pt-20"><motion.div initial="hidden" animate="show" variants={{show:{transition:{staggerChildren:.1}}}}><motion.div variants={reveal} className="glass inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-extrabold text-aid-teal"><Sparkles className="h-4 w-4" />Care, made more present by intelligence</motion.div><motion.h1 variants={reveal} className="mt-6 max-w-4xl font-quicksand text-[clamp(3.25rem,8vw,6.7rem)] font-bold leading-[.93] tracking-[-.055em] text-aid-ink">Clear help now.<span className="mt-2 block text-aid-teal">Better care next.</span></motion.h1><motion.p variants={reveal} className="body-copy mt-7 max-w-2xl">Curais helps you act during a health moment, keep the context that matters, and share it with the people caring for you—only when you choose.</motion.p><motion.div variants={reveal} className="mt-8 flex flex-col gap-3 sm:flex-row"><button onClick={()=>openModal("immediate")} className="button-primary"><HeartPulse className="h-5 w-5" />Try Immediate Care</button><button onClick={()=>openModal("start")} className="button-secondary">Explore Curais <ChevronRight className="h-4 w-4" /></button></motion.div><motion.p variants={reveal} className="mt-5 flex max-w-xl items-start gap-2 text-sm leading-6 text-aid-muted"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-aid-teal" />Guidance, not diagnosis. Your health information stays under your control.</motion.p></motion.div><motion.div initial={{opacity:0,scale:.94}} animate={{opacity:1,scale:1}} transition={{duration:.8,ease:[.22,1,.36,1]}} className="relative mx-auto w-full max-w-[38rem]"><div className="absolute inset-12 rounded-full bg-aid-seafoam/25 blur-3xl"/><motion.div animate={reduceMotion?undefined:{y:[0,-10,0]}} transition={{duration:5,repeat:Infinity,ease:"easeInOut"}} className="glass-strong relative rounded-[2.5rem] p-5 sm:p-7"><div className="flex items-center justify-between"><div className="flex items-center gap-3"><span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aid-teal text-white"><HeartPulse/></span><div><p className="font-quicksand font-bold">Your care journey</p><p className="text-xs text-aid-muted">One calm step at a time</p></div></div><span className="rounded-full bg-emerald-100/70 px-3 py-1 text-xs font-bold text-emerald-800">You control access</span></div><div className="mt-6 space-y-3"><JourneyRow icon={Activity} step="01" title="Get clear immediate guidance" text="Curated first-aid steps stay close to emergency action." active/><JourneyRow icon={FileHeart} step="02" title="Keep your health context" text="Allergies, medication, history and family context in one place."/><JourneyRow icon={Stethoscope} step="03" title="Share with your clinic" text="Permission is explicit, bounded and revocable."/></div></motion.div><motion.div animate={reduceMotion?undefined:{y:[0,8,0]}} transition={{duration:4.3,repeat:Infinity,ease:"easeInOut"}} className="glass absolute -bottom-6 -left-2 hidden items-center gap-3 rounded-2xl p-3 sm:flex"><span className="rounded-xl bg-white/60 p-2 text-aid-teal"><Users className="h-5 w-5" /></span><div><p className="text-xs font-bold">Family context</p><p className="text-[11px] text-aid-muted">Connected by consent</p></div></motion.div></motion.div></section>;
+  return <section id="top" className="site-shell relative grid items-center gap-10 pb-14 pt-10 sm:pb-16 sm:pt-14 lg:min-h-[calc(100dvh-5rem)] lg:grid-cols-[1.05fr_.95fr] lg:pb-24 lg:pt-20"><motion.div initial="hidden" animate="show" variants={{show:{transition:{staggerChildren:.1}}}}><motion.div variants={reveal} className="glass inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-extrabold text-aid-teal"><Sparkles className="h-4 w-4" />Care, made more present by intelligence</motion.div><motion.h1 variants={reveal} className="mt-6 max-w-4xl font-quicksand text-[clamp(3.25rem,8vw,6.7rem)] font-bold leading-[.93] tracking-[-.055em] text-aid-ink">Clear help now.<span className="mt-2 block text-aid-teal">Better care next.</span></motion.h1><motion.p variants={reveal} className="body-copy mt-7 max-w-2xl">Curais helps you act during a health moment, keep the context that matters, and share it with the people caring for you—only when you choose.</motion.p><motion.div variants={reveal} className="mt-8 flex flex-col gap-3 sm:flex-row"><button onClick={()=>openModal("immediate")} className="button-primary"><HeartPulse className="h-5 w-5" />Try Immediate Care</button><button onClick={()=>openModal("start")} className="button-secondary">Explore Curais <ChevronRight className="h-4 w-4" /></button></motion.div><motion.p variants={reveal} className="mt-5 flex max-w-xl items-start gap-2 text-sm leading-6 text-aid-muted"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-aid-teal" />Guidance, not diagnosis. Your health information stays under your control.</motion.p></motion.div><motion.div initial={{opacity:0,scale:.94}} animate={{opacity:1,scale:1}} transition={{duration:.8,ease:[.22,1,.36,1]}} className="relative mx-auto w-full max-w-[38rem]"><div className="absolute inset-12 rounded-full bg-aid-seafoam/25 blur-3xl"/><motion.div animate={reduceMotion?undefined:{y:[0,-10,0]}} transition={{duration:5,repeat:Infinity,ease:"easeInOut"}} className="glass-strong relative rounded-[2.5rem] p-5 sm:p-7"><div className="flex items-center justify-between"><div className="flex items-center gap-3"><span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aid-teal text-white"><HeartPulse/></span><div><p className="font-quicksand font-bold">Your care journey</p><p className="text-xs text-aid-muted">One calm step at a time</p></div></div><span className="rounded-full bg-emerald-100/70 px-3 py-1 text-xs font-bold text-emerald-800">You control access</span></div><div className="mt-6 space-y-3"><JourneyRow icon={Activity} step="01" title="Get clear immediate guidance" text="Curated first-aid steps stay close to emergency action." active/><JourneyRow icon={FileHeart} step="02" title="Keep your health context" text="Allergies, medication, history and family context in one place."/><JourneyRow icon={Stethoscope} step="03" title="Share with your clinic" text="Permission is explicit, bounded and revocable."/></div></motion.div><motion.div animate={reduceMotion?undefined:{y:[0,8,0]}} transition={{duration:4.3,repeat:Infinity,ease:"easeInOut"}} className="glass absolute -bottom-6 -left-2 hidden items-center gap-3 rounded-2xl p-3 sm:flex"><span className="rounded-xl bg-white/60 p-2 text-aid-teal"><Users className="h-5 w-5" /></span><div><p className="text-xs font-bold">Family context</p><p className="text-[11px] text-aid-muted">Connected by consent</p></div></motion.div></motion.div></section>;
 }
 
 function JourneyRow({ icon:Icon,step,title,text,active=false }) { return <div className={`rounded-2xl border p-4 ${active?"border-aid-teal/20 bg-aid-teal/10":"border-white/60 bg-white/30"}`}><div className="flex items-start gap-3"><span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${active?"bg-aid-teal text-white":"bg-white/60 text-aid-teal"}`}><Icon className="h-5 w-5"/></span><div className="min-w-0"><p className="text-[10px] font-extrabold tracking-[.18em] text-aid-teal">STEP {step}</p><p className="font-quicksand text-sm font-bold sm:text-base">{title}</p><p className="mt-1 text-xs leading-5 text-aid-muted">{text}</p></div></div></div> }
@@ -82,7 +82,7 @@ function TrustStrip() {
   ];
 
   return (
-    <section className="site-shell pb-24" aria-labelledby="trust-title">
+    <section className="site-shell pb-10 sm:pb-16 lg:pb-24" aria-labelledby="trust-title">
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -108,7 +108,7 @@ function TrustStrip() {
               variants={reveal}
               whileHover={{ y: -6 }}
               transition={{ duration: .25, ease: [.22, 1, .36, 1] }}
-              className="glass-strong group relative min-h-[17rem] overflow-hidden rounded-[2rem] p-6 sm:p-7"
+              className="glass-strong group relative overflow-hidden rounded-[1.75rem] p-5 sm:min-h-[17rem] sm:rounded-[2rem] sm:p-7"
             >
               <div className={`absolute -right-16 -top-16 h-44 w-44 rounded-full bg-gradient-to-br ${tone} opacity-90 blur-xl transition duration-500 group-hover:scale-125`} />
               <div className="relative flex items-start justify-between">
@@ -117,11 +117,11 @@ function TrustStrip() {
                 </span>
                 <span className="font-quicksand text-sm font-bold tracking-[.16em] text-aid-teal/35">0{index + 1}</span>
               </div>
-              <div className="relative mt-8">
+              <div className="relative mt-5 sm:mt-8">
                 <h3 className="font-quicksand text-xl font-bold sm:text-2xl">{title}</h3>
                 <p className="mt-3 text-sm leading-7 text-aid-muted sm:text-base">{text}</p>
               </div>
-              <div className="absolute inset-x-6 bottom-6 flex items-center gap-2 border-t border-aid-teal/10 pt-4 text-xs font-extrabold uppercase tracking-[.12em] text-aid-teal">
+              <div className="relative mt-5 flex items-center gap-2 border-t border-aid-teal/10 pt-4 text-[10px] font-extrabold uppercase tracking-[.12em] text-aid-teal sm:absolute sm:inset-x-6 sm:bottom-6 sm:mt-0 sm:text-xs">
                 <span className="h-2 w-2 rounded-full bg-aid-seafoam shadow-[0_0_0_5px_rgba(26,143,152,.10)]" />
                 {label}
               </div>
@@ -135,7 +135,7 @@ function TrustStrip() {
 
 function Journey() {
   return (
-    <section id="how" className="site-shell py-24">
+    <section id="how" className="site-shell py-10 sm:py-16 lg:py-24">
       <div className="grid gap-6 lg:grid-cols-[1fr_.65fr] lg:items-end">
         <SectionIntro
           eyebrow="One connected path"
@@ -152,7 +152,7 @@ function Journey() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: .18 }}
-        className="glass-strong relative mt-12 grid gap-3 overflow-hidden rounded-[2.75rem] p-3 sm:p-4 lg:grid-cols-[.9fr_1.1fr]"
+        className="glass-strong relative mt-8 grid gap-3 overflow-hidden rounded-[2.25rem] p-3 sm:mt-10 sm:rounded-[2.75rem] sm:p-4 lg:mt-12 lg:grid-cols-[.9fr_1.1fr]"
       >
         <article className="relative flex min-h-[29rem] flex-col overflow-hidden rounded-[2.2rem] bg-aid-teal p-6 text-white shadow-[0_24px_55px_rgba(10,107,111,.22)] sm:p-8">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border-[48px] border-white/5" />
@@ -214,7 +214,7 @@ function Journey() {
   );
 }
 
-function PatientSection({openModal}){return <section id="patients" className="site-shell py-24"><div className="glass-dark relative overflow-hidden rounded-[2.5rem] px-5 py-10 text-white sm:px-10 lg:grid lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-14 lg:p-14"><div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-aid-seafoam/25 blur-3xl"/><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative"><p className="eyebrow !text-[#79d5ce]">For you and the people you love</p><h2 className="mt-3 font-quicksand text-4xl font-bold leading-tight sm:text-5xl">A health record that feels like yours—because it is.</h2><p className="mt-5 text-base leading-7 text-white/70 sm:text-lg">Build a useful picture over time, connect individual family accounts and decide when a clinician can see your information.</p><button onClick={()=>openModal("start")} className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Open patient app <ArrowRight className="h-4 w-4"/></button></motion.div><div className="relative mt-10 grid gap-3 sm:grid-cols-2 lg:mt-0">{[[FileHeart,"Health timeline","See conditions, visits and important events together."],[Pill,"Medication context","Keep current medicines and allergy information close."],[Users,"Family connections","Separate logins, connected only after both people agree."],[ShieldCheck,"Sharing controls","Grant and revoke clinic access from one clear screen."]].map(([Icon,title,text])=><div key={title} className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl"><Icon className="h-5 w-5 text-[#79d5ce]"/><h3 className="mt-5 font-quicksand font-bold">{title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{text}</p></div>)}</div></div></section>}
+function PatientSection({openModal}){return <section id="patients" className="site-shell py-10 sm:py-16 lg:py-24"><div className="glass-dark relative overflow-hidden rounded-[2.25rem] px-5 py-9 text-white sm:rounded-[2.5rem] sm:px-10 sm:py-10 lg:grid lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-14 lg:p-14"><div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-aid-seafoam/25 blur-3xl"/><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative"><p className="eyebrow !text-[#79d5ce]">For you and the people you love</p><h2 className="mt-3 font-quicksand text-3xl font-bold leading-tight sm:text-5xl">A health record that feels like yours—because it is.</h2><p className="mt-5 text-base leading-7 text-white/70 sm:text-lg">Build a useful picture over time, connect individual family accounts and decide when a clinician can see your information.</p><button onClick={()=>openModal("start")} className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Open patient app <ArrowRight className="h-4 w-4"/></button></motion.div><div className="relative mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:mt-0">{[[FileHeart,"Health timeline","See conditions, visits and important events together."],[Pill,"Medication context","Keep current medicines and allergy information close."],[Users,"Family connections","Separate logins, connected only after both people agree."],[ShieldCheck,"Sharing controls","Grant and revoke clinic access from one clear screen."]].map(([Icon,title,text])=><div key={title} className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-xl sm:p-5"><Icon className="h-5 w-5 text-[#79d5ce]"/><h3 className="mt-4 font-quicksand font-bold sm:mt-5">{title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{text}</p></div>)}</div></div></section>}
 
 function FamilySection() {
   const [activeStep, setActiveStep] = useState(0);
@@ -240,14 +240,16 @@ function FamilySection() {
   ];
 
   return (
-    <section className="site-shell py-24" aria-labelledby="family-story-title">
-      <div className="grid gap-12 lg:grid-cols-[.92fr_1.08fr] lg:items-start lg:gap-16">
-        <div className="lg:sticky lg:top-28 lg:flex lg:h-[calc(100dvh-8.5rem)] lg:items-center">
+    <section className="site-shell relative py-10 sm:py-16 lg:py-24" aria-labelledby="family-story-title">
+      <div className="pointer-events-none absolute -right-16 top-16 h-52 w-52 rounded-full border-[34px] border-aid-teal/5 lg:hidden" />
+      <div className="pointer-events-none absolute -left-24 bottom-20 h-48 w-48 rounded-full border-[30px] border-white/25 lg:hidden" />
+      <div className="relative grid gap-8 lg:grid-cols-[.92fr_1.08fr] lg:items-start lg:gap-16">
+        <div className="hidden lg:sticky lg:top-28 lg:flex lg:h-[calc(100dvh-8.5rem)] lg:items-center">
           <FamilyStoryVisual activeStep={activeStep} />
         </div>
 
         <div>
-          <div className="mb-14 lg:mb-6 lg:min-h-[38vh] lg:pt-12">
+          <div className="mb-8 lg:mb-6 lg:min-h-[38vh] lg:pt-12">
             <p className="eyebrow">Family context, with boundaries</p>
             <h2 id="family-story-title" className="section-title mt-3">
               Health can run in families. Access should not.
@@ -257,36 +259,66 @@ function FamilySection() {
             </p>
           </div>
 
-          {stories.map((story, index) => (
-            <motion.article
-              key={story.title}
-              onViewportEnter={() => setActiveStep(index)}
-              viewport={{ amount: .62 }}
-              initial={{ opacity: .4 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: .35 }}
-              className="flex min-h-[62vh] items-center py-10 lg:min-h-[78vh]"
-            >
-              <div className={`w-full rounded-[2rem] border p-6 transition duration-500 sm:p-8 ${activeStep === index ? "border-white/80 bg-white/55 shadow-[0_24px_70px_rgba(18,32,38,.09)] backdrop-blur-2xl" : "border-transparent"}`}>
-                <p className="eyebrow">{story.eyebrow}</p>
-                <h3 className="mt-4 max-w-xl font-quicksand text-3xl font-bold leading-tight sm:text-4xl">{story.title}</h3>
-                <p className="mt-5 max-w-xl text-base leading-8 text-aid-muted sm:text-lg">{story.text}</p>
-                <ul className="mt-7 grid gap-3">
-                  {story.points.map((point) => (
-                    <li key={point} className="flex items-center gap-3 text-sm font-bold text-aid-muted sm:text-base">
-                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-aid-teal/10 text-aid-teal">
-                        <Check className="h-4 w-4" />
-                      </span>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.article>
-          ))}
+          <MobileFamilySummary />
+
+          <div className="mt-4 grid gap-3 lg:mt-0 lg:block">
+            {stories.map((story, index) => (
+              <motion.article
+                key={story.title}
+                onViewportEnter={() => setActiveStep(index)}
+                viewport={{ amount: .62 }}
+                initial={{ opacity: .55 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: .35 }}
+                className="flex items-center lg:min-h-[78vh] lg:py-10"
+              >
+                <div className={`w-full rounded-[1.6rem] border border-white/80 bg-white/55 p-5 shadow-[0_16px_42px_rgba(18,32,38,.07)] backdrop-blur-2xl transition duration-500 sm:rounded-[2rem] sm:p-8 ${activeStep === index ? "lg:border-white/80 lg:bg-white/55 lg:shadow-[0_24px_70px_rgba(18,32,38,.09)]" : "lg:border-transparent lg:bg-transparent lg:shadow-none lg:backdrop-blur-none"}`}>
+                  <p className="eyebrow">{story.eyebrow}</p>
+                  <h3 className="mt-3 max-w-xl font-quicksand text-2xl font-bold leading-tight sm:mt-4 sm:text-4xl">{story.title}</h3>
+                  <p className="mt-3 max-w-xl text-sm leading-6 text-aid-muted sm:mt-5 sm:text-lg sm:leading-8">{story.text}</p>
+                  <ul className="mt-5 grid gap-2.5 sm:mt-7 sm:gap-3">
+                    {story.points.map((point) => (
+                      <li key={point} className="flex items-center gap-2.5 text-xs font-bold text-aid-muted sm:gap-3 sm:text-base">
+                        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-aid-teal/10 text-aid-teal sm:h-7 sm:w-7">
+                          <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        </span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function MobileFamilySummary() {
+  return (
+    <div className="glass-strong relative mb-5 overflow-hidden rounded-[1.75rem] p-5 lg:hidden">
+      <div className="absolute -right-12 -top-14 h-36 w-36 rounded-full border-[24px] border-aid-teal/5" />
+      <div className="relative flex items-center justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-aid-teal">Your family circle</p>
+          <p className="mt-1 font-quicksand text-lg font-bold">Connected by consent</p>
+        </div>
+        <ShieldCheck className="h-6 w-6 text-aid-teal" />
+      </div>
+      <div className="relative mt-5 flex items-center">
+        {["You", "P", "S"].map((label, index) => (
+          <span key={label} className={`inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#e5f3f2] font-quicksand text-xs font-bold shadow-sm ${index === 0 ? "z-30 bg-aid-teal text-white" : index === 1 ? "-ml-2 z-20 bg-white text-aid-teal" : "-ml-2 z-10 bg-[#dff1ef] text-aid-teal"}`}>
+            {label}
+          </span>
+        ))}
+        <div className="ml-3 min-w-0">
+          <p className="text-xs font-bold">3 separate accounts</p>
+          <p className="mt-1 text-[11px] text-aid-muted">Each person controls their record</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -472,7 +504,7 @@ function StoryNode({ className, label, initial }) {
   );
 }
 
-function ClinicSection({openModal}){return <section id="clinics" className="site-shell py-24"><SectionIntro eyebrow="For clinics and hospitals" title="A focused EMR, built around patient permission." text="Give clinicians the context they need without turning every record into an open directory. Curais keeps consent visible inside the workflow."/><div className="mt-12 grid gap-5 lg:grid-cols-[1.2fr_.8fr]"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-strong rounded-[2rem] p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="eyebrow">Clinical command center</p><h3 className="mt-2 font-quicksand text-2xl font-bold">Today at a glance</h3></div><span className="rounded-full bg-aid-teal/10 px-3 py-2 text-xs font-bold text-aid-teal">Consent checked on every record</span></div><div className="mt-7 grid gap-3 sm:grid-cols-4">{[[Users,"24","Patients"],[CalendarCheck2,"8","Appointments"],[ClipboardList,"3","Draft notes"],[Activity,"5","Labs"]].map(([Icon,value,label])=><div key={label} className="glass rounded-2xl p-4"><Icon className="h-4 w-4 text-aid-teal"/><p className="mt-5 font-quicksand text-2xl font-bold">{value}</p><p className="text-xs text-aid-muted">{label}</p></div>)}</div><div className="mt-4 grid gap-3 sm:grid-cols-2">{["Appointments and patient lookup","Encounters, vitals and SOAP notes","Medication instructions","Routine and urgent lab orders"].map(text=><div key={text} className="flex items-center gap-3 rounded-xl bg-white/40 p-3 text-sm font-bold"><Check className="h-4 w-4 text-aid-teal"/>{text}</div>)}</div></motion.div><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-dark flex flex-col justify-between rounded-[2rem] p-7 text-white"><div><Stethoscope className="h-8 w-8 text-[#79d5ce]"/><h3 className="mt-8 font-quicksand text-3xl font-bold">Bring calm structure to everyday care.</h3><p className="mt-4 leading-7 text-white/65">Designed first for small clinics and growing care teams that need clarity, continuity and accountable access.</p></div><button onClick={()=>openModal("demo")} className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Request a clinic walkthrough <ArrowRight className="h-4 w-4"/></button></motion.div></div></section>}
+function ClinicSection({openModal}){return <section id="clinics" className="site-shell py-10 sm:py-16 lg:py-24"><SectionIntro eyebrow="For clinics and hospitals" title="A focused EMR, built around patient permission." text="Give clinicians the context they need without turning every record into an open directory. Curais keeps consent visible inside the workflow."/><div className="mt-8 grid gap-5 sm:mt-10 lg:mt-12 lg:grid-cols-[1.2fr_.8fr]"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-strong rounded-[2rem] p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="eyebrow">Clinical command center</p><h3 className="mt-2 font-quicksand text-2xl font-bold">Today at a glance</h3></div><span className="rounded-full bg-aid-teal/10 px-3 py-2 text-xs font-bold text-aid-teal">Consent checked on every record</span></div><div className="mt-6 grid grid-cols-2 gap-3 sm:mt-7 sm:grid-cols-4">{[[Users,"24","Patients"],[CalendarCheck2,"8","Appointments"],[ClipboardList,"3","Draft notes"],[Activity,"5","Labs"]].map(([Icon,value,label])=><div key={label} className="glass rounded-2xl p-4"><Icon className="h-4 w-4 text-aid-teal"/><p className="mt-4 font-quicksand text-2xl font-bold sm:mt-5">{value}</p><p className="text-xs text-aid-muted">{label}</p></div>)}</div><div className="mt-4 grid gap-2 sm:grid-cols-2 sm:gap-3">{["Appointments and patient lookup","Encounters, vitals and SOAP notes","Medication instructions","Routine and urgent lab orders"].map(text=><div key={text} className="flex items-center gap-3 rounded-xl bg-white/40 p-3 text-sm font-bold"><Check className="h-4 w-4 text-aid-teal"/>{text}</div>)}</div></motion.div><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} className="glass-dark flex flex-col justify-between rounded-[2rem] p-6 text-white sm:p-7"><div><Stethoscope className="h-8 w-8 text-[#79d5ce]"/><h3 className="mt-6 font-quicksand text-3xl font-bold sm:mt-8">Bring calm structure to everyday care.</h3><p className="mt-4 leading-7 text-white/65">Designed first for small clinics and growing care teams that need clarity, continuity and accountable access.</p></div><button onClick={()=>openModal("demo")} className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal sm:mt-8">Request a clinic walkthrough <ArrowRight className="h-4 w-4"/></button></motion.div></div></section>}
 
 function SafetySection() {
   const safeguards = [
@@ -483,15 +515,15 @@ function SafetySection() {
   ];
 
   return (
-    <section id="safety" className="site-shell py-24">
+    <section id="safety" className="site-shell py-10 sm:py-16 lg:py-24">
       <motion.div
         variants={reveal}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: .2 }}
-        className="glass-strong grid gap-3 overflow-hidden rounded-[2.75rem] p-3 sm:p-4 lg:grid-cols-[.86fr_1.14fr]"
+        className="glass-strong grid gap-3 overflow-hidden rounded-[2.25rem] p-3 sm:rounded-[2.75rem] sm:p-4 lg:grid-cols-[.86fr_1.14fr]"
       >
-        <div className="glass-dark relative flex min-h-[35rem] flex-col overflow-hidden rounded-[2.2rem] p-7 text-white sm:p-10">
+        <div className="glass-dark relative flex min-h-[30rem] flex-col overflow-hidden rounded-[1.8rem] p-6 text-white sm:min-h-[35rem] sm:rounded-[2.2rem] sm:p-10">
           <div className="absolute -right-24 -top-20 h-72 w-72 rounded-full border-[54px] border-white/5" />
           <div className="absolute -bottom-36 -left-28 h-80 w-80 rounded-full bg-aid-seafoam/20 blur-3xl" />
 
@@ -503,9 +535,9 @@ function SafetySection() {
             <span className="font-quicksand text-sm font-bold text-white/35">04 safeguards</span>
           </div>
 
-          <div className="relative mt-12">
+          <div className="relative mt-9 sm:mt-12">
             <p className="eyebrow !text-[#79d5ce]">Trust is a feature</p>
-            <h2 className="mt-4 max-w-lg font-quicksand text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
+            <h2 className="mt-4 max-w-lg font-quicksand text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
               Calm by default.<span className="mt-2 block text-[#8adbd4]">Urgent when it matters.</span>
             </h2>
             <p className="mt-5 max-w-md text-base leading-7 text-white/65">
@@ -513,7 +545,7 @@ function SafetySection() {
             </p>
           </div>
 
-          <div className="relative mt-auto pt-10">
+          <div className="relative mt-auto pt-7 sm:pt-10">
             <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-2xl">
               <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-aid-teal shadow-xl">
                 <ShieldCheck className="h-7 w-7" />
@@ -527,7 +559,7 @@ function SafetySection() {
           </div>
         </div>
 
-        <div className="rounded-[2.2rem] bg-white/25 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+        <div className="rounded-[1.8rem] bg-white/25 px-5 py-7 sm:rounded-[2.2rem] sm:px-8 sm:py-10 lg:px-10">
           <div className="flex items-end justify-between gap-5 border-b border-aid-teal/10 pb-6">
             <div>
               <p className="eyebrow">Built into every layer</p>
@@ -544,7 +576,7 @@ function SafetySection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: .55 }}
                 transition={{ delay: index * .06, duration: .45 }}
-                className="group grid grid-cols-[auto_1fr_auto] items-start gap-4 border-b border-aid-teal/10 py-6 last:border-b-0"
+                className="group grid grid-cols-[auto_1fr_auto] items-start gap-3 border-b border-aid-teal/10 py-5 last:border-b-0 sm:gap-4 sm:py-6"
               >
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-aid-teal/10 text-aid-teal transition duration-300 group-hover:bg-aid-teal group-hover:text-white">
                   <Icon className="h-5 w-5" />
@@ -563,9 +595,9 @@ function SafetySection() {
   );
 }
 
-function FinalCTA({openModal}){return <section className="site-shell py-24"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative overflow-hidden rounded-[2.75rem] bg-aid-teal px-6 py-14 text-center text-white shadow-[0_30px_90px_rgba(10,107,111,.28)] sm:px-12 sm:py-20"><div className="absolute -left-20 -top-20 h-64 w-64 rounded-full border-[55px] border-white/5"/><div className="absolute -bottom-28 -right-20 h-72 w-72 rounded-full border-[65px] border-white/5"/><Sparkles className="relative mx-auto h-7 w-7 text-[#a6e5df]"/><h2 className="relative mx-auto mt-5 max-w-3xl font-quicksand text-4xl font-bold leading-tight sm:text-5xl">Care should feel clearer from the very first step.</h2><p className="relative mx-auto mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">Start with Immediate Care, build your record at your pace, or bring Curais into your clinic workflow.</p><div className="relative mt-8 flex flex-col justify-center gap-3 sm:flex-row"><button onClick={()=>openModal("start")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Choose your Curais app <ArrowRight className="h-4 w-4"/></button><button onClick={()=>openModal("demo")} className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-extrabold text-white backdrop-blur-xl">Talk to us</button></div></motion.div></section>}
+function FinalCTA({openModal}){return <section className="site-shell py-10 sm:py-16 lg:py-24"><motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="relative overflow-hidden rounded-[2.25rem] bg-aid-teal px-5 py-11 text-center text-white shadow-[0_30px_90px_rgba(10,107,111,.28)] sm:rounded-[2.75rem] sm:px-12 sm:py-20"><div className="absolute -left-20 -top-20 h-64 w-64 rounded-full border-[55px] border-white/5"/><div className="absolute -bottom-28 -right-20 h-72 w-72 rounded-full border-[65px] border-white/5"/><Sparkles className="relative mx-auto h-7 w-7 text-[#a6e5df]"/><h2 className="relative mx-auto mt-5 max-w-3xl font-quicksand text-3xl font-bold leading-tight sm:text-5xl">Care should feel clearer from the very first step.</h2><p className="relative mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-lg sm:leading-7">Start with Immediate Care, build your record at your pace, or bring Curais into your clinic workflow.</p><div className="relative mt-7 flex flex-col justify-center gap-3 sm:mt-8 sm:flex-row"><button onClick={()=>openModal("start")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-extrabold text-aid-teal">Choose your Curais app <ArrowRight className="h-4 w-4"/></button><button onClick={()=>openModal("demo")} className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-extrabold text-white backdrop-blur-xl">Talk to us</button></div></motion.div></section>}
 
-function Footer({openModal}){return <footer className="mt-16 border-t border-white/55 bg-white/25 backdrop-blur-2xl"><div className="site-shell grid gap-10 py-12 md:grid-cols-[1.2fr_.8fr_.8fr_.8fr]"><div><BrandMark/><p className="mt-4 max-w-sm text-sm leading-6 text-aid-muted">Clear help in the moment. Better context for the care that follows.</p><p className="mt-4 text-xs text-aid-muted">Curais does not replace emergency services or professional medical advice.</p></div><FooterGroup title="Product" links={[["#how","How it works"],["#patients","Patients"],["#clinics","Clinics"]]}/><FooterGroup title="Access" links={[[`${patientURL}/signin`,"Patient app"],[`${doctorURL}/signin`,"Doctor EMR"]]}/><FooterGroup title="Company" links={[["/privacy","Privacy"],["/terms","Terms"]]}/></div><div className="site-shell flex flex-col gap-3 border-t border-white/55 py-6 text-xs text-aid-muted sm:flex-row sm:items-center sm:justify-between"><p>© 2026 Curais. Care, made more present by intelligence.</p><button onClick={()=>openModal("demo")} className="w-fit font-bold text-aid-teal">Contact Curais</button></div></footer>}
+function Footer({openModal}){return <footer className="mt-8 border-t border-white/55 bg-white/25 backdrop-blur-2xl sm:mt-12 lg:mt-16"><div className="site-shell grid gap-8 py-10 sm:gap-10 sm:py-12 md:grid-cols-[1.2fr_.8fr_.8fr_.8fr]"><div><BrandMark/><p className="mt-4 max-w-sm text-sm leading-6 text-aid-muted">Clear help in the moment. Better context for the care that follows.</p><p className="mt-4 text-xs text-aid-muted">Curais does not replace emergency services or professional medical advice.</p></div><FooterGroup title="Product" links={[["#how","How it works"],["#patients","Patients"],["#clinics","Clinics"]]}/><FooterGroup title="Access" links={[[`${patientURL}/signin`,"Patient app"],[`${doctorURL}/signin`,"Doctor EMR"]]}/><FooterGroup title="Company" links={[["/privacy","Privacy"],["/terms","Terms"]]}/></div><div className="site-shell flex flex-col gap-3 border-t border-white/55 py-6 text-xs text-aid-muted sm:flex-row sm:items-center sm:justify-between"><p>© 2026 Curais. Care, made more present by intelligence.</p><button onClick={()=>openModal("demo")} className="w-fit font-bold text-aid-teal">Contact Curais</button></div></footer>}
 function FooterGroup({title,links}){return <div><h2 className="font-quicksand text-sm font-bold">{title}</h2><ul className="mt-4 space-y-3">{links.map(([href,label])=><li key={label}><a href={href} className="text-sm text-aid-muted transition hover:text-aid-teal">{label}</a></li>)}</ul></div>}
 
 function SectionIntro({eyebrow,title,text}){return <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{once:true,amount:.3}} className="max-w-3xl"><p className="eyebrow">{eyebrow}</p><h2 className="section-title mt-3">{title}</h2><p className="body-copy mt-5">{text}</p></motion.div>}
