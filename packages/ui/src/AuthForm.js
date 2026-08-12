@@ -7,10 +7,10 @@ import { useToast } from "./Toast";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function AuthForm({ role, homePath, counterpart }) {
+export function AuthForm({ role, homePath, counterpart, initialMode = "signin" }) {
   const router = useRouter();
   const { showToast } = useToast();
-  const [mode, setMode] = useState("signin");
+  const [mode, setMode] = useState(initialMode === "signup" ? "signup" : "signin");
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 

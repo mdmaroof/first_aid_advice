@@ -4,8 +4,8 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   Activity, ArrowRight, Building2, CalendarCheck2, Check, ChevronRight,
-  FileHeart, HeartHandshake, HeartPulse, Menu, MessageCircleHeart, Pill, ShieldCheck,
-  Sparkles, Stethoscope, Users, X, ClipboardList,
+  FileHeart, HeartHandshake, HeartPulse, LogIn, MessageCircleHeart, Pill, ShieldCheck,
+  Sparkles, Stethoscope, UserPlus, Users, X, ClipboardList,
 } from "lucide-react";
 import { BrandMark } from "@curais/ui";
 import { StartModal } from "./StartModal";
@@ -16,7 +16,6 @@ const doctorURL = process.env.NEXT_PUBLIC_DOCTOR_APP_URL || "http://localhost:30
 const reveal = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: .62, ease: [.22, 1, .36, 1] } } };
 
 export function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -26,7 +25,7 @@ export function LandingPage() {
     <div className="relative min-h-dvh overflow-clip">
       <motion.div className="fixed inset-x-0 top-0 z-[70] h-1 origin-left bg-aid-teal" style={{ width: reduceMotion ? "0%" : progress }} />
       <div className="noise pointer-events-none absolute inset-x-0 top-0 h-[52rem] opacity-30" />
-      <Navigation menuOpen={menuOpen} setMenuOpen={setMenuOpen} openModal={setModal} />
+      <Navigation openModal={setModal} />
 
       <main>
         <Hero openModal={setModal} reduceMotion={reduceMotion} />
@@ -45,9 +44,9 @@ export function LandingPage() {
   );
 }
 
-function Navigation({ menuOpen, setMenuOpen, openModal }) {
+function Navigation({ openModal }) {
   const links = [["#how", "How it works"], ["#patients", "For patients"], ["#clinics", "For clinics"], ["#safety", "Safety"]];
-  return <header className="site-shell sticky top-0 z-50 pt-3"><nav className="glass-strong flex min-h-16 items-center justify-between rounded-2xl px-4 sm:px-5" aria-label="Main navigation"><a href="#top" className="rounded-xl"><BrandMark compact /></a><div className="hidden items-center gap-1 lg:flex">{links.map(([href,label])=><a key={href} href={href} className="rounded-xl px-3 py-2 text-sm font-bold text-aid-muted transition hover:bg-white/45 hover:text-aid-ink">{label}</a>)}</div><div className="hidden items-center gap-2 sm:flex"><a href={`${patientURL}/signin`} className="rounded-xl px-3 py-2 text-sm font-bold text-aid-teal">Sign in</a><button onClick={()=>openModal("start")} className="button-primary min-h-10 rounded-xl px-4 py-2">Get started <ArrowRight className="h-4 w-4" /></button></div><button className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/45 lg:hidden" onClick={()=>setMenuOpen(v=>!v)} aria-expanded={menuOpen} aria-label="Toggle navigation">{menuOpen?<X/>:<Menu/>}</button></nav><AnimatePresence>{menuOpen?<motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} className="glass-strong mt-2 rounded-2xl p-3 lg:hidden">{links.map(([href,label])=><a key={href} href={href} onClick={()=>setMenuOpen(false)} className="block rounded-xl px-3 py-3 font-bold text-aid-muted hover:bg-white/50">{label}</a>)}<div className="mt-2 grid grid-cols-2 gap-2"><a href={`${patientURL}/signin`} className="button-secondary">Sign in</a><button onClick={()=>{setMenuOpen(false);openModal("start")}} className="button-primary">Get started</button></div></motion.div>:null}</AnimatePresence></header>;
+  return <header className="site-shell sticky top-0 z-50 pt-3"><nav className="glass-strong flex min-h-16 items-center justify-between rounded-2xl px-4 sm:px-5" aria-label="Main navigation"><a href="#top" className="rounded-xl"><BrandMark compact /></a><div className="hidden items-center gap-1 lg:flex">{links.map(([href,label])=><a key={href} href={href} className="rounded-xl px-3 py-2 text-sm font-bold text-aid-muted transition hover:bg-white/45 hover:text-aid-ink">{label}</a>)}</div><div className="hidden items-center gap-2 lg:flex"><a href={`${patientURL}/signin`} className="rounded-xl px-3 py-2 text-sm font-bold text-aid-teal">Sign in</a><button onClick={()=>openModal("start")} className="button-primary min-h-10 rounded-xl px-4 py-2">Get started <ArrowRight className="h-4 w-4" /></button></div><div className="flex items-center gap-2 lg:hidden"><a href={`${patientURL}/signin`} aria-label="Log in" title="Log in" className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/70 bg-white/45 text-aid-teal shadow-sm backdrop-blur-xl"><LogIn className="h-5 w-5" /></a><a href={`${patientURL}/signin?mode=signup`} aria-label="Sign up" title="Sign up" className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-aid-teal text-white shadow-[0_10px_24px_rgba(10,107,111,.20)]"><UserPlus className="h-5 w-5" /></a></div></nav></header>;
 }
 
 function Hero({ openModal, reduceMotion }) {
