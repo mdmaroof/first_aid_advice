@@ -24,8 +24,10 @@ Initial relational ownership:
 - `users`: identity subject and coarse role.
 - `patient_profiles`: patient-owned demographic and emergency context.
 - `patient_allergies` and `patient_medications`: profile-owned structured health items.
+- `clinics` and `clinic_memberships`: active clinical organizations and roles.
+- `sharing_grants`: patient-controlled, bounded clinic access.
 - `audit_events`: append-only access/change facts.
-- Later migrations add clinics, memberships, consent grants, visits, vitals, and attachments.
+- Later migrations add consent policy versions/expiry, visits, vitals, and attachments.
 
 ## Production recommendation
 

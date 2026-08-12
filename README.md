@@ -21,9 +21,19 @@ Patient routes:
 - `/` and `/search` - existing SnapAid Immediate Care flow.
 - `/patient` - Curais patient home.
 - `/patient/profile` - local My Health vertical slice backed by the Go API.
+- `/patient/care-team` - grant/revoke local clinic profile access.
+
+Doctor routes:
+
+- `/` - doctor workspace.
+- `/patients` - patients with active grants to the doctor's clinic.
+- `/patients/{patientID}` - consent-checked shared profile.
 
 The local profile proxy uses `patient-local-1` only for development. It is not
 a production authentication mechanism.
+
+API endpoints and migration runbooks are documented in `docs/API_REFERENCE.md`,
+`docs/POSTGRESQL_CONVERSION.md`, and `docs/MONGODB_CONVERSION.md`.
 
 For deployment, create separate projects rooted at `apps/patient` and
 `apps/doctor`, and deploy `services/api` as an independent Go service. Do not
