@@ -16,6 +16,8 @@ npm run dev:doctor  # http://localhost:3001
 npm run api:dev     # http://localhost:8080
 ```
 
+Interactive Swagger documentation: [http://localhost:8080/swagger](http://localhost:8080/swagger)
+
 Patient routes:
 
 - `/signin` - patient sign-in and sign-up.

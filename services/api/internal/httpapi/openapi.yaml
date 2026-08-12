@@ -1,0 +1,240 @@
+openapi: 3.1.0
+info:
+  title: Curais API
+  version: 0.2.0
+  description: Consent-led patient, family, and clinical EMR API. Never place tokens or PHI in query strings.
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local Go API
+tags:
+  - name: Authentication
+  - name: Patient profile
+  - name: Consent
+  - name: Family
+  - name: Clinical history
+  - name: Doctor EMR
+paths:
+  /healthz:
+    get:
+      operationId: health
+      security: []
+      responses:
+        "200": { description: Healthy }
+  /v1/auth/signup:
+    post:
+      tags: [Authentication]
+      operationId: signUp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SignUpRequest" }
+      responses:
+        "201": { $ref: "#/components/responses/Session" }
+        "400": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+  /v1/auth/signin:
+    post:
+      tags: [Authentication]
+      operationId: signIn
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SignInRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/Session" }
+        "401": { $ref: "#/components/responses/Error" }
+  /v1/auth/me:
+    get:
+      tags: [Authentication]
+      operationId: currentUser
+      responses:
+        "200":
+          description: Current account
+          content: { application/json: { schema: { type: object, properties: { user: { $ref: "#/components/schemas/User" } } } } }
+        "401": { $ref: "#/components/responses/Error" }
+  /v1/auth/signout:
+    post:
+      tags: [Authentication]
+      operationId: signOut
+      responses:
+        "204": { description: Session revoked }
+  /v1/directory/clinics:
+    get:
+      tags: [Consent]
+      operationId: listCareOrganizations
+      responses:
+        "200":
+          description: Active clinics and hospitals
+          content: { application/json: { schema: { type: object, properties: { clinics: { type: array, items: { $ref: "#/components/schemas/Clinic" } } } } } }
+  /v1/patients/{patientId}/profile:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Patient profile]
+      operationId: getOwnProfile
+      responses:
+        "200": { description: Profile, content: { application/json: { schema: { $ref: "#/components/schemas/Profile" } } } }
+        "403": { $ref: "#/components/responses/Error" }
+    put:
+      tags: [Patient profile]
+      operationId: updateOwnProfile
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/Profile" } } } }
+      responses:
+        "200": { description: Updated profile, content: { application/json: { schema: { $ref: "#/components/schemas/Profile" } } } }
+  /v1/patients/{patientId}/care-team:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Consent]
+      operationId: listCareTeam
+      responses:
+        "200": { description: Grants and organizations }
+  /v1/patients/{patientId}/sharing-grants:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    post:
+      tags: [Consent]
+      operationId: createSharingGrant
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, required: [clinicId], properties: { clinicId: { type: string }, scope: { type: string, const: profile.read } } } } }
+      responses:
+        "201": { description: Grant created }
+  /v1/patients/{patientId}/sharing-grants/{grantId}:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }, { name: grantId, in: path, required: true, schema: { type: string } }]
+    delete:
+      tags: [Consent]
+      operationId: revokeSharingGrant
+      responses:
+        "204": { description: Grant revoked }
+  /v1/patients/{patientId}/history:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Clinical history]
+      operationId: listOwnHistory
+      responses:
+        "200": { $ref: "#/components/responses/History" }
+    post:
+      tags: [Clinical history]
+      operationId: addOwnHistory
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/HistoryInput" } } } }
+      responses:
+        "201": { description: Created history entry, content: { application/json: { schema: { $ref: "#/components/schemas/HistoryEntry" } } } }
+  /v1/patients/{patientId}/family:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Family]
+      operationId: listFamilyLinks
+      responses:
+        "200": { description: Family links and invitations }
+  /v1/patients/{patientId}/family/invitations:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    post:
+      tags: [Family]
+      operationId: inviteFamilyMember
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [email, relationship], properties: { email: { type: string, format: email }, relationship: { type: string } } } } } }
+      responses:
+        "201": { description: Pending invitation }
+        "404": { $ref: "#/components/responses/Error" }
+  /v1/patients/{patientId}/family/invitations/{linkId}/response:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }, { name: linkId, in: path, required: true, schema: { type: string } }]
+    post:
+      tags: [Family]
+      operationId: respondToFamilyInvitation
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [accept], properties: { accept: { type: boolean }, shareFamilyHistory: { type: boolean, default: false } } } } } }
+      responses:
+        "200": { description: Invitation updated }
+  /v1/doctor/patients:
+    get:
+      tags: [Doctor EMR]
+      operationId: searchConsentedPatients
+      description: Searches only patients with an active grant to the caller's clinic. Exact E.164 mobile matches are supported.
+      parameters: [{ name: query, in: query, schema: { type: string, maxLength: 100 } }]
+      responses:
+        "200": { description: Consented patients }
+        "403": { $ref: "#/components/responses/Error" }
+  /v1/doctor/patients/{patientId}/profile:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Doctor EMR]
+      operationId: getConsentedPatientProfile
+      responses:
+        "200": { description: Patient-shared profile, content: { application/json: { schema: { $ref: "#/components/schemas/Profile" } } } }
+        "403": { $ref: "#/components/responses/Error" }
+  /v1/doctor/patients/{patientId}/history:
+    parameters: [{ $ref: "#/components/parameters/PatientId" }]
+    get:
+      tags: [Doctor EMR]
+      operationId: getConsentedPatientHistory
+      responses:
+        "200": { $ref: "#/components/responses/History" }
+        "403": { $ref: "#/components/responses/Error" }
+    post:
+      tags: [Doctor EMR]
+      operationId: addClinicalHistoryEntry
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/HistoryInput" } } } }
+      responses:
+        "201": { description: Attributable clinical entry created }
+components:
+  securitySchemes:
+    bearerSession:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: Opaque seven-day session token returned by sign-in. Browser apps store it only in an HttpOnly cookie.
+  parameters:
+    PatientId: { name: patientId, in: path, required: true, schema: { type: string } }
+  responses:
+    Session:
+      description: Authenticated session
+      content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } }
+    History:
+      description: Longitudinal history
+      content: { application/json: { schema: { type: object, properties: { history: { type: array, items: { $ref: "#/components/schemas/HistoryEntry" } } } } } }
+    Error:
+      description: Error envelope
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+  schemas:
+    SignUpRequest:
+      type: object
+      required: [email, password, displayName, role]
+      properties: { email: { type: string, format: email }, password: { type: string, minLength: 10, writeOnly: true }, displayName: { type: string, minLength: 1 }, role: { type: string, enum: [patient, doctor] } }
+    SignInRequest:
+      type: object
+      required: [email, password, role]
+      properties: { email: { type: string, format: email }, password: { type: string, writeOnly: true }, role: { type: string, enum: [patient, doctor] } }
+    User:
+      type: object
+      required: [id, email, displayName, role]
+      properties: { id: { type: string }, email: { type: string, format: email }, displayName: { type: string }, role: { type: string } }
+    Session:
+      type: object
+      required: [token, expiresAt, user]
+      properties: { token: { type: string, writeOnly: true }, expiresAt: { type: string, format: date-time }, user: { $ref: "#/components/schemas/User" } }
+    Clinic: { type: object, properties: { id: { type: string }, name: { type: string }, kind: { type: string, enum: [clinic, hospital] } } }
+    Profile:
+      type: object
+      required: [displayName]
+      properties:
+        patientId: { type: string, readOnly: true }
+        displayName: { type: string }
+        dateOfBirth: { type: string, format: date }
+        bloodGroup: { type: string }
+        mobilePhone: { type: string, description: E.164 format; verification required before production lookup. }
+        emergencyContact: { type: object, properties: { name: { type: string }, phone: { type: string } } }
+        allergies: { type: array, items: { type: object, properties: { name: { type: string }, severity: { type: string } } } }
+        medications: { type: array, items: { type: object, properties: { name: { type: string }, details: { type: string } } } }
+    HistoryInput:
+      type: object
+      required: [category, title]
+      properties: { category: { type: string, enum: [condition, procedure, diagnosis, visit, family_history, other] }, title: { type: string }, details: { type: string }, occurredAt: { type: string, format: date } }
+    HistoryEntry:
+      allOf:
+        - { $ref: "#/components/schemas/HistoryInput" }
+        - { type: object, properties: { id: { type: string }, patientId: { type: string }, source: { type: string, enum: [patient, doctor] }, recordedBy: { type: string }, createdAt: { type: string, format: date-time } } }
+    Error:
+      type: object
+      properties: { error: { type: object, properties: { code: { type: string }, message: { type: string } } } }
+security:
+  - bearerSession: []

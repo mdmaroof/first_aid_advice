@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
@@ -80,6 +81,27 @@ func TestHealth(t *testing.T) {
 	newTestHandler().ServeHTTP(response, request)
 	if response.Code != http.StatusOK {
 		t.Fatalf("expected 200, got %d", response.Code)
+	}
+}
+
+func TestSwaggerUIAndSpec(t *testing.T) {
+	for _, test := range []struct {
+		path        string
+		contentType string
+	}{
+		{path: "/swagger", contentType: "text/html"},
+		{path: "/swagger/", contentType: "text/html"},
+		{path: "/swagger/openapi.yaml", contentType: "application/yaml"},
+	} {
+		request := httptest.NewRequest(http.MethodGet, test.path, nil)
+		response := httptest.NewRecorder()
+		newTestHandler().ServeHTTP(response, request)
+		if response.Code != http.StatusOK {
+			t.Fatalf("%s: expected 200, got %d", test.path, response.Code)
+		}
+		if contentType := response.Header().Get("Content-Type"); !strings.HasPrefix(contentType, test.contentType) {
+			t.Fatalf("%s: expected %s, got %s", test.path, test.contentType, contentType)
+		}
 	}
 }
 

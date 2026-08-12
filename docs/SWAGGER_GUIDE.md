@@ -1,5 +1,7 @@
 # Curais Swagger and API Authentication Guide
 
+Start the Go API with `npm run api:dev`, then open [http://localhost:8080/swagger](http://localhost:8080/swagger). The embedded contract is served at `http://localhost:8080/swagger/openapi.yaml`.
+
 The machine-readable OpenAPI 3.1 contract is [`openapi.yaml`](./openapi.yaml). Import it into Swagger UI, Swagger Editor, Postman, Insomnia, Bruno, or an SDK generator.
 
 ## Local Swagger UI

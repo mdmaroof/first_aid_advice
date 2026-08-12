@@ -32,6 +32,9 @@ func NewHandler(logger *slog.Logger, profiles profile.Repository, accessReposito
 func (h *Handler) Routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", h.health)
+	mux.HandleFunc("GET /swagger", h.swaggerUI)
+	mux.HandleFunc("GET /swagger/", h.swaggerUI)
+	mux.HandleFunc("GET /swagger/openapi.yaml", h.swaggerSpec)
 	mux.HandleFunc("POST /v1/auth/signup", h.signUp)
 	mux.HandleFunc("POST /v1/auth/signin", h.signIn)
 	mux.HandleFunc("GET /v1/auth/me", h.currentUser)
