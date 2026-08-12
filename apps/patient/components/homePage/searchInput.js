@@ -43,7 +43,7 @@ export const SearchInput = ({ step, setStep, error, setError }) => {
         }
 
         setResult(res.data);
-        router.push("/patient/snapaid/search");
+        router.push("/immediate-care/search");
       } finally {
         searchingRef.current = false;
       }

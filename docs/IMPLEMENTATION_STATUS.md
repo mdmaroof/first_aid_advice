@@ -4,14 +4,15 @@
 
 - npm-workspaces monorepo with separately runnable Patient and Doctor apps.
 - Shared Curais UI package for brand, shell, and feature-card primitives.
-- Existing SnapAid routes and AI/curated first-aid behavior preserved in Patient.
+- Existing SnapAid AI/curated first-aid behavior preserved as public Curais Immediate Care.
 - Patient home and local My Health profile flow.
 - Patient Care Team screen for granting and revoking clinic access.
 - Doctor shared-patient directory and profile view, restricted by active consent.
 - Go HTTP API with SQLite migrations, repository boundaries, identity abstraction, clinic memberships, sharing grants, profile save/read, and audit events.
 - PostgreSQL-first production database recommendation and MongoDB split-store option documented.
 - Patient and doctor sign-up/sign-in/sign-out with role-isolated, expiring sessions.
-- `/patient` as patient home with SnapAid at `/patient/snapaid`.
+- Public `/immediate-care` route with no authentication gate; legacy SnapAid routes redirect to it.
+- Optional signed-in health-context review and explicit care-moment save after guidance; no automatic profile access or persistence.
 - Patient and clinician-authored longitudinal health history.
 - Individual family accounts with invitations, acceptance, and separate history-sharing permission.
 - Consent-limited doctor search by name or exact mobile number.
@@ -24,7 +25,7 @@
 
 | Ticket | Status | Notes |
 | --- | --- | --- |
-| CUR-001 | Started | Curais shells exist; SnapAid public rebrand is intentionally not applied yet. |
+| CUR-001 | Local vertical slice | SnapAid is available as public Curais Immediate Care while retaining its existing guidance behavior. |
 | CUR-101 | Local vertical slice | Local password sessions work; production identity provider, phone verification, recovery, and clinician MFA remain required. |
 | CUR-102 | Local vertical slice | Profile, allergies, medications, blood group, and emergency contact save through Go/SQLite. |
 | CUR-105 | Local vertical slice | Grant and revoke lifecycle is persisted and audited; purpose/version/expiry comes next. |

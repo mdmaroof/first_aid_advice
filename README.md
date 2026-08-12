@@ -24,9 +24,11 @@ Error codes and operational troubleshooting: [`docs/ERROR_CATALOG.md`](docs/ERRO
 
 Patient routes:
 
+- `/immediate-care` - public SnapAid guidance; no account required.
+- `/immediate-care/search` - session-only guidance result with optional signed-in context and explicit save.
 - `/signin` - patient sign-in and sign-up.
 - `/patient` - authenticated Curais patient home.
-- `/patient/snapaid` - existing SnapAid Immediate Care flow.
+- `/patient/snapaid` - compatibility redirect to `/immediate-care`.
 - `/patient/profile` - local My Health vertical slice backed by the Go API.
 - `/patient/care-team` - grant/revoke local clinic profile access.
 - `/patient/history` - patient-authored longitudinal health history.

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Title } from "@/components/homePage";
 import { FirstAidSteps } from "@/components/search/FirstAidSteps";
 import { SymptomsTabs } from "@/components/search/SymptomsTabs";
+import { AccountContext } from "@/components/search/AccountContext";
 import {
   EmergencyActions,
   EmergencyCTA,
@@ -21,7 +22,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (hydrated && !result) {
-      router.replace("/patient/snapaid");
+      router.replace("/immediate-care");
     }
   }, [result, router, hydrated]);
 
@@ -48,7 +49,7 @@ const SearchPage = () => {
 
   const handleNewSearch = () => {
     clearResult();
-    router.push("/patient/snapaid");
+    router.push("/immediate-care");
   };
 
   return (
@@ -123,6 +124,8 @@ const SearchPage = () => {
           symptomsOption={symptoms_option}
           showPoisonHotline={isPoison}
         />
+
+        <AccountContext result={result} />
 
         <motion.footer
           custom={8}

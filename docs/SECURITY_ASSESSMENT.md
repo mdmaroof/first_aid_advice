@@ -2,7 +2,7 @@
 
 ## Scope and current posture
 
-This assessment covers the current SnapAid codebase and the planned Curais expansion. SnapAid currently sends user-entered symptom text to a third-party AI API, keeps results in browser session storage, and provides emergency guidance. It does not currently implement accounts or persistent patient records.
+This assessment covers the current SnapAid codebase and the planned Curais expansion. Public Curais Immediate Care sends user-entered symptom text to a third-party AI API, keeps results in browser session storage, and provides emergency guidance without requiring an account. Authenticated Curais records are isolated behind patient sessions. Immediate Care fetches profile/history only after explicit user action and persists a care moment only after a separate explicit save action.
 
 ## Current strengths
 
@@ -30,4 +30,3 @@ This assessment covers the current SnapAid codebase and the planned Curais expan
 - Tamper-evident audit events for record access, changes, shares, exports, and admin actions.
 - Incident response playbook, backups/restore test, vulnerability scanning, and penetration test.
 - Legal/privacy review for Indian health-data obligations and every target market. This document is not legal advice.
-

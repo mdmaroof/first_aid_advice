@@ -17,9 +17,11 @@ R1 has one immediate-care experience. R2 introduces a patient home with **Immedi
 
 ## Immediate Care flow
 
+Immediate Care is public at `/immediate-care`. Authentication must never block symptom entry, curated guidance, emergency calling, or results. Results remain session-only unless a signed-in patient explicitly chooses to save them.
+
 1. Home: Curais wordmark, “Get help now” symptom entry, common emergency buttons, persistent emergency CTA.
 2. Input: voice/text support, clear data-use notice, character limit, and loading state.
-3. Result: emergency CTA first; possible concern and concise action line; numbered steps; red flags; disclaimer; “save to My Health” only for signed-in users who opt in.
+3. Result: emergency CTA first; possible concern and concise action line; numbered steps; red flags; disclaimer. Account context is fetched only after the user selects “Review my health context.” “Save this care moment” is available only after signed-in access is confirmed.
 4. Error/offline: say what is unavailable, retain curated quick-aid options and emergency CTA.
 
 ## Visual direction
