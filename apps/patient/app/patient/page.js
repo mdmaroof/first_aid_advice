@@ -20,10 +20,11 @@ const features = [
   },
   {
     icon: Stethoscope,
-    eyebrow: "Next release",
+    eyebrow: "Available locally",
     title: "Care Team",
     description: "Share only the records you choose with a doctor or clinic and revoke access when needed.",
-    action: "Coming soon",
+    href: "/patient/care-team",
+    action: "Manage access",
   },
 ];
 

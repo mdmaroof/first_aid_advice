@@ -1,0 +1,117 @@
+# Curais API Reference
+
+## Status and base URL
+
+The implemented API is versioned under `/v1`. Local default:
+
+```text
+http://127.0.0.1:8080
+```
+
+All health-data responses use `Cache-Control: no-store` and JSON. Local development accepts identity headers; non-local environments reject this adapter.
+
+```text
+X-Curais-Actor-ID: patient-local-1 | doctor-local-1
+X-Curais-Actor-Role: patient | doctor
+```
+
+These headers are not authentication. Production must replace the identity resolver with verified token/session claims.
+
+## Error envelope
+
+```json
+{
+  "error": {
+    "code": "sharing_grant_required",
+    "message": "An active patient sharing grant is required."
+  }
+}
+```
+
+Common status codes: `400` validation, `401` no identity, `403` wrong role/ownership or missing grant, `404` resource missing, `500` internal failure.
+
+## Health
+
+### `GET /healthz`
+
+Returns `200` with `{"status":"ok"}`. No identity required.
+
+## Patient profile
+
+### `GET /v1/patients/{patientID}/profile`
+
+Patient identity must exactly match `{patientID}`.
+
+### `PUT /v1/patients/{patientID}/profile`
+
+Replaces the patient's core profile, allergy list, and medication list atomically. Creates an audit event and increments `version` on updates.
+
+```json
+{
+  "displayName": "Aisha Khan",
+  "dateOfBirth": "1990-03-12",
+  "bloodGroup": "O+",
+  "emergencyContact": { "name": "Imran", "phone": "+919000000000" },
+  "allergies": [{ "name": "Peanuts", "severity": "high" }],
+  "medications": [{ "name": "Metformin", "details": "500 mg" }]
+}
+```
+
+## Clinic directory and Care Team
+
+### `GET /v1/directory/clinics`
+
+Returns active clinics to an authenticated actor.
+
+### `GET /v1/patients/{patientID}/care-team`
+
+Patient-owned endpoint returning `{clinics, grants}` including revoked grant history.
+
+### `POST /v1/patients/{patientID}/sharing-grants`
+
+Patient-owned endpoint. Currently accepts one bounded scope:
+
+```json
+{ "clinicId": "clinic-local-1", "scope": "profile.read" }
+```
+
+Returns `201`. Re-granting the same clinic/scope reactivates the existing grant and updates its timestamp.
+
+### `DELETE /v1/patients/{patientID}/sharing-grants/{grantID}`
+
+Patient-owned endpoint. Revokes only an active grant belonging to that patient. Returns `204`.
+
+## Doctor access
+
+### `GET /v1/doctor/patients?query={text}`
+
+Doctor identity required. Returns only patients with an active `profile.read` grant to a clinic where the doctor has an active membership. Search matches patient name or ID and is limited to 50 results.
+
+### `GET /v1/doctor/patients/{patientID}/profile`
+
+Doctor identity required. The API checks membership plus active consent on every request. Returns `403 sharing_grant_required` immediately after revocation.
+
+## Local examples
+
+```bash
+curl http://127.0.0.1:8080/v1/patients/patient-local-1/care-team \
+  -H 'X-Curais-Actor-ID: patient-local-1' \
+  -H 'X-Curais-Actor-Role: patient'
+
+curl -X POST http://127.0.0.1:8080/v1/patients/patient-local-1/sharing-grants \
+  -H 'Content-Type: application/json' \
+  -H 'X-Curais-Actor-ID: patient-local-1' \
+  -H 'X-Curais-Actor-Role: patient' \
+  --data '{"clinicId":"clinic-local-1","scope":"profile.read"}'
+
+curl http://127.0.0.1:8080/v1/doctor/patients \
+  -H 'X-Curais-Actor-ID: doctor-local-1' \
+  -H 'X-Curais-Actor-Role: doctor'
+```
+
+## Planned API concerns
+
+- Verified OAuth/OIDC or managed-identity adapter and clinician MFA.
+- Pagination cursors, conditional updates, idempotency keys, and formal request IDs.
+- Consent purpose/version/expiry and emergency break-glass workflow.
+- OpenAPI 3.1 generation after the identity and versioning contract stabilizes.

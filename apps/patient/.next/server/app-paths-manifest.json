@@ -1,5 +1,6 @@
 {
-  "/icon/[[...__metadata_id__]]/route": "app/icon/[[...__metadata_id__]]/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/patient/profile/page": "app/patient/profile/page.js",
+  "/patient/page": "app/patient/page.js",
+  "/search/page": "app/search/page.js"
 }
