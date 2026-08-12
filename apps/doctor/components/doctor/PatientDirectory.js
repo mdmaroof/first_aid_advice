@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, Search, ShieldCheck, UserRound } from "lucide-react";
+import { errorMessage, readApiResponse } from "@curais/ui";
 
 export function PatientDirectory() {
   const [query, setQuery] = useState("");
@@ -12,11 +13,10 @@ export function PatientDirectory() {
     setStatus({ type: "loading", message: "Checking active grants…" });
     try {
       const response = await fetch(`/api/curais/patients?query=${encodeURIComponent(search)}`, { cache: "no-store" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result?.error?.message || "Unable to load shared patients.");
+      const result = await readApiResponse(response);
       setPatients(result.patients || []);
       setStatus({ type: "idle", message: `${result.patients?.length || 0} actively shared patient${result.patients?.length === 1 ? "" : "s"}` });
-    } catch (error) { setStatus({ type: "error", message: error.message }); }
+    } catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to load shared patients.") }); }
   }, []);
 
   useEffect(() => { load(); }, [load]);

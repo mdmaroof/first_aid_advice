@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Save, ShieldCheck } from "lucide-react";
+import { errorMessage, readApiResponse } from "@curais/ui";
 
 const emptyProfile = {
   displayName: "",
@@ -32,8 +33,7 @@ export function ProfileForm() {
     fetch("/api/curais/profile", { cache: "no-store" })
       .then(async (response) => {
         if (response.status === 404) return null;
-        if (!response.ok) throw new Error("Start the Curais API to load this profile.");
-        return response.json();
+        return readApiResponse(response);
       })
       .then((value) => {
         if (!active) return;
@@ -44,7 +44,7 @@ export function ProfileForm() {
         }
         setStatus({ type: "idle", message: value ? `Saved profile version ${value.version}` : "No saved profile yet" });
       })
-      .catch((error) => active && setStatus({ type: "error", message: error.message }));
+      .catch((error) => active && setStatus({ type: "error", message: errorMessage(error, "Unable to load your profile.") }));
     return () => { active = false; };
   }, []);
 
@@ -60,12 +60,11 @@ export function ProfileForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...profile, allergies: textToList(allergies, "severity"), medications: textToList(medications, "details") }),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result?.error?.message || "Unable to save profile.");
+      const result = await readApiResponse(response);
       setProfile(result);
       setStatus({ type: "success", message: `Saved profile version ${result.version}` });
     } catch (error) {
-      setStatus({ type: "error", message: error.message });
+      setStatus({ type: "error", message: errorMessage(error, "Unable to save profile.") });
     }
   }
 

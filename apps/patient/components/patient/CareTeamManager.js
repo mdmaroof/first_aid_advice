@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Building2, Loader2, ShieldCheck, ShieldX } from "lucide-react";
+import { errorMessage, readApiResponse } from "@curais/ui";
 
 export function CareTeamManager() {
   const [data, setData] = useState({ clinics: [], grants: [] });
@@ -11,12 +12,11 @@ export function CareTeamManager() {
     setStatus({ type: "loading", message: "Loading access…" });
     try {
       const response = await fetch("/api/curais/care-team", { cache: "no-store" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result?.error?.message || "Unable to load care team.");
+      const result = await readApiResponse(response);
       setData(result);
       setStatus({ type: "idle", message: "Access is controlled by you" });
     } catch (error) {
-      setStatus({ type: "error", message: error.message });
+      setStatus({ type: "error", message: errorMessage(error, "Unable to load care team.") });
     }
   }, []);
 
@@ -26,17 +26,14 @@ export function CareTeamManager() {
 
   async function grant(clinicId) {
     setStatus({ type: "saving", message: "Granting access…" });
-    const response = await fetch("/api/curais/care-team", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ clinicId, scope: "profile.read" }) });
-    const result = await response.json();
-    if (!response.ok) { setStatus({ type: "error", message: result?.error?.message || "Unable to grant access." }); return; }
-    await load();
+    try { const response = await fetch("/api/curais/care-team", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ clinicId, scope: "profile.read" }) }); await readApiResponse(response); await load(); }
+    catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to grant access.") }); }
   }
 
   async function revoke(grantId) {
     setStatus({ type: "saving", message: "Revoking access…" });
-    const response = await fetch(`/api/curais/care-team/${encodeURIComponent(grantId)}`, { method: "DELETE" });
-    if (!response.ok) { const result = await response.json(); setStatus({ type: "error", message: result?.error?.message || "Unable to revoke access." }); return; }
-    await load();
+    try { const response = await fetch(`/api/curais/care-team/${encodeURIComponent(grantId)}`, { method: "DELETE" }); await readApiResponse(response); await load(); }
+    catch (error) { setStatus({ type: "error", message: errorMessage(error, "Unable to revoke access.") }); }
   }
 
   return (

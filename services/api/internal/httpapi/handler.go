@@ -65,7 +65,12 @@ func (h *Handler) Routes() http.Handler {
 	mux.HandleFunc("POST /v1/doctor/prescriptions", h.createPrescription)
 	mux.HandleFunc("GET /v1/doctor/labs", h.listLabs)
 	mux.HandleFunc("POST /v1/doctor/labs", h.createLab)
-	return h.securityHeaders(h.requestLog(mux))
+	mux.HandleFunc("/", h.notFound)
+	return h.middleware(mux)
+}
+
+func (h *Handler) notFound(w http.ResponseWriter, _ *http.Request) {
+	writeError(w, http.StatusNotFound, "route_not_found", "The requested API route does not exist.")
 }
 
 func (h *Handler) doctorDashboard(w http.ResponseWriter, r *http.Request) {
@@ -400,18 +405,6 @@ func (h *Handler) signOut(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func decodeJSON(w http.ResponseWriter, r *http.Request, value any) bool {
-	r.Body = http.MaxBytesReader(w, r.Body, 32<<10)
-	defer r.Body.Close()
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(value); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "Use a valid request payload.")
-		return false
-	}
-	return true
-}
-
 func bearerToken(r *http.Request) string {
 	value := strings.TrimSpace(r.Header.Get("Authorization"))
 	if !strings.HasPrefix(value, "Bearer ") {
@@ -463,13 +456,8 @@ func (h *Handler) putProfile(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
-	defer r.Body.Close()
 	var input profile.Profile
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&input); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "Use a valid profile payload.")
+	if !decodeJSON(w, r, &input) {
 		return
 	}
 	input.PatientID = patientID
@@ -634,30 +622,9 @@ func (h *Handler) authorizeRole(w http.ResponseWriter, r *http.Request, role str
 	return actor, true
 }
 
-func (h *Handler) internalError(w http.ResponseWriter, operation string, err error) {
-	h.logger.Error(operation, "error", err)
-	writeError(w, http.StatusInternalServerError, "internal_error", "The request could not be completed.")
-}
-
-func (h *Handler) requestLog(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.logger.Info("request", "method", r.Method, "path", r.URL.Path)
-		next.ServeHTTP(w, r)
-	})
-}
-func (h *Handler) securityHeaders(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("X-Content-Type-Options", "nosniff")
-		w.Header().Set("Cache-Control", "no-store")
-		next.ServeHTTP(w, r)
-	})
-}
-func writeError(w http.ResponseWriter, status int, code, message string) {
-	writeJSONStatus(w, status, map[string]any{"error": map[string]string{"code": code, "message": message}})
-}
 func writeJSON(w http.ResponseWriter, status int, value any) { writeJSONStatus(w, status, value) }
 func writeJSONStatus(w http.ResponseWriter, status int, value any) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(value)
 }

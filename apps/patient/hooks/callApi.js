@@ -128,7 +128,7 @@ export const callApi = async (input) => {
       return {
         success: false,
         error: true,
-        message: payload?.error || "Something went wrong. Please try again.",
+        message: payload?.error?.message || payload?.error || "Something went wrong. Please try again.",
         data: null,
       };
     }

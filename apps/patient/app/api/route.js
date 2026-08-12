@@ -121,7 +121,7 @@ Include 5–7 instant_help steps, 3–4 critical symptoms, and 2–3 basic sympt
     const text = completion.choices[0].message.content;
     if (!text) {
       return NextResponse.json(
-        { error: "No response from the model" },
+        { error: { code: "guidance_provider_empty_response", message: "The guidance provider returned no content. Please try again." } },
         { status: 502 }
       );
     }
@@ -131,7 +131,7 @@ Include 5–7 instant_help steps, 3–4 critical symptoms, and 2–3 basic sympt
       parsed = JSON.parse(text);
     } catch {
       return NextResponse.json(
-        { error: "Invalid guidance response. Please try again." },
+        { error: { code: "guidance_provider_invalid_response", message: "The guidance provider returned unreadable content. Please try again." } },
         { status: 502 }
       );
     }
@@ -139,19 +139,17 @@ Include 5–7 instant_help steps, 3–4 critical symptoms, and 2–3 basic sympt
     const normalized = normalizeAidResult(parsed);
     if (!normalized) {
       return NextResponse.json(
-        { error: "Incomplete guidance response. Please try again." },
+        { error: { code: "guidance_provider_incomplete_response", message: "The guidance provider returned incomplete steps. Please try again." } },
         { status: 502 }
       );
     }
 
     return NextResponse.json(normalized);
   } catch (err) {
+    console.error("SnapAid guidance request failed", { name: err?.name, status: err?.status });
     return NextResponse.json(
-      {
-        error:
-          err?.response?.data?.error || err.message || "Internal server error",
-      },
-      { status: 500 }
+      { error: { code: "guidance_provider_unavailable", message: "Guidance is temporarily unavailable. Use the emergency controls if someone is in danger, then try again." } },
+      { status: 503 }
     );
   }
 }
