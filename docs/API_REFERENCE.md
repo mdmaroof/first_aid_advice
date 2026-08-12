@@ -101,6 +101,10 @@ Patient-owned endpoint. Revokes only an active grant belonging to that patient. 
 
 ## Doctor access
 
+### `GET /v1/doctor/dashboard`
+
+Returns consented-patient, today's appointment, draft encounter, and outstanding lab counts for the doctor's active clinic memberships.
+
 ### `GET /v1/doctor/patients?query={text}`
 
 Doctor identity required. Returns only patients with an active `profile.read` grant to a clinic where the doctor has an active membership. Search matches patient name/ID or an exact E.164 mobile number and is limited to 50 results. It is never a global mobile directory.
@@ -108,6 +112,15 @@ Doctor identity required. Returns only patients with an active `profile.read` gr
 ### `GET /v1/doctor/patients/{patientID}/profile`
 
 Doctor identity required. The API checks membership plus active consent on every request. Returns `403 sharing_grant_required` immediately after revocation.
+
+## Doctor EMR workflows
+
+- `GET|POST /v1/doctor/appointments`
+- `GET|POST /v1/doctor/encounters`
+- `GET|POST /v1/doctor/prescriptions`
+- `GET|POST /v1/doctor/labs`
+
+Creation requires an active doctor clinic membership and an active patient sharing grant. Encounters support vitals and SOAP-style context with draft/signed states. Prescriptions require medication, dosage, and frequency. Lab orders support routine and urgent priority.
 
 ## Longitudinal history
 

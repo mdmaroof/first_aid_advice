@@ -11,6 +11,7 @@ import (
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/clinical"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/emr"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/family"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
@@ -38,6 +39,27 @@ func (stubClinical) AddHistory(context.Context, string, string, clinical.History
 }
 
 type stubFamily struct{}
+type stubEMR struct{}
+
+func (stubEMR) Dashboard(context.Context, string) (emr.Dashboard, error)            { return emr.Dashboard{}, nil }
+func (stubEMR) ListAppointments(context.Context, string) ([]emr.Appointment, error) { return nil, nil }
+func (stubEMR) CreateAppointment(context.Context, string, emr.Appointment) (emr.Appointment, error) {
+	return emr.Appointment{}, nil
+}
+func (stubEMR) ListEncounters(context.Context, string) ([]emr.Encounter, error) { return nil, nil }
+func (stubEMR) CreateEncounter(context.Context, string, emr.Encounter) (emr.Encounter, error) {
+	return emr.Encounter{}, nil
+}
+func (stubEMR) ListPrescriptions(context.Context, string) ([]emr.Prescription, error) {
+	return nil, nil
+}
+func (stubEMR) CreatePrescription(context.Context, string, emr.Prescription) (emr.Prescription, error) {
+	return emr.Prescription{}, nil
+}
+func (stubEMR) ListLabOrders(context.Context, string) ([]emr.LabOrder, error) { return nil, nil }
+func (stubEMR) CreateLabOrder(context.Context, string, emr.LabOrder) (emr.LabOrder, error) {
+	return emr.LabOrder{}, nil
+}
 
 func (stubFamily) List(context.Context, string) ([]family.Link, error) { return nil, nil }
 func (stubFamily) Invite(context.Context, string, string, string) (family.Link, error) {
@@ -72,7 +94,7 @@ func (stubAccess) CanDoctorReadPatient(context.Context, string, string) (bool, e
 }
 
 func newTestHandler() http.Handler {
-	return NewHandler(slog.Default(), stubProfiles{}, stubAccess{}, stubAuth{}, stubClinical{}, stubFamily{}, identity.NewLocalHeaderResolver("local")).Routes()
+	return NewHandler(slog.Default(), stubProfiles{}, stubAccess{}, stubAuth{}, stubClinical{}, stubFamily{}, stubEMR{}, identity.NewLocalHeaderResolver("local")).Routes()
 }
 
 func TestHealth(t *testing.T) {

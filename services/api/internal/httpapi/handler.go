@@ -10,6 +10,7 @@ import (
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/access"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/clinical"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/emr"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/family"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/profile"
@@ -22,11 +23,12 @@ type Handler struct {
 	auth     auth.Repository
 	clinical clinical.Repository
 	family   family.Repository
+	emr      emr.Repository
 	identity identity.Resolver
 }
 
-func NewHandler(logger *slog.Logger, profiles profile.Repository, accessRepository access.Repository, authRepository auth.Repository, clinicalRepository clinical.Repository, familyRepository family.Repository, identityResolver identity.Resolver) *Handler {
-	return &Handler{logger: logger, profiles: profiles, access: accessRepository, auth: authRepository, clinical: clinicalRepository, family: familyRepository, identity: identityResolver}
+func NewHandler(logger *slog.Logger, profiles profile.Repository, accessRepository access.Repository, authRepository auth.Repository, clinicalRepository clinical.Repository, familyRepository family.Repository, emrRepository emr.Repository, identityResolver identity.Resolver) *Handler {
+	return &Handler{logger: logger, profiles: profiles, access: accessRepository, auth: authRepository, clinical: clinicalRepository, family: familyRepository, emr: emrRepository, identity: identityResolver}
 }
 
 func (h *Handler) Routes() http.Handler {
@@ -54,7 +56,140 @@ func (h *Handler) Routes() http.Handler {
 	mux.HandleFunc("GET /v1/doctor/patients/{patientID}/profile", h.getDoctorPatientProfile)
 	mux.HandleFunc("GET /v1/doctor/patients/{patientID}/history", h.listDoctorHistory)
 	mux.HandleFunc("POST /v1/doctor/patients/{patientID}/history", h.addDoctorHistory)
+	mux.HandleFunc("GET /v1/doctor/dashboard", h.doctorDashboard)
+	mux.HandleFunc("GET /v1/doctor/appointments", h.listAppointments)
+	mux.HandleFunc("POST /v1/doctor/appointments", h.createAppointment)
+	mux.HandleFunc("GET /v1/doctor/encounters", h.listEncounters)
+	mux.HandleFunc("POST /v1/doctor/encounters", h.createEncounter)
+	mux.HandleFunc("GET /v1/doctor/prescriptions", h.listPrescriptions)
+	mux.HandleFunc("POST /v1/doctor/prescriptions", h.createPrescription)
+	mux.HandleFunc("GET /v1/doctor/labs", h.listLabs)
+	mux.HandleFunc("POST /v1/doctor/labs", h.createLab)
 	return h.securityHeaders(h.requestLog(mux))
+}
+
+func (h *Handler) doctorDashboard(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	result, err := h.emr.Dashboard(r.Context(), actor.ID)
+	if err != nil {
+		h.internalError(w, "doctor dashboard", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+func (h *Handler) listAppointments(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	items, err := h.emr.ListAppointments(r.Context(), actor.ID)
+	if err != nil {
+		h.internalError(w, "list appointments", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"appointments": items})
+}
+func (h *Handler) createAppointment(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	var input emr.Appointment
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.emr.CreateAppointment(r.Context(), actor.ID, input)
+	h.writeEMRCreate(w, item, err)
+}
+func (h *Handler) listEncounters(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	items, err := h.emr.ListEncounters(r.Context(), actor.ID)
+	if err != nil {
+		h.internalError(w, "list encounters", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"encounters": items})
+}
+func (h *Handler) createEncounter(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	var input emr.Encounter
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.emr.CreateEncounter(r.Context(), actor.ID, input)
+	h.writeEMRCreate(w, item, err)
+}
+func (h *Handler) listPrescriptions(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	items, err := h.emr.ListPrescriptions(r.Context(), actor.ID)
+	if err != nil {
+		h.internalError(w, "list prescriptions", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"prescriptions": items})
+}
+func (h *Handler) createPrescription(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	var input emr.Prescription
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.emr.CreatePrescription(r.Context(), actor.ID, input)
+	h.writeEMRCreate(w, item, err)
+}
+func (h *Handler) listLabs(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	items, err := h.emr.ListLabOrders(r.Context(), actor.ID)
+	if err != nil {
+		h.internalError(w, "list labs", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"labs": items})
+}
+func (h *Handler) createLab(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.authorizeRole(w, r, "doctor")
+	if !ok {
+		return
+	}
+	var input emr.LabOrder
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	item, err := h.emr.CreateLabOrder(r.Context(), actor.ID, input)
+	h.writeEMRCreate(w, item, err)
+}
+func (h *Handler) writeEMRCreate(w http.ResponseWriter, item any, err error) {
+	if errors.Is(err, emr.ErrForbidden) {
+		writeError(w, http.StatusForbidden, "sharing_grant_required", "The patient must actively share with your clinic.")
+		return
+	}
+	if errors.Is(err, emr.ErrInvalid) {
+		writeError(w, http.StatusBadRequest, "invalid_clinical_record", "Complete all required clinical fields.")
+		return
+	}
+	if err != nil {
+		h.internalError(w, "create clinical record", err)
+		return
+	}
+	writeJSON(w, http.StatusCreated, item)
 }
 
 func (h *Handler) listPatientHistory(w http.ResponseWriter, r *http.Request) {

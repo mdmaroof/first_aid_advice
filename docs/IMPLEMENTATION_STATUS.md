@@ -16,6 +16,7 @@
 - Individual family accounts with invitations, acceptance, and separate history-sharing permission.
 - Consent-limited doctor search by name or exact mobile number.
 - OpenAPI 3.1 Swagger contract and credential guide.
+- Doctor EMR dashboard, appointments, encounters/vitals, prescriptions, and lab orders.
 
 ## Ticket mapping
 
@@ -33,5 +34,5 @@
 1. Integrate a production identity provider with verified phone flow and clinician MFA.
 2. Add consent purpose, policy version, expiry, and explicit renewal.
 3. Add clinic onboarding and role administration.
-4. Add structured encounters, vitals, prescriptions, appointments, billing, and patient-visible audit history.
+4. Add encounter editing/versioning, lab result entry, appointment status transitions, billing, and patient-visible audit history.
 5. Implement PostgreSQL adapter and migrations before production health-data persistence.

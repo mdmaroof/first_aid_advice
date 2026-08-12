@@ -34,6 +34,10 @@ Doctor routes:
 - `/` - authenticated doctor EMR workspace.
 - `/patients` - patients with active grants to the doctor's clinic.
 - `/patients/{patientID}` - consent-checked shared profile and clinical history.
+- `/appointments` - clinic scheduling for consented patients.
+- `/encounters` - vitals and SOAP-style clinical documentation.
+- `/prescriptions` - attributable medication orders and instructions.
+- `/labs` - routine and urgent diagnostic orders.
 
 The apps use opaque Go API sessions stored in HttpOnly cookies. Local identity
 headers remain available only as a development testing adapter.

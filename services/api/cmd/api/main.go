@@ -14,6 +14,7 @@ import (
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/auth"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/clinical"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/config"
+	"github.com/mdmaroof/first_aid_advice/services/api/internal/emr"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/family"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/httpapi"
 	"github.com/mdmaroof/first_aid_advice/services/api/internal/identity"
@@ -48,8 +49,9 @@ func main() {
 	authRepository := auth.NewSQLiteRepository(db, cfg.Environment == "local")
 	clinicalRepository := clinical.NewSQLiteRepository(db)
 	familyRepository := family.NewSQLiteRepository(db)
+	emrRepository := emr.NewSQLiteRepository(db)
 	identityResolver := identity.NewSessionResolver(authRepository, identity.NewLocalHeaderResolver(cfg.Environment))
-	handler := httpapi.NewHandler(logger, profileRepository, accessRepository, authRepository, clinicalRepository, familyRepository, identityResolver)
+	handler := httpapi.NewHandler(logger, profileRepository, accessRepository, authRepository, clinicalRepository, familyRepository, emrRepository, identityResolver)
 	server := &http.Server{
 		Addr:              cfg.Address,
 		Handler:           handler.Routes(),
