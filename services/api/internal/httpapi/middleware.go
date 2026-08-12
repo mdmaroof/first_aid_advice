@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"net/http"
 	"runtime/debug"
 	"time"
@@ -41,7 +42,7 @@ func (h *Handler) middleware(next http.Handler) http.Handler {
 
 		defer func() {
 			if recovered := recover(); recovered != nil {
-				h.logger.Error("panic recovered", "request_id", requestID, "method", r.Method, "path", r.URL.Path, "panic", recovered, "stack", string(debug.Stack()))
+				h.logger.Error("panic recovered", "request_id", requestID, "method", r.Method, "path", r.URL.Path, "panic_type", fmt.Sprintf("%T", recovered), "stack", string(debug.Stack()))
 				if recorder.status == 0 {
 					writeError(recorder, http.StatusInternalServerError, "internal_error", "An unexpected error occurred. Reference: "+requestID)
 				}

@@ -17,6 +17,7 @@
 - Consent-limited doctor search by name or exact mobile number.
 - OpenAPI 3.1 Swagger contract and credential guide.
 - Doctor EMR dashboard, appointments, encounters/vitals, prescriptions, and lab orders.
+- Standard error envelopes, request-ID correlation, panic recovery, structured failure logs, shared UI parsing, and an operational error catalog.
 
 ## Ticket mapping
 

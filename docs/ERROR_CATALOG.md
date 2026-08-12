@@ -82,6 +82,7 @@ Never send passwords, bearer tokens, full medical records, or database files in 
 | `patient_not_found` | 404 | Family invitation email is not a Patient account. | Ask the relative to create a Patient account or verify the email. |
 | `invitation_not_found` | 404 | Invitation is missing, already answered, or belongs to another patient. | Refresh the family list and use a pending incoming invitation. |
 | `route_not_found` | 404 | API path does not exist. | Check Swagger and the `/v1` prefix. |
+| `method_not_allowed` | 405 | Route exists but does not accept this HTTP method. | Use the method documented in Swagger. |
 
 ## Infrastructure and unexpected errors
 
@@ -108,7 +109,7 @@ The Go API writes one completion record for every request:
 request completed request_id=req-... method=POST path=/v1/doctor/encounters status=400 duration_ms=2
 ```
 
-Unexpected failures add an error record with the same request ID and an internal operation name. Recovered panics include a stack trace only in server logs—not in the response.
+Unexpected failures add an error record with the same request ID and an internal operation name. Recovered panics include the panic type and stack trace only in server logs—not the panic value or client response.
 
 Suggested incident workflow:
 

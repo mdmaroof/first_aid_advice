@@ -65,12 +65,28 @@ func (h *Handler) Routes() http.Handler {
 	mux.HandleFunc("POST /v1/doctor/prescriptions", h.createPrescription)
 	mux.HandleFunc("GET /v1/doctor/labs", h.listLabs)
 	mux.HandleFunc("POST /v1/doctor/labs", h.createLab)
+	for _, path := range []string{
+		"/healthz",
+		"/v1/auth/signup", "/v1/auth/signin", "/v1/auth/me", "/v1/auth/signout",
+		"/v1/directory/clinics", "/v1/patients/{patientID}/profile", "/v1/patients/{patientID}/care-team",
+		"/v1/patients/{patientID}/sharing-grants", "/v1/patients/{patientID}/sharing-grants/{grantID}",
+		"/v1/patients/{patientID}/history", "/v1/patients/{patientID}/family",
+		"/v1/patients/{patientID}/family/invitations", "/v1/patients/{patientID}/family/invitations/{linkID}/response",
+		"/v1/doctor/patients", "/v1/doctor/patients/{patientID}/profile", "/v1/doctor/patients/{patientID}/history",
+		"/v1/doctor/dashboard", "/v1/doctor/appointments", "/v1/doctor/encounters", "/v1/doctor/prescriptions", "/v1/doctor/labs",
+	} {
+		mux.HandleFunc(path, h.methodNotAllowed)
+	}
 	mux.HandleFunc("/", h.notFound)
 	return h.middleware(mux)
 }
 
 func (h *Handler) notFound(w http.ResponseWriter, _ *http.Request) {
 	writeError(w, http.StatusNotFound, "route_not_found", "The requested API route does not exist.")
+}
+
+func (h *Handler) methodNotAllowed(w http.ResponseWriter, _ *http.Request) {
+	writeError(w, http.StatusMethodNotAllowed, "method_not_allowed", "This HTTP method is not supported for the requested route.")
 }
 
 func (h *Handler) doctorDashboard(w http.ResponseWriter, r *http.Request) {

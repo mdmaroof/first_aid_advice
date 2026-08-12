@@ -50,7 +50,7 @@ func decodeJSON(w http.ResponseWriter, r *http.Request, value any) bool {
 		switch {
 		case errors.As(err, &maxBytesError):
 			writeError(w, http.StatusRequestEntityTooLarge, "request_too_large", "The request body exceeds the 64 KB limit.")
-		case errors.As(err, &syntaxError):
+		case errors.As(err, &syntaxError), errors.Is(err, io.ErrUnexpectedEOF):
 			writeError(w, http.StatusBadRequest, "malformed_json", "The request contains malformed JSON.")
 		case errors.As(err, &typeError):
 			writeDetailedError(w, http.StatusBadRequest, "invalid_field_type", "A request field has the wrong data type.", FieldError{Field: typeError.Field, Message: typeError.Error()})

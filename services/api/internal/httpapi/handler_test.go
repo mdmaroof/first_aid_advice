@@ -170,6 +170,37 @@ func TestMalformedJSONReturnsDiagnosticError(t *testing.T) {
 	}
 }
 
+func TestMethodNotAllowedUsesErrorEnvelope(t *testing.T) {
+	request := httptest.NewRequest(http.MethodDelete, "/v1/auth/signin", nil)
+	response := httptest.NewRecorder()
+	newTestHandler().ServeHTTP(response, request)
+	var payload errorEnvelope
+	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if response.Code != http.StatusMethodNotAllowed || payload.Error.Code != "method_not_allowed" {
+		t.Fatalf("unexpected response: %d %#v", response.Code, payload.Error)
+	}
+}
+
+func TestPanicRecoveryReturnsSafeReference(t *testing.T) {
+	handler := &Handler{logger: slog.Default()}
+	panics := handler.middleware(http.HandlerFunc(func(http.ResponseWriter, *http.Request) { panic("sensitive internal value") }))
+	request := httptest.NewRequest(http.MethodGet, "/panic", nil)
+	response := httptest.NewRecorder()
+	panics.ServeHTTP(response, request)
+	var payload errorEnvelope
+	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if response.Code != http.StatusInternalServerError || payload.Error.Code != "internal_error" || payload.Error.RequestID == "" {
+		t.Fatalf("unexpected response: %d %#v", response.Code, payload.Error)
+	}
+	if strings.Contains(response.Body.String(), "sensitive internal value") {
+		t.Fatal("panic details leaked to client")
+	}
+}
+
 func TestProfileRejectsMismatchedPatient(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/v1/patients/patient-1/profile", nil)
 	request.Header.Set("X-Curais-Actor-ID", "patient-2")
