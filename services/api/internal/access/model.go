@@ -13,6 +13,7 @@ var (
 type Clinic struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+	Kind string `json:"kind"`
 }
 
 type Grant struct {

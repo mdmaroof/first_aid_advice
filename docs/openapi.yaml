@@ -212,7 +212,7 @@ components:
       type: object
       required: [token, expiresAt, user]
       properties: { token: { type: string, writeOnly: true }, expiresAt: { type: string, format: date-time }, user: { $ref: "#/components/schemas/User" } }
-    Clinic: { type: object, properties: { id: { type: string }, name: { type: string } } }
+    Clinic: { type: object, properties: { id: { type: string }, name: { type: string }, kind: { type: string, enum: [clinic, hospital] } } }
     Profile:
       type: object
       required: [displayName]

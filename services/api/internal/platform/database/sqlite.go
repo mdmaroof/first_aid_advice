@@ -105,6 +105,7 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 		`CREATE TABLE IF NOT EXISTS clinics (
 			id TEXT PRIMARY KEY,
 			name TEXT NOT NULL,
+			kind TEXT NOT NULL DEFAULT 'clinic' CHECK (kind IN ('clinic', 'hospital')),
 			status TEXT NOT NULL CHECK (status IN ('active', 'disabled')),
 			created_at TEXT NOT NULL
 		)`,
@@ -143,6 +144,39 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("run migration: %w", err)
 		}
 	}
+	if err := ensureColumn(ctx, db, "clinics", "kind", "TEXT NOT NULL DEFAULT 'clinic'"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ensureColumn(ctx context.Context, db *sql.DB, table, column, definition string) error {
+	rows, err := db.QueryContext(ctx, "PRAGMA table_info("+table+")")
+	if err != nil {
+		return err
+	}
+	found := false
+	for rows.Next() {
+		var cid, notNull, primaryKey int
+		var name, kind string
+		var defaultValue any
+		if err := rows.Scan(&cid, &name, &kind, &notNull, &defaultValue, &primaryKey); err != nil {
+			rows.Close()
+			return err
+		}
+		if name == column {
+			found = true
+		}
+	}
+	if err := rows.Close(); err != nil {
+		return err
+	}
+	if found {
+		return nil
+	}
+	if _, err := db.ExecContext(ctx, "ALTER TABLE "+table+" ADD COLUMN "+column+" "+definition); err != nil {
+		return fmt.Errorf("add %s.%s: %w", table, column, err)
+	}
 	return nil
 }
 
@@ -155,7 +189,8 @@ func SeedLocal(ctx context.Context, db *sql.DB) error {
 		{`INSERT INTO users(id, role, created_at, updated_at) VALUES(?, 'patient', ?, ?) ON CONFLICT(id) DO NOTHING`, []any{"patient-local-1", now, now}},
 		{`INSERT INTO patient_profiles(patient_id, display_name, version, updated_at) VALUES(?, ?, 1, ?) ON CONFLICT(patient_id) DO NOTHING`, []any{"patient-local-1", "Local Patient", now}},
 		{`INSERT INTO users(id, role, created_at, updated_at) VALUES(?, 'doctor', ?, ?) ON CONFLICT(id) DO NOTHING`, []any{"doctor-local-1", now, now}},
-		{`INSERT INTO clinics(id, name, status, created_at) VALUES(?, ?, 'active', ?) ON CONFLICT(id) DO NOTHING`, []any{"clinic-local-1", "Curais Community Clinic", now}},
+		{`INSERT INTO clinics(id, name, kind, status, created_at) VALUES(?, ?, 'clinic', 'active', ?) ON CONFLICT(id) DO NOTHING`, []any{"clinic-local-1", "Curais Community Clinic", now}},
+		{`INSERT INTO clinics(id, name, kind, status, created_at) VALUES(?, ?, 'hospital', 'active', ?) ON CONFLICT(id) DO NOTHING`, []any{"hospital-local-1", "Curais General Hospital", now}},
 		{`INSERT INTO clinic_memberships(clinic_id, user_id, role, status, created_at) VALUES(?, ?, 'doctor', 'active', ?) ON CONFLICT(clinic_id, user_id) DO NOTHING`, []any{"clinic-local-1", "doctor-local-1", now}},
 	}
 	for _, statement := range statements {

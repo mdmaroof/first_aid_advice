@@ -282,6 +282,19 @@ func bearerToken(r *http.Request) string {
 	return strings.TrimSpace(strings.TrimPrefix(value, "Bearer "))
 }
 
+func validE164(value string) bool {
+	value = strings.TrimSpace(value)
+	if len(value) < 9 || len(value) > 16 || value[0] != '+' {
+		return false
+	}
+	for _, character := range value[1:] {
+		if character < '0' || character > '9' {
+			return false
+		}
+	}
+	return true
+}
+
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
@@ -324,6 +337,10 @@ func (h *Handler) putProfile(w http.ResponseWriter, r *http.Request) {
 	input.PatientID = patientID
 	if strings.TrimSpace(input.DisplayName) == "" {
 		writeError(w, http.StatusBadRequest, "display_name_required", "Display name is required.")
+		return
+	}
+	if input.MobilePhone != "" && !validE164(input.MobilePhone) {
+		writeError(w, http.StatusBadRequest, "invalid_mobile", "Use an E.164 mobile number including country code, for example +919876543210.")
 		return
 	}
 	result, err := h.profiles.Upsert(r.Context(), actor.ID, input)

@@ -14,7 +14,7 @@ type SQLiteRepository struct{ db *sql.DB }
 func NewSQLiteRepository(db *sql.DB) *SQLiteRepository { return &SQLiteRepository{db: db} }
 
 func (r *SQLiteRepository) ListClinics(ctx context.Context) ([]Clinic, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id, name FROM clinics WHERE status = 'active' ORDER BY name`)
+	rows, err := r.db.QueryContext(ctx, `SELECT id, name, kind FROM clinics WHERE status = 'active' ORDER BY name`)
 	if err != nil {
 		return nil, fmt.Errorf("list clinics: %w", err)
 	}
@@ -22,7 +22,7 @@ func (r *SQLiteRepository) ListClinics(ctx context.Context) ([]Clinic, error) {
 	result := []Clinic{}
 	for rows.Next() {
 		var item Clinic
-		if err := rows.Scan(&item.ID, &item.Name); err != nil {
+		if err := rows.Scan(&item.ID, &item.Name, &item.Kind); err != nil {
 			return nil, err
 		}
 		result = append(result, item)
